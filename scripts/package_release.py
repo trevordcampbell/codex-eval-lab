@@ -18,7 +18,9 @@ def release_files(root: Path):
     for p in sorted(root.rglob("*")):
         rel=p.relative_to(root)
         if any(part in SKIP or part.endswith(".egg-info") for part in rel.parts): continue
-        allowed=str(rel) in TOP or (len(rel.parts)>1 and rel.parts[0] in DIRS and p.suffix in EXT)
+        # Reviewed documentation figures only; do not include arbitrary SVGs.
+        doc_figure=len(rel.parts)==3 and rel.parts[:2]==("docs","assets") and p.suffix==".svg"
+        allowed=str(rel) in TOP or (len(rel.parts)>1 and rel.parts[0] in DIRS and p.suffix in EXT) or doc_figure
         if not allowed: continue
         if p.is_symlink(): raise ValueError(f"Release source cannot be a symlink: {rel}")
         if not p.is_file():continue

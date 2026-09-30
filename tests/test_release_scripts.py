@@ -108,5 +108,29 @@ class ReleaseScriptTests(unittest.TestCase):
             data=json.loads(z.read('codex-eval-lab/RELEASE_MANIFEST.json'))
             for name,sha in data['files'].items():self.assertEqual(hashlib.sha256(z.read('codex-eval-lab/'+name)).hexdigest(),sha)
         with self.assertRaises(ValueError):packager.package(root,self.root/'release')
+    def test_package_includes_only_documentation_svg_figures(self):
+        root=self.root/'repo';root.mkdir()
+        for name in packager.TOP:(root/name).write_text('required')
+        svg='<svg xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10"/></svg>'
+        names=['docs/assets/workflow.svg','docs/other.svg','examples/figure.svg',
+               'docs/assets/nested/figure.svg','docs/assets/.env.svg']
+        for name in names:
+            p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(svg)
+        # Secret-like filenames must still fail instead of entering the archive.
+        with self.assertRaises(ValueError):packager.release_files(root)
+        (root/'docs/assets/.env.svg').unlink()
+        result=packager.package(root,self.root/'release')
+        with zipfile.ZipFile(result['archive']) as z:
+            data=json.loads(z.read('codex-eval-lab/RELEASE_MANIFEST.json'))
+            self.assertEqual(z.read('codex-eval-lab/docs/assets/workflow.svg'),svg.encode())
+            self.assertEqual(data['files']['docs/assets/workflow.svg'],hashlib.sha256(svg.encode()).hexdigest())
+            for name in names[1:]:self.assertNotIn(name,data['files'])
+    def test_package_rejects_symlinked_documentation_svg(self):
+        root=self.root/'repo';root.mkdir()
+        for name in packager.TOP:(root/name).write_text('required')
+        target=self.root/'private.svg';target.write_text('<svg/>')
+        assets=root/'docs/assets';assets.mkdir(parents=True)
+        (assets/'figure.svg').symlink_to(target)
+        with self.assertRaises(ValueError):packager.release_files(root)
 
 if __name__=='__main__':unittest.main()

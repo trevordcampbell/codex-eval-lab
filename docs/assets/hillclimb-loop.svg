@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="760" viewBox="0 0 1040 760" role="img" aria-labelledby="title desc">
+<title id="title">Improve on development evidence; select on validation; test only at the end</title>
+<desc id="desc">Iterative search has four stages: inspect development-only feedback, propose a scoped change, evaluate with the frozen evaluator on validation, and keep or reject using gates against both incumbent and original baseline. Continue within approved limits. Once the search stops, seal the selected source, obtain final-test approval, then compare once on the held-out final test and report. Never feed final-test failures back into the same search.</desc>
+<defs>
+ <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 8 5 L 1 9" fill="none" stroke="#617184" stroke-width="1.5"/></marker>
+</defs>
+<style>
+ text { font-family: Arial, Helvetica, sans-serif; fill: #172638; }
+ .kicker { font-size: 13px; font-weight: 700; letter-spacing: 1.8px; fill: #47647b; }
+ .title { font-size: 32px; font-weight: 700; letter-spacing: -.5px; }
+ .lead { font-size: 18px; fill: #526376; }
+ .heading { font-size: 21px; font-weight: 700; }
+ .body { font-size: 18px; }
+ .small { font-size: 16px; fill: #526376; }
+ .label { font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+ .line { fill: none; stroke: #617184; stroke-width: 2; marker-end: url(#arrow); }
+</style><rect width="1040" height="760" rx="18" fill="#f6f8fb"/>
+<text x="36" y="40" class="kicker" >02 / CONTROLLED HILLCLIMBING</text>
+<text x="36" y="83" class="title" >Make one change. Ask the same question.</text>
+<text x="36" y="115" class="lead" >Development explains failures. Validation selects. The final test checks the result.</text>
+<rect x="36" y="150" width="968" height="321" rx="12" fill="#ffffff" stroke="#d6e0e9"/>
+<text x="58" y="182" class="label" >REPEAT WITHIN APPROVED LIMITS</text>
+<rect x="58" y="204" width="198" height="184" rx="12" fill="#edf7fb" stroke="#edf7fb"/>
+<rect x="300" y="204" width="198" height="184" rx="12" fill="#edf7fb" stroke="#edf7fb"/>
+<rect x="542" y="204" width="198" height="184" rx="12" fill="#e8f1f8" stroke="#e8f1f8"/>
+<rect x="784" y="204" width="198" height="184" rx="12" fill="#fff3e7" stroke="#fff3e7"/>
+<text x="74" y="236" class="heading" >1  Inspect</text>
+<text x="74" y="272" class="body" >Development-only</text>
+<text x="74" y="298" class="body" >failure evidence</text>
+<text x="74" y="345" class="small" >Explain what failed</text>
+<text x="316" y="236" class="heading" >2  Propose</text>
+<text x="316" y="272" class="body" >One hypothesis</text>
+<text x="316" y="298" class="body" >Scoped app edits</text>
+<text x="316" y="345" class="small" >Check edit scope</text>
+<text x="558" y="236" class="heading" >3  Validate</text>
+<text x="558" y="272" class="body" >Frozen evaluator</text>
+<text x="558" y="298" class="body" >Paired comparisons</text>
+<text x="558" y="345" class="small" >Quality + guardrails</text>
+<text x="800" y="236" class="heading" >4  Decide</text>
+<text x="800" y="272" class="body" >Keep or reject</text>
+<text x="800" y="298" class="body" >Record the evidence</text>
+<text x="800" y="345" class="small" >No automatic deploy</text>
+<path class="line" d="M 260 289 H 294"/>
+<path class="line" d="M 502 289 H 536"/>
+<path class="line" d="M 744 289 H 778"/>
+<path class="line" d="M 883 389 V 423 H 157 V 390"/>
+<rect x="299" y="404" width="442" height="33" rx="0" fill="#ffffff" stroke="#ffffff"/>
+<text x="520" y="426" class="small" text-anchor="middle">Use fresh development feedback for the next proposal</text>
+<text x="58" y="456" class="small" >Acceptance must pass against both the incumbent and the original baseline.</text>
+<path class="line" d="M 883 472 V 511"/>
+<text x="901" y="498" class="small" >Stop search</text>
+<rect x="36" y="522" width="968" height="168" rx="12" fill="#ffffff" stroke="#d6e0e9"/>
+<text x="58" y="553" class="label" >AFTER SELECTION · SEPARATE FROM THE LOOP</text>
+<text x="58" y="595" class="heading" >Seal the source</text>
+<text x="58" y="626" class="body" >Fix the selected version</text>
+<text x="58" y="653" class="small" >Approve opening the test</text>
+<path class="line" d="M 289 607 H 340"/>
+<text x="365" y="595" class="heading" >Open the final test</text>
+<text x="365" y="626" class="body" >Compare against baseline</text>
+<text x="365" y="653" class="small" >A validation win can fail here</text>
+<path class="line" d="M 619 607 H 670"/>
+<text x="695" y="595" class="heading" >Report what happened</text>
+<text x="695" y="626" class="body" >Gain, uncertainty, regressions</text>
+<text x="695" y="653" class="small" >Keep disappointing results</text>
+<text x="36" y="729" class="body" >Do not tune on final-test failures. A new search needs a fresh final test.</text>
+</svg>

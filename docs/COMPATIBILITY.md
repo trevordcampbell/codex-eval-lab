@@ -6,8 +6,9 @@ integrations actually exercised during development.
 ## Core
 
 Requires Python 3.11+ (`tomllib` is used). No third-party runtime dependencies.
-Development was exercised on Linux/Python 3.13.5. CI is configured for Python
-3.11–3.13 on Linux; those hosted runs have not been observed for the initial release.
+Development was exercised on Linux/Python 3.13.5 and rechecked on Python 3.12.14.
+Hosted CI passed on Linux/Python 3.11, 3.12, and 3.13 for publication commit
+`d01b1770bcee381f77b54b417874016c1880aaab`. Check GitHub Actions for later revisions.
 macOS should use the POSIX path but was not executed here. Native Windows kills only
 the immediate timed-out child; use WSL or a properly isolated worker for agents.
 
@@ -37,7 +38,7 @@ Authenticated CLI execution was **not available in the development environment**
 Tests simulate the CLI's process response and verify flags, strict JSON, event capture,
 failed-turn handling and output consumption. This establishes an integration contract,
 not proof of actual CLI authentication, model quality, prompt-budget fit, API billing
-or sandbox operation. Run the README's live smoke workflow on your own machine.
+or sandbox operation. Run the [live Codex smoke workflow](OPERATING_GUIDE.md#live-codex-smoke-workflow) on your own machine.
 
 Saved authentication remains local to your Codex installation. The adapter does not
 copy `auth.json`. Treat HOME, CODEX_HOME and any custom agent plugins/settings as part
@@ -77,9 +78,10 @@ grader or host credentials. See SECURITY.md.
 
 The publishing script uses the documented `gh repo create --private --source --push`
 path. It requires local GitHub CLI authentication and new-repository permissions.
-Its manifest checks and refusal behavior are unit tested; live publication and hosted
-CI were not executed for the initial delivery. No repository URL should be described
-as published until creation and verification actually succeed.
+Its manifest checks and refusal behavior are unit tested; the script itself has
+not been live-tested. The public repository was published through a separate
+authenticated GitHub workflow, with full file-integrity verification and successful
+[hosted CI](https://github.com/trevordcampbell/codex-eval-lab/actions/runs/36675694829).
 
 ## Official references
 

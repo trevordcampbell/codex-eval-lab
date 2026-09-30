@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="632" viewBox="0 0 1040 632" role="img" aria-labelledby="title desc">
+<title id="title">Build the measurement before changing the system</title>
+<desc id="desc">Representative tasks become reviewed cases and expected outcomes. A separate grader measures actual application outputs. An approved, fixed experiment produces a repeatable baseline. Review leakage, noise, metric headroom, and editable scope before optimization. The final test stays unopened.</desc>
+<defs>
+ <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 8 5 L 1 9" fill="none" stroke="#617184" stroke-width="1.5"/></marker>
+</defs>
+<style>
+ text { font-family: Arial, Helvetica, sans-serif; fill: #172638; }
+ .kicker { font-size: 13px; font-weight: 700; letter-spacing: 1.8px; fill: #47647b; }
+ .title { font-size: 32px; font-weight: 700; letter-spacing: -.5px; }
+ .lead { font-size: 18px; fill: #526376; }
+ .heading { font-size: 21px; font-weight: 700; }
+ .body { font-size: 18px; }
+ .small { font-size: 16px; fill: #526376; }
+ .label { font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+ .line { fill: none; stroke: #617184; stroke-width: 2; marker-end: url(#arrow); }
+</style><rect width="1040" height="632" rx="18" fill="#f6f8fb"/>
+<text x="36" y="40" class="kicker" >01 / EVAL DESIGN</text>
+<text x="36" y="83" class="title" >Turn “better” into something you can test</text>
+<text x="36" y="115" class="lead" >A useful evaluation starts with the task, not with a score to maximize.</text>
+<rect x="36" y="152" width="300" height="244" rx="12" fill="#ffffff" stroke="#d6e0e9"/>
+<rect x="370" y="152" width="300" height="244" rx="12" fill="#ffffff" stroke="#d6e0e9"/>
+<rect x="704" y="152" width="300" height="244" rx="12" fill="#ffffff" stroke="#d6e0e9"/>
+<text x="58" y="184" class="label" >THE TASK</text>
+<text x="58" y="222" class="heading" >Start with real work</text>
+<text x="58" y="257" class="body" >Representative inputs</text>
+<text x="58" y="285" class="body" >Important edge cases</text>
+<text x="58" y="313" class="body" >Observable end states</text>
+<rect x="58" y="341" width="256" height="34" rx="6" fill="#edf7fb" stroke="#edf7fb"/>
+<text x="72" y="364" class="small" >What should success mean?</text>
+<text x="392" y="184" class="label" >THE MEASUREMENT</text>
+<text x="392" y="222" class="heading" >Review the answers</text>
+<text x="392" y="257" class="body" >Approved expected outcomes</text>
+<text x="392" y="285" class="body" >An independent grader</text>
+<text x="392" y="313" class="body" >A pilot to check disagreements</text>
+<rect x="392" y="341" width="256" height="34" rx="6" fill="#edf7fb" stroke="#edf7fb"/>
+<text x="406" y="364" class="small" >Grade the actual trial output</text>
+<text x="726" y="184" class="label" >THE STARTING POINT</text>
+<text x="726" y="222" class="heading" >Run a repeatable baseline</text>
+<text x="726" y="257" class="body" >Use the real app entry point</text>
+<text x="726" y="285" class="body" >Record quality, time, and cost</text>
+<text x="726" y="313" class="body" >Keep failures in the evidence</text>
+<rect x="726" y="341" width="256" height="34" rx="6" fill="#edf7fb" stroke="#edf7fb"/>
+<text x="740" y="364" class="small" >Leave the final test unopened</text>
+<path class="line" d="M 339 269 H 366"/><path class="line" d="M 673 269 H 700"/>
+<rect x="36" y="420" width="968" height="80" rx="12" fill="#e8f1f8" stroke="#d4e4ef"/>
+<text x="58" y="448" class="label" >HOLD FIXED AFTER APPROVAL</text>
+<text x="58" y="478" class="body" >Cases · grader · objective · guardrails · execution settings · editable scope · budgets</text>
+<text x="36" y="539" class="heading" >Before searching, challenge the measurement</text>
+<text x="36" y="570" class="body" >Check related-case leakage, ambiguous labels, run-to-run noise, and metric headroom.</text>
+<text x="36" y="599" class="small" >More repetitions cannot repair a wrong label or a missing kind of real-world task.</text>
+</svg>

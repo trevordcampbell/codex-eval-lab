@@ -130,3 +130,45 @@ These are adapter patterns, not claims that domain-specific graders ship for eve
 possible task. Real-world experiments need their own safety, validity and approval
 controls. Never trade away medical, security, legal, privacy or operational constraints
 to improve a proxy score.
+
+## Live Codex smoke workflow
+
+
+Install and authenticate the Codex CLI on your machine using the
+[official instructions](https://developers.openai.com/codex/cli). No credentials are
+included in this project. Prepare a separate suite that replaces the scripted
+optimizer with the real Codex adapter:
+
+```sh
+python scripts/prepare_codex_demo.py --out ../eval-lab-codex-suite
+eval-lab doctor
+eval-lab audit ../eval-lab-codex-suite
+```
+
+Review the cases, grader, editable scope, source files and budget. Only after approval:
+
+```sh
+eval-lab start ../eval-lab-codex-suite \
+  --app ../eval-lab-codex-suite/app --state ../eval-lab-codex-state \
+  --approve-cases --approve-grader --approve-execution \
+  --note "Reviewed synthetic cases, grader, source scope and execution budget."
+eval-lab loop ../eval-lab-codex-state --approve-optimizer
+eval-lab report ../eval-lab-codex-state --out ../eval-lab-codex-state/report.html
+```
+
+Codex usage consumes your account's plan allowance or API billing as applicable.
+**Optimizer usage is separate from the evaluation-dollar budget.** The adapter
+records CLI usage and limits calls/time; it does not invent a dollar conversion.
+
+Once selection is finished and you approve opening the held-out test:
+
+```sh
+eval-lab finalize ../eval-lab-codex-state --approve-final
+eval-lab report ../eval-lab-codex-state --out ../eval-lab-codex-state/report.html
+eval-lab export-best ../eval-lab-codex-state --out ../eval-lab-reviewed-winner
+```
+
+The final test seals the selected source hash before it runs. The experiment cannot
+then keep optimizing against that test. Export creates a **new directory**; it never
+overwrites your working tree, merges a PR or deploys an application.
+

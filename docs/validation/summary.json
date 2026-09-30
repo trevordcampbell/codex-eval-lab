@@ -17,17 +17,18 @@
   "live_codex": "not run; no authenticated CLI available",
   "live_judge": "not run; no paid calls made",
   "docker_runtime": "not run; binary unavailable",
-  "hosted_github_ci": "Check GitHub Actions for the published commit; not part of original local validation",
-  "github_publication": "Public repository creation confirmed at https://github.com/trevordcampbell/codex-eval-lab; full source publication and commit verification tracked in release notes",
+  "hosted_github_ci": "passed Python 3.11, 3.12, 3.13 at d01b1770bcee381f77b54b417874016c1880aaab; see Actions for later commits",
+  "github_publication": "Full structured repository published and 89 initial file paths, Git blob hashes, sizes and modes verified at d01b1770bcee381f77b54b417874016c1880aaab; editorial update adds two documentation figures",
   "record_scope": "Original Python 3.13.5 validation plus explicitly separated publication-session updates",
   "publication_session_checks": {
     "date": "2026-09-30",
     "python": "3.12.14",
-    "tests": 184,
+    "tests": 186,
     "failures": 0,
     "skill_reference_sync": "passed",
     "cli_doctor": "passed",
     "offline_demo": "passed; 560 trials; scripted proposals; no paid calls",
-    "coverage": "not remeasured"
+    "coverage": "not remeasured",
+    "note": "Two additional tests cover documentation SVG inclusion and symlink rejection; runtime engine unchanged"
   }
 }
