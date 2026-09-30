@@ -1,0 +1,6 @@
+interface:
+  display_name: "Report Eval Results"
+  short_description: "Review experiments without leaking holdout evidence."
+  default_prompt: "Use $report-eval for the requested evaluation workflow."
+policy:
+  allow_implicit_invocation: true

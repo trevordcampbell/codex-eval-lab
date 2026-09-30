@@ -1,0 +1,7 @@
+{
+  "browser": "system Chromium through Playwright set_content; native file URL navigation not tested",
+  "page_errors": [],
+  "development_case_details": 320,
+  "after_unmatched_search": 0,
+  "mobile_horizontal_overflow": false
+}

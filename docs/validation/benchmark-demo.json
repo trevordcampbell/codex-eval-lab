@@ -1,0 +1,125 @@
+{
+  "demonstration": "Hand-authored optimization, NOT a model performance benchmark; cooperative kernel timing on synthetic integer lists.",
+  "selection": {
+    "baseline": "baseline",
+    "candidate": "ordered-hash-dedup",
+    "split": "validation",
+    "accepted": true,
+    "metrics": {
+      "kernel_ms": {
+        "baseline": 0.92685485,
+        "candidate": 0.02279485,
+        "raw_delta": -0.90406,
+        "direction": "minimize",
+        "favorable_delta": {
+          "mean": 0.90406,
+          "low": 0.41575048249999996,
+          "high": 1.472200399375,
+          "groups": 10,
+          "cases": 10,
+          "confidence": 0.975,
+          "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+        },
+        "threshold": 0.001,
+        "passes": true
+      },
+      "correctness": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "raw_delta": 0.0,
+        "direction": "maximize",
+        "favorable_delta": {
+          "mean": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "groups": 10,
+          "cases": 10,
+          "confidence": 0.975,
+          "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+        },
+        "threshold": -0.0,
+        "passes": true
+      }
+    },
+    "cases": 10,
+    "groups": 10,
+    "repetitions": 2,
+    "decision": "keep",
+    "caveats": [
+      "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+      "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+      "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+    ]
+  },
+  "final": {
+    "baseline": "baseline",
+    "candidate": "ordered-hash-dedup",
+    "split": "test",
+    "accepted": true,
+    "metrics": {
+      "kernel_ms": {
+        "baseline": 1.09748935,
+        "candidate": 0.02378885,
+        "raw_delta": -1.0737005,
+        "direction": "minimize",
+        "favorable_delta": {
+          "mean": 1.0737005,
+          "low": 0.4587715506250002,
+          "high": 1.7540567587500009,
+          "groups": 10,
+          "cases": 10,
+          "confidence": 0.975,
+          "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+        },
+        "threshold": 0.001,
+        "passes": true
+      },
+      "correctness": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "raw_delta": 0.0,
+        "direction": "maximize",
+        "favorable_delta": {
+          "mean": 0.0,
+          "low": 0.0,
+          "high": 0.0,
+          "groups": 10,
+          "cases": 10,
+          "confidence": 0.975,
+          "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+        },
+        "threshold": -0.0,
+        "passes": true
+      }
+    },
+    "cases": 10,
+    "groups": 10,
+    "repetitions": 2,
+    "decision": "keep",
+    "caveats": [
+      "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+      "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+      "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+    ],
+    "final_selection": {
+      "label": "ordered-hash-dedup",
+      "source_hash": "631d2b720d3d029f8f982b94b3d1a23652c9f3bcc17109d63c9844c448afa945",
+      "sealed_at": "2026-09-30T05:05:32.984400+00:00"
+    },
+    "interpretation": "Independent held-out comparison for the preselected winner; not a guarantee about unsampled tasks. Do not tune further on this test set."
+  },
+  "budget": {
+    "trials": 120,
+    "eval_charged_usd": 0.0,
+    "pending_reserved_usd": 0,
+    "optimizer_calls": 0,
+    "optimizer_dollars": null,
+    "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+  },
+  "report": {
+    "report": "Generated locally by scripts/benchmark_demo.py",
+    "variants": 2,
+    "private_details_included": false,
+    "final_test_complete": true
+  }
+}

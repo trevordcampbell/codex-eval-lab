@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-30",
+  "python": "3.13.5",
+  "platform": "Linux x86_64",
+  "tests": 184,
+  "failures": 0,
+  "coverage": {
+    "covered_lines": 1332,
+    "num_statements": 1458,
+    "percent_covered": 91.35802469135803,
+    "missing_lines": 126
+  },
+  "coverage_scope": "src/codex_eval_lab only; optional adapters, scripts and subprocess-executed fixture code are not included in this percentage",
+  "wheel_build": "passed",
+  "wheel_install_in_clean_venv": "passed",
+  "cli_smoke": "passed",
+  "live_codex": "not run; no authenticated CLI available",
+  "live_judge": "not run; no paid calls made",
+  "docker_runtime": "not run; binary unavailable",
+  "hosted_github_ci": "Check GitHub Actions for the published commit; not part of original local validation",
+  "github_publication": "Public repository creation confirmed at https://github.com/trevordcampbell/codex-eval-lab; full source publication and commit verification tracked in release notes",
+  "record_scope": "Original Python 3.13.5 validation plus explicitly separated publication-session updates",
+  "publication_session_checks": {
+    "date": "2026-09-30",
+    "python": "3.12.14",
+    "tests": 184,
+    "failures": 0,
+    "skill_reference_sync": "passed",
+    "cli_doctor": "passed",
+    "offline_demo": "passed; 560 trials; scripted proposals; no paid calls",
+    "coverage": "not remeasured"
+  }
+}

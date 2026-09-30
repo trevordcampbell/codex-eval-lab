@@ -1,0 +1,53 @@
+schema_version = 1
+name = "routing-demo"
+cases = "cases.jsonl"
+repetitions = 2
+seed = 42
+source_paths = ["app.py"]
+harness_paths = ["grader.py", "demo_optimizer.py"]
+
+[execution]
+mode = "local"
+app_command = ["{python}", "-S", "{app}/app.py"]
+grader_command = ["{python}", "-S", "{suite}/grader.py"]
+timeout_s = 10
+grader_timeout_s = 10
+max_output_bytes = 100000
+
+[metrics.accuracy]
+minimum = 0.0
+maximum = 1.0
+[metrics.cost_usd]
+minimum = 0.0
+
+[objective]
+metric = "accuracy"
+direction = "maximize"
+min_improvement = 0.01
+confidence = 0.95
+min_validation_groups = 8
+bootstrap_samples = 2000
+
+[[guardrails]]
+metric = "cost_usd"
+direction = "minimize"
+max_regression = 0.0
+
+[budget]
+max_eval_cost_usd = 0.0
+trial_reserve_usd = 0.0
+max_trials = 1000
+max_wall_time_s = 3600
+max_optimizer_calls = 3
+
+[search]
+editable = ["app.py"]
+max_rounds = 3
+patience = 2
+
+# This fixture is deliberately NOT a model. For live Codex, use the codex variant
+# created by scripts/prepare_codex_demo.py, then review and approve that new suite.
+[optimizer]
+backend = "command"
+command = ["{python}", "-S", "{suite}/demo_optimizer.py"]
+timeout_s = 10

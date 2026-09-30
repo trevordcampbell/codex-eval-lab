@@ -1,0 +1,55 @@
+{
+  "demonstration": "scripted synthetic fixture, NOT a live Codex/model benchmark",
+  "best": "round-0001",
+  "stop_reason": "patience_exhausted",
+  "heldout": {
+    "accuracy": {
+      "baseline": 0.7,
+      "candidate": 1.0,
+      "raw_delta": 0.3,
+      "direction": "maximize",
+      "favorable_delta": {
+        "mean": 0.3,
+        "low": 0.1,
+        "high": 0.55,
+        "groups": 20,
+        "cases": 20,
+        "confidence": 0.975,
+        "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+      },
+      "threshold": 0.01,
+      "passes": true
+    },
+    "cost_usd": {
+      "baseline": 0.0,
+      "candidate": 0.0,
+      "raw_delta": 0.0,
+      "direction": "minimize",
+      "favorable_delta": {
+        "mean": 0.0,
+        "low": 0.0,
+        "high": 0.0,
+        "groups": 20,
+        "cases": 20,
+        "confidence": 0.975,
+        "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+      },
+      "threshold": -0.0,
+      "passes": true
+    }
+  },
+  "report": {
+    "report": "See docs/sample-report.html",
+    "variants": 4,
+    "private_details_included": false,
+    "final_test_complete": true
+  },
+  "budget": {
+    "trials": 560,
+    "eval_charged_usd": 0.0,
+    "pending_reserved_usd": 0,
+    "optimizer_calls": 3,
+    "optimizer_dollars": null,
+    "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+  }
+}

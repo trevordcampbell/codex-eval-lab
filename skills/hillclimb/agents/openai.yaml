@@ -1,0 +1,6 @@
+interface:
+  display_name: "Hillclimb an Eval"
+  short_description: "Improve measured capability with guarded experiments."
+  default_prompt: "Use $hillclimb for the requested evaluation workflow."
+policy:
+  allow_implicit_invocation: false
