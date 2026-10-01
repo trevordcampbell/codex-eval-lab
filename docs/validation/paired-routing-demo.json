@@ -1,0 +1,20 @@
+{
+  "test": "offline synthetic paired-mode routing integration",
+  "best": "round-0001",
+  "decisions": [
+    true,
+    false,
+    false
+  ],
+  "final_accepted": true,
+  "cohorts": 6,
+  "budget": {
+    "trials": 800,
+    "eval_charged_usd": 0.0,
+    "pending_reserved_usd": 0,
+    "optimizer_calls": 3,
+    "optimizer_dollars": null,
+    "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+  },
+  "record_scope": "Final 0.3.0 offline synthetic routing integration; no model or performance claim"
+}

@@ -18,6 +18,7 @@ import sys
 import stat
 from typing import Any
 
+from . import __version__
 from .review import validate_packet
 from .review_ui import render_mcp_review, review_payload
 from .util import LabError, digest, strict_json
@@ -275,7 +276,7 @@ def build_server(store: PacketStore):
             types.TextResourceContents(uri=RESOURCE_URI, text=render_mcp_review(), mime_type=RESOURCE_MIME, _meta=RESOURCE_META),
         ])
 
-    server = Server("codex-eval-lab", version="0.2.0", on_list_tools=list_tools,
+    server = Server("codex-eval-lab", version=__version__, on_list_tools=list_tools,
                     on_call_tool=call_tool, on_list_resources=list_resources,
                     on_read_resource=read_resource)
     # Standard MCP Apps capability declaration; no authentication/write extension.

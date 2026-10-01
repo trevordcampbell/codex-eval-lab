@@ -17,6 +17,13 @@ CREATE TABLE IF NOT EXISTS trials(
  status TEXT NOT NULL, reserved REAL NOT NULL, charged REAL NOT NULL,
  result TEXT, started TEXT NOT NULL, finished TEXT,
  PRIMARY KEY(label, split, case_id, rep));
+CREATE TABLE IF NOT EXISTS paired_cohorts(
+ id TEXT PRIMARY KEY, spec TEXT NOT NULL, created TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS paired_trials(
+ cohort TEXT NOT NULL, label TEXT NOT NULL, split TEXT NOT NULL, case_id TEXT NOT NULL, rep INTEGER NOT NULL,
+ status TEXT NOT NULL, reserved REAL NOT NULL, charged REAL NOT NULL,
+ result TEXT, started TEXT NOT NULL, finished TEXT,
+ PRIMARY KEY(cohort, label, split, case_id, rep));
 CREATE TABLE IF NOT EXISTS optimizers(
  id INTEGER PRIMARY KEY AUTOINCREMENT, status TEXT NOT NULL, started TEXT NOT NULL,
  result TEXT, finished TEXT);
@@ -61,6 +68,14 @@ class Store:
         self.db.execute("INSERT INTO events(at,kind,data) VALUES(?,?,?)", (utc_now(), kind, canonical(data)))
         self.db.commit()
 
+    def record_manual_selection(self, candidate: str, decision: dict[str, Any], *, promoted: bool) -> None:
+        """Commit the promotion and its audit record atomically, including rejected attempts."""
+        with self.transaction():
+            if promoted:
+                self.db.execute("INSERT OR REPLACE INTO meta VALUES('best',?)", (canonical(candidate),))
+            self.db.execute("INSERT INTO events(at,kind,data) VALUES(?,?,?)",
+                            (utc_now(), "manual_selection", canonical({**decision, "promoted": promoted})))
+
     def variant(self, label: str) -> dict[str, Any] | None:
         row = self.db.execute("SELECT * FROM variants WHERE label=?", (label,)).fetchone()
         return dict(row) if row else None
@@ -75,14 +90,37 @@ class Store:
         self.db.commit()
 
     def budget(self) -> dict[str, Any]:
-        row = self.db.execute("SELECT COUNT(*) AS trials, COALESCE(SUM(charged),0) AS charged, COALESCE(SUM(CASE WHEN status='pending' THEN reserved ELSE 0 END),0) AS pending FROM trials").fetchone()
+        row = self.db.execute("SELECT COUNT(*) AS trials, COALESCE(SUM(charged),0) AS charged, COALESCE(SUM(CASE WHEN status='pending' THEN reserved ELSE 0 END),0) AS pending FROM (SELECT status,charged,reserved FROM trials UNION ALL SELECT status,charged,reserved FROM paired_trials)").fetchone()
         calls = self.db.execute("SELECT COUNT(*) FROM optimizers").fetchone()[0]
         return {"trials": row["trials"], "eval_charged_usd": row["charged"], "pending_reserved_usd": row["pending"], "optimizer_calls": calls,
                 "optimizer_dollars": None, "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."}
 
-    def reserve(self, label: str, split: str, case_id: str, rep: int, budget: dict[str, Any]) -> bool:
+    def cohort(self, id_: str) -> dict[str, Any] | None:
+        row = self.db.execute("SELECT spec FROM paired_cohorts WHERE id=?", (id_,)).fetchone()
+        return json.loads(row[0]) if row else None
+
+    def add_cohort(self, id_: str, spec: dict[str, Any]) -> None:
+        # A persisted specification is append-only; never replace measurement history.
         with self.transaction():
-            row = self.db.execute("SELECT status FROM trials WHERE label=? AND split=? AND case_id=? AND rep=?", (label, split, case_id, rep)).fetchone()
+            current = self.cohort(id_)
+            if current is not None:
+                if current != spec:
+                    raise LabError("Paired cohort specification changed; start a new experiment")
+                return
+            self.db.execute("INSERT INTO paired_cohorts VALUES(?,?,?)", (id_, canonical(spec), utc_now()))
+
+    def _trial_key(self, label, split, case_id, rep, cohort):
+        if cohort is None:
+            return "trials", "label=? AND split=? AND case_id=? AND rep=?", (label, split, case_id, rep)
+        spec = self.cohort(cohort)
+        if not spec or label not in spec["arms"] or split != spec["split"]:
+            raise LabError("Trial must belong to a persisted paired cohort")
+        return "paired_trials", "cohort=? AND label=? AND split=? AND case_id=? AND rep=?", (cohort, label, split, case_id, rep)
+
+    def reserve(self, label: str, split: str, case_id: str, rep: int, budget: dict[str, Any], *, cohort: str | None = None) -> bool:
+        table, where, key = self._trial_key(label, split, case_id, rep, cohort)
+        with self.transaction():
+            row = self.db.execute(f"SELECT status FROM {table} WHERE {where}", key).fetchone()
             if row:
                 if row[0] == "pending":
                     raise LabError("An interrupted trial has indeterminate cost/outcome. Use recover; it will NOT be retried for free.")
@@ -93,31 +131,42 @@ class Store:
             reserve = budget["trial_reserve_usd"]
             if totals["eval_charged_usd"] + totals["pending_reserved_usd"] + reserve > budget["max_eval_cost_usd"] + 1e-9:
                 raise LabError("Evaluation cost reservation would exceed the approved budget")
-            self.db.execute("INSERT INTO trials VALUES(?,?,?,?,?,?,?,?,?,?)", (label, split, case_id, rep, "pending", reserve, 0, None, utc_now(), None))
+            values = (*key, "pending", reserve, 0, None, utc_now(), None)
+            self.db.execute(f"INSERT INTO {table} VALUES({','.join('?' for _ in values)})", values)
         return True
 
-    def complete(self, label: str, split: str, case_id: str, rep: int, result: dict[str, Any], charged: float) -> None:
+    def complete(self, label: str, split: str, case_id: str, rep: int, result: dict[str, Any], charged: float, *, cohort: str | None = None) -> None:
         charged = finite(charged, "charged cost", minimum=0)
+        table, where, key = self._trial_key(label, split, case_id, rep, cohort)
         with self.transaction():
-            cur = self.db.execute("UPDATE trials SET status=?,charged=?,result=?,finished=? WHERE label=? AND split=? AND case_id=? AND rep=? AND status='pending'", (result["status"], charged, canonical(result), utc_now(), label, split, case_id, rep))
+            cur = self.db.execute(f"UPDATE {table} SET status=?,charged=?,result=?,finished=? WHERE {where} AND status='pending'", (result["status"], charged, canonical(result), utc_now(), *key))
             if cur.rowcount != 1:
                 raise LabError("Trial was not reserved, or was already completed")
 
-    def results(self, label: str, split: str) -> list[dict[str, Any]]:
-        return [json.loads(row[0]) for row in self.db.execute("SELECT result FROM trials WHERE label=? AND split=? AND result IS NOT NULL ORDER BY case_id,rep", (label, split))]
+    def results(self, label: str, split: str, *, cohort: str | None = None) -> list[dict[str, Any]]:
+        table = "trials" if cohort is None else "paired_trials"
+        where = "label=? AND split=?" if cohort is None else "cohort=? AND label=? AND split=?"
+        key = (label, split) if cohort is None else (cohort, label, split)
+        return [json.loads(row[0]) for row in self.db.execute(f"SELECT result FROM {table} WHERE {where} AND result IS NOT NULL ORDER BY case_id,rep", key)]
+
+    def cohort_statuses(self, cohort: str) -> dict[tuple[str, str, int], str]:
+        return {(r["label"], r["case_id"], r["rep"]): r["status"] for r in self.db.execute("SELECT * FROM paired_trials WHERE cohort=?", (cohort,))}
 
     def pending(self) -> int:
-        return self.db.execute("SELECT COUNT(*) FROM trials WHERE status='pending'").fetchone()[0]
+        return sum(self.db.execute(f"SELECT COUNT(*) FROM {table} WHERE status='pending'").fetchone()[0] for table in ("trials", "paired_trials"))
 
     def recover(self) -> int:
-        rows = self.db.execute("SELECT * FROM trials WHERE status='pending'").fetchall()
-        for row in rows:
-            result = {"case_id": row["case_id"], "rep": row["rep"], "status": "indeterminate", "metrics": {}, "error": "Interrupted attempt; outcome/cost unknown. Full reservation charged; no automatic retry."}
-            self.complete(row["label"], row["split"], row["case_id"], row["rep"], result, row["reserved"])
+        count = 0
+        for table in ("trials", "paired_trials"):
+            rows = self.db.execute(f"SELECT * FROM {table} WHERE status='pending'").fetchall()
+            for row in rows:
+                result = {"case_id": row["case_id"], "rep": row["rep"], "status": "indeterminate", "metrics": {}, "error": "Interrupted attempt; outcome/cost unknown. Full reservation charged; no automatic retry."}
+                self.complete(row["label"], row["split"], row["case_id"], row["rep"], result, row["reserved"], cohort=row["cohort"] if table == "paired_trials" else None)
+            count += len(rows)
         self.db.execute("UPDATE optimizers SET status='indeterminate',finished=? WHERE status='pending'", (utc_now(),))
         self.db.commit()
-        self.event("recovery", {"trials_marked_indeterminate": len(rows)})
-        return len(rows)
+        self.event("recovery", {"trials_marked_indeterminate": count})
+        return count
 
     def begin_optimizer(self, max_calls: int) -> int:
         with self.transaction():

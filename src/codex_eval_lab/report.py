@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from . import paired
 from .engine import manifest_for
 from .stats import case_means
 from .store import Store
@@ -47,7 +48,7 @@ def render_report(state: Path, output: Path, *, include_private: bool = False) -
             cells = []
             for split in ("train", "validation", "test"):
                 allowed = split != "test" or final is not None
-                rows = store.results(label, split) if allowed else []
+                rows = store.results(label, split) if allowed and not (paired.enabled(manifest) and split != "train") else []
                 expected = len(splits[split]) * cfg["repetitions"]
                 complete = len(rows) == expected and expected > 0 and all(r["status"] == "ok" for r in rows)
                 if complete:
@@ -56,6 +57,8 @@ def render_report(state: Path, output: Path, *, include_private: bool = False) -
                     cells.append(f"<td><strong>{score:.5g}</strong><br><span class='muted'>{len(means)} cases · {cfg['repetitions']} repeats</span></td>")
                 elif split == "test" and final is None:
                     cells.append("<td class='muted'>Sealed</td>")
+                elif paired.enabled(manifest) and split != "train":
+                    cells.append("<td class='muted'>See separate paired cohorts below</td>")
                 else:
                     cells.append(f"<td class='muted'>{len(rows)}/{expected} trials; not complete</td>")
                 show_details = split == "train" or include_private and (split != "test" or final is not None)
@@ -65,10 +68,36 @@ def render_report(state: Path, output: Path, *, include_private: bool = False) -
                         details.append(f"<details data-case><summary>{esc(title)} <span class='pill'>{esc(row['status'])}</span></summary><pre>{pretty(row)}</pre></details>")
             badge = " <span class='pill'>Selected</span>" if label == best else ""
             rows_html.append(f"<tr><td><strong>{esc(label)}</strong>{badge}<br><small>{esc(variant['hypothesis'])}</small></td>{''.join(cells)}</tr>")
+        paired_html = ""
+        if paired.enabled(manifest):
+            cohort_html = []
+            for saved in store.db.execute("SELECT id,spec FROM paired_cohorts ORDER BY created,id"):
+                cohort, spec = saved["id"], json.loads(saved["spec"])
+                split = spec["split"]
+                if split == "test" and final is None:
+                    cohort_html.append("<p>Final paired cohort: sealed or incomplete; no test details exported.</p>")
+                    continue
+                try:
+                    result = paired.comparison(state, store, manifest, cohort)
+                except LabError:
+                    result = {"cohort": cohort, "split": split, "status": "incomplete or invalid; no accepted comparison"}
+                cohort_html.append(f"<details><summary>{esc(cohort)} / {esc(split)}</summary><pre>{pretty(result)}</pre></details>")
+                if include_private:
+                    for role in spec["arms"]:
+                        for row in store.results(role, split, cohort=cohort):
+                            title = f"{cohort} / {role} / {row['case_id']} / repeat {row['rep']}"
+                            details.append(f"<details data-case><summary>{esc(title)}</summary><pre>{pretty(row)}</pre></details>")
+            paired_html = "<section><h2>Paired measurement cohorts</h2><p>Each cohort has fresh reference and candidate calls. Scores from different cohorts are not pooled. AB/BA pairing reduces slow drift but does not eliminate environmental confounding.</p>" + "".join(cohort_html) + "</section>"
         decisions = store.get("search_history", [])
         decision_html = "".join(f"<details><summary>Round {d['round']}: {esc(d['label'])} — {'keep' if d['accepted'] else 'do not promote'}</summary><p>{esc(d['hypothesis'])}</p><pre>{pretty(d)}</pre></details>" for d in decisions)
         if not decision_html:
-            decision_html = "<p class='muted'>No automated candidate decisions yet. Manual comparisons are available through the CLI.</p>"
+            decision_html = "<p class='muted'>No automated selection rounds recorded. Manual selection actions, if any, are listed separately below.</p>"
+        manual_html = []
+        for saved in store.db.execute("SELECT at,data FROM events WHERE kind='manual_selection' ORDER BY id"):
+            decision = json.loads(saved["data"])
+            action = "promoted" if decision["promoted"] else "not promoted"
+            manual_html.append(f"<details><summary>{esc(decision['candidate'])}: {action} / {esc(saved['at'])}</summary><pre>{pretty(decision)}</pre></details>")
+        manual_section = ("<section><h2>Manual selection decisions</h2><p>These records show selection actions, including rejections. A comparison's accepted flag describes measurement eligibility; it is not by itself a promotion. Read-only compare commands do not add history.</p>" + "".join(manual_html) + "</section>") if manual_html else ""
         final_html = f"<pre>{pretty(final)}</pre>" if final else "<p>The final test has not been completed. Development and validation improvements are not an independent final result.</p>"
         csp_hash = base64.b64encode(hashlib.sha256(JS.encode()).digest()).decode()
         title = esc(cfg["name"])
@@ -81,7 +110,9 @@ def render_report(state: Path, output: Path, *, include_private: bool = False) -
 <div class="cards"><div class="card"><strong>{esc(best)}</strong><span>SELECTED CANDIDATE</span></div><div class="card"><strong>{len(manifest['cases']):,}</strong><span>CASES / {cfg['repetitions']} REPEATS</span></div><div class="card"><strong>{budget['trials']:,}</strong><span>RESERVED OR COMPLETED TRIALS</span></div><div class="card"><strong>${budget['eval_charged_usd']:,.4f}</strong><span>EVAL ACCOUNTING / OPTIMIZER SEPARATE</span></div></div>
 <div class="notice"><strong>{'Final test complete' if final else 'Exploratory until final confirmation'}.</strong> Related cases are grouped; repeated samples are not counted as new independent tasks. Local mode is cooperative, not a secret-isolation boundary.</div>
 <section id="scores"><h2>Candidate scorecard</h2><p class="muted">Primary metric: <code>{esc(metric)}</code> · {esc(cfg['objective']['direction'])}. Only complete runs receive scores.</p><div class="scroll"><table><thead><tr><th>Candidate / hypothesis</th><th>Development</th><th>Validation</th><th>Final test</th></tr></thead><tbody>{''.join(rows_html)}</tbody></table></div></section>
+{paired_html}
 <section id="decisions"><h2>Optimization decisions</h2><p class="muted">Candidates must clear the primary improvement threshold and every guardrail against both the incumbent and original baseline.</p>{decision_html}</section>
+{manual_section}
 <section id="final"><h2>Independent final comparison</h2>{final_html}</section>
 <section><h2>Accounting and provenance</h2><pre>{pretty({'budget':budget,'source_hashes':{v['label']:v['source_hash'] for v in variants},'created':manifest['created'],'environment':manifest['environment'],'runtime_version':manifest['tool_version']})}</pre></section>
 <section id="cases"><h2>Case evidence</h2><p class="muted">{'PRIVATE EXPORT: includes validation details and completed final-test details. Do not feed this report to the optimizer.' if include_private else 'Development evidence only. Validation and unfinished test transcripts are not embedded.'} Model outputs are displayed as escaped text, never executed.</p><label for="filter">Filter by case, candidate, output, or explanation</label><input id="filter" type="search" placeholder="Search evidence…">{''.join(details)}</section>

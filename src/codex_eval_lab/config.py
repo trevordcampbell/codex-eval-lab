@@ -10,7 +10,7 @@ from typing import Any
 
 from .util import LabError, canonical, contained, digest, finite, integer, relative_name, safe_name, strict_json, unknown_keys
 
-TOP = {"schema_version", "name", "cases", "repetitions", "seed", "source_paths", "harness_paths", "execution", "metrics", "objective", "guardrails", "budget", "search", "optimizer", "evidence"}
+TOP = {"schema_version", "name", "cases", "repetitions", "seed", "source_paths", "harness_paths", "execution", "metrics", "objective", "guardrails", "budget", "search", "optimizer", "evidence", "measurement"}
 
 
 def strings(value: Any, name: str, *, nonempty: bool = True) -> list[str]:
@@ -159,6 +159,13 @@ def validate_config(cfg: dict[str, Any]) -> dict[str, Any]:
             raise LabError("evidence must be a table")
         unknown_keys(evidence, {"bundle"}, "evidence")
         evidence["bundle"] = relative_name(evidence.get("bundle", ""))
+    if "measurement" in cfg:
+        measurement = cfg["measurement"]
+        if not isinstance(measurement, dict):
+            raise LabError("measurement must be a table")
+        unknown_keys(measurement, {"design"}, "measurement")
+        if measurement.get("design") != "paired_ab_ba":
+            raise LabError('measurement.design must be "paired_ab_ba" when configured')
     return cfg
 
 
@@ -249,6 +256,10 @@ def audit(suite: Path) -> dict[str, Any]:
     cases = load_cases(suite, cfg)
     splits = make_splits(cases, cfg["seed"])
     warnings: list[str] = []
+    if cfg.get("measurement", {}).get("design") == "paired_ab_ba":
+        warnings.append("Paired mode measures fresh references for each candidate and final test. Budget all calls; interruption within a pair invalidates its cohort.")
+    else:
+        warnings.append("Default measurements are variant-blocked and reuse cached validation references. Case/seed pairing is not temporal pairing; use a new approved paired_ab_ba experiment for timing-sensitive selection.")
     if cfg["execution"]["mode"] == "local":
         warnings.append("Local processes are NOT an isolation boundary. Use only trusted code; holdouts remain accessible to the same OS user.")
     if cfg["execution"]["mode"] == "docker" and "@sha256:" not in cfg["execution"]["docker_image"]:

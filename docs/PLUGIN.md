@@ -1,6 +1,6 @@
 # Local plugin and human review UI
 
-Codex Eval Lab 0.2 ships a **local plugin source and reproducible distribution
+Codex Eval Lab 0.3 ships a **local plugin source and reproducible distribution
 builder**, not a hosted service. It combines the four evaluation skills with
 three read-only MCP tools. A bundled MCP Apps review component appears in hosts
 that support that protocol. Codex CLI and hosts without UI support retain skills,
@@ -35,7 +35,7 @@ The output includes:
 - `catalog/plugins/codex-eval-lab/`: a relocatable plugin containing the core, bundled UI, skills,
   public documentation, examples, and helper scripts
 - `catalog/.agents/plugins/marketplace.json`: a disposable, local catalog
-- `codex-eval-lab-plugin-v0.2.0.zip`: deterministic archive of the catalog
+- `codex-eval-lab-plugin-v0.3.0.zip`: deterministic archive of the catalog
 - A SHA-256 checksum and per-file `PLUGIN_MANIFEST.json`
 
 A build requires a fresh output directory and rejects source symlinks. It never

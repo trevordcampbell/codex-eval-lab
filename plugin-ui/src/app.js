@@ -1,6 +1,6 @@
 import { App } from '@modelcontextprotocol/ext-apps';
 import { mountReview } from './review.js';
-const app=new App({name:'Codex Eval Lab Review',version:'0.2.0'},{},{autoResize:true});
+const app=new App({name:'Codex Eval Lab Review',version:'0.3.0'},{},{autoResize:true});
 const view=mountReview(null,{loadPacket:async(packetId)=>{
  const result=await app.callServerTool({name:'open_review',arguments:{packet_id:packetId}});
  if(result.isError)throw Error('The local server rejected the selected packet');

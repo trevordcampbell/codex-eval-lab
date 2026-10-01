@@ -52,7 +52,7 @@ def parser() -> argparse.ArgumentParser:
     s.add_argument("--baseline", default="baseline")
     s.add_argument("--candidate", required=True)
     s.add_argument("--split", choices=("train", "validation", "test"), default="validation")
-    s = sub.add_parser("select")
+    s = sub.add_parser("select", help="Select a candidate; paired mode executes fresh validation reference/candidate cohorts first")
     s.add_argument("state", type=Path)
     s.add_argument("--candidate", required=True)
     s = sub.add_parser("loop", help="Run a bounded automatic proposal/evaluation loop; optimizer billing is separate")

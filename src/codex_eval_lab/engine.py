@@ -15,7 +15,7 @@ import time
 import uuid
 from typing import Any
 
-from . import __version__
+from . import __version__, paired
 from .artifacts import allowed_edit, collect, copy_files, hashes, snapshot
 from .config import audit, load_cases, load_config, make_splits
 from .evidence import evidence_files, validate_evidence, validate_criterion_results
@@ -285,6 +285,8 @@ def run_internal(state: Path, store: Store, manifest: dict[str, Any], label: str
         raise LabError("Unknown split")
     if split == "test" and not allow_test:
         raise LabError("Test cases are sealed. Use finalize after selecting a winner.")
+    if paired.enabled(manifest) and split != "train":
+        raise LabError("Paired measurement mode uses select for fresh validation pairs and finalize for the sealed final test")
     source = check_source(state, store, label)
     cfg = manifest["config"]
     ids = manifest["splits"][split]
@@ -333,6 +335,10 @@ def compare_internal(state: Path, store: Store, manifest: dict[str, Any], baseli
                      split: str = "validation") -> dict[str, Any]:
     check_source(state, store, baseline)
     check_source(state, store, candidate)
+    if paired.enabled(manifest) and split == "validation":
+        return paired.selected_comparison(state, store, manifest, baseline, candidate)
+    if paired.enabled(manifest) and split == "test":
+        return paired.comparison(state, store, manifest, "final")
     comparison = compare_rows(store.results(baseline, split), store.results(candidate, split),
                               cases=manifest["cases"], ids=manifest["splits"][split], cfg=manifest["config"])
     return {"baseline": baseline, "candidate": candidate, "split": split, **comparison}
@@ -353,14 +359,20 @@ def select(state: Path, candidate: str) -> dict[str, Any]:
         manifest = manifest_for(state, store)
         if store.get("final_selection"):
             raise LabError("Final selection is sealed")
-        decision = compare_internal(state, store, manifest, store.get("best"), candidate)
+        incumbent = store.get("best")
+        if paired.enabled(manifest):
+            decision, against_start = paired.evaluate_selection(state, store, manifest, candidate, incumbent)
+        else:
+            decision = compare_internal(state, store, manifest, incumbent, candidate)
+            against_start = compare_internal(state, store, manifest, "baseline", candidate)
+        store.record_manual_selection(candidate, {"candidate": candidate, "incumbent": incumbent,
+                                      "vs_incumbent": decision, "vs_start": against_start},
+                                      promoted=decision["accepted"] and against_start["accepted"])
         if not decision["accepted"]:
-            raise LabError("Candidate does not clear the approved validation and guardrail gates")
+            raise LabError("Candidate does not clear the approved validation and guardrail gates; use compare to inspect the recorded result")
         # Guardrails are also checked against the original baseline to prevent cumulative drift.
-        against_start = compare_internal(state, store, manifest, "baseline", candidate)
         if not against_start["accepted"]:
             raise LabError("Candidate regresses against the original baseline")
-        store.put("best", candidate)
         store.event("selected", {"vs_incumbent": decision, "vs_start": against_start})
         return decision
 
@@ -377,17 +389,25 @@ def finalize(state: Path, *, approved: bool) -> dict[str, Any]:
         if selection is None:
             winner = store.get("best")
             check_source(state, store, winner)
-            selection = {"label": winner, "source_hash": store.variant(winner)["source_hash"], "sealed_at": utc_now()}
+            check_source(state, store, "baseline")
+            selection = {"label": winner, "source_hash": store.variant(winner)["source_hash"],
+                         "baseline_source_hash": store.variant("baseline")["source_hash"], "sealed_at": utc_now(),
+                         "measurement_design": "paired_ab_ba" if paired.enabled(manifest) else "variant_blocked"}
             # Seal BEFORE any holdout calls. Failures cannot be used to choose a different winner.
             store.put("final_selection", selection)
             store.event("final_test_sealed", selection)
         winner = selection["label"]
         if store.variant(winner)["source_hash"] != selection["source_hash"]:
             raise LabError("Final candidate identity changed")
-        run_internal(state, store, manifest, "baseline", "test", allow_test=True)
-        if winner != "baseline":
-            run_internal(state, store, manifest, winner, "test", allow_test=True)
-        result = compare_internal(state, store, manifest, "baseline", winner, "test")
+        if store.variant("baseline")["source_hash"] != selection["baseline_source_hash"]:
+            raise LabError("Final baseline identity changed")
+        if paired.enabled(manifest):
+            result = paired.execute(state, store, manifest, "final", "baseline", winner, "test", allow_test=True)
+        else:
+            run_internal(state, store, manifest, "baseline", "test", allow_test=True)
+            if winner != "baseline":
+                run_internal(state, store, manifest, winner, "test", allow_test=True)
+            result = compare_internal(state, store, manifest, "baseline", winner, "test")
         result["final_selection"] = selection
         result["interpretation"] = "Independent held-out comparison for the preselected winner; not a guarantee about unsampled tasks. Do not tune further on this test set."
         store.put("final_result", result)

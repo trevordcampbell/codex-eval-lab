@@ -190,3 +190,28 @@ Trace packets use calibration partitions `tuning` and `validation`. These are
 separate from experiment splits. They carry immutable trace digests and explicit
 provenance. File import does not verify provenance or human identity. Never pass
 private calibration or application-heldout records into optimizer feedback.
+
+## Temporal measurement mode
+
+For new timing-sensitive experiments, optional `[measurement]` accepts exactly
+`design = "paired_ab_ba"`. This is a frozen execution-design choice, not an adapter
+field or a change to the configured objective. Omitting it preserves legacy
+variant-blocked execution and cached validation references; an audit warns that
+case/seed pairing alone does not protect against time drift.
+
+In paired mode, `run --split train` still creates development feedback.
+`select --candidate LABEL` executes or resumes fresh validation comparison cohorts
+before applying the existing two-reference gates; `loop` does the same for each
+proposal. A standalone validation `run` is refused so cached matrices cannot be
+mistaken for temporally paired measurements. `compare` reads recorded paired
+selection results and never executes adapters. `finalize --approve-final` creates
+a fresh paired final cohort after sealing the winner and baseline source hashes.
+
+SQLite keeps separate `paired_cohorts` and `paired_trials` records. A source label
+identifies frozen code; a cohort and role identify a measurement. Original trial
+rows are not replaced. Schedule JSON, per-role JSONL and comparisons are exported
+under `paired-cohorts/`; the database remains authoritative after interruption.
+Reports display separate cohort comparisons instead of pooling them into a
+single per-source validation score. All legacy and paired attempts count toward
+the same approved trial, cost and wall-time limits. See the operating guide for
+budgeting and recovery behavior.

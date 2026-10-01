@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.3.0 — 2026-10-01
+
+Opt-in temporal pairing for new timing-sensitive experiments. The frozen
+`paired_ab_ba` measurement design persists adjacent, counterbalanced schedules;
+selects with fresh incumbent/original-baseline reference cohorts; and seals both
+source identities before a fresh final-test comparison. Cohort/role trial keys
+retain historical rows, share budget accounting, and reject interrupted half-pairs
+rather than silently retrying or treating delayed measurements as adjacent.
+
+Manual selection attempts now retain both rejection and actual-promotion records.
+Promotion and its audit event commit atomically; reports show these actions and
+separate paired cohorts. `compare` remains read-only. Documentation explains the
+additional trial budgets, selection-time execution, recovery rules and inferential
+limits. The default blocked mode remains available with explicit audit warnings.
+
+This is a new measurement protocol, not a retrospective correction to existing
+results. Existing frozen experiments require their original runtime; do not edit
+their manifests or databases to retrofit this mode. No scientific objective,
+threshold, guardrail or inference method is changed automatically. Local checks
+and current hosted-CI status are distinguished in docs/VALIDATION.md. No paid
+provider call, deployment or public release is implied by this source revision.
+
 ## 0.2.0 — 2026-10-01
 
 Trace-first human review packets, atomic anchored criteria, independently measured

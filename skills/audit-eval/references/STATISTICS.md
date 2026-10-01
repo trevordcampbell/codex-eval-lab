@@ -91,3 +91,47 @@ failure-enriched set does not estimate production positive predictive value. Lab
 provenance, sampling notes, label uncertainty, model-role overlap and rubric drift
 must be reviewed independently of any interval. Same-anchor judge drift reports
 are diagnostic; after using them for judge tuning, collect fresh confirmation data.
+
+## Opt-in temporal pairing for timing-sensitive experiments
+
+Statistical pairing by case, repetition and seed is not temporal pairing. The
+legacy/default path executes whole variant matrices separately and caches each
+variant's validation results. Slow machine load or clock/thermal drift can then
+look like an application change. Use the frozen opt-in measurement design for a
+new timing-sensitive experiment:
+
+```toml
+[measurement]
+design = "paired_ab_ba"
+```
+
+This mode shuffles case × repetition pairs with a deterministic recorded seed,
+then executes each reference/candidate pair adjacently. First position is balanced
+AB/BA within each case (exactly when repetitions are even, within one when odd)
+and overall (within one when the total number of pairs is odd). Which position
+gets the odd extra slot is randomized. The complete schedule, source labels and
+source hashes are persisted before its first call. Application random seeds still
+match within each pair. Statistics still average repetitions within cases and
+resample related-case groups; repeated calls do not create additional independent
+cases. The primary objective, effect threshold and guardrails are unchanged.
+
+Each candidate's selection measures fresh paired cohorts against the incumbent
+and the original baseline. If the two references have the same source hash, one
+cohort serves both checks. Otherwise there are two separate cohorts, including
+separate candidate measurements; their results are not pooled. Legacy cached rows
+cannot substitute for either reference. The selected source and original baseline
+hashes are sealed before a fresh final-test cohort. Even an unchanged final winner
+uses two independent A/A measurement roles rather than comparing a row to itself.
+
+This reduces slow drift; it does not eliminate carryover, nonlinear or rapid drift,
+shared load shocks, or multiple adaptive-selection effects. AB/BA is not ABBA and
+does not cancel every within-pair change. Repeats of the same workload need not be
+independent environmental replicates. Use unchanged controls and prespecified
+warmup, timer, workload, hardware and run-level checks. Self-reported kernel timing
+remains cooperative evidence unless the measurement is independently trusted.
+
+An interrupted half-pair is not completed later and represented as adjacent. Its
+record and charges are retained, pending work can be marked indeterminate with
+`recover`, and the cohort cannot drive selection or final confirmation. Resuming
+at a complete pair boundary is supported without repeating completed calls. An
+invalid final cohort keeps its winner sealed; recovery never reopens selection.

@@ -9,6 +9,7 @@ import tempfile
 import time
 from typing import Any
 
+from . import paired
 from .artifacts import apply_proposal, hashes
 from .engine import check_source, compare_internal, feedback, manifest_for, run_internal
 from .process import invoke, minimal_env, substitute
@@ -195,7 +196,8 @@ def loop(state: Path, *, approved: bool, rounds: int | None = None) -> dict[str,
             raise LabError("Not enough independent validation groups for automatic selection; add groups in a new approved experiment")
         best = store.get("best")
         run_internal(state, store, manifest, best, "train")
-        run_internal(state, store, manifest, best, "validation")
+        if not paired.enabled(manifest):
+            run_internal(state, store, manifest, best, "validation")
         stalled = store.get("stalled_rounds", 0)
         history = store.get("search_history", [])
         processed = 0
@@ -238,9 +240,12 @@ def loop(state: Path, *, approved: bool, rounds: int | None = None) -> dict[str,
             existing = next((entry for entry in history if entry["label"] == label), None)
             if existing is None:
                 run_internal(state, store, manifest, label, "train")
-                run_internal(state, store, manifest, label, "validation")
-                decision = compare_internal(state, store, manifest, active["incumbent"], label)
-                initial = compare_internal(state, store, manifest, "baseline", label)
+                if paired.enabled(manifest):
+                    decision, initial = paired.evaluate_selection(state, store, manifest, label, active["incumbent"])
+                else:
+                    run_internal(state, store, manifest, label, "validation")
+                    decision = compare_internal(state, store, manifest, active["incumbent"], label)
+                    initial = compare_internal(state, store, manifest, "baseline", label)
                 accepted = decision["accepted"] and initial["accepted"]
                 entry = {**active, "accepted": accepted, "vs_incumbent": decision, "vs_start": initial,
                          "stalled_after": 0 if accepted else stalled + 1}

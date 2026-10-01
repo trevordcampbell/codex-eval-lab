@@ -5,6 +5,14 @@ integrations actually exercised during development.
 
 ## Core
 
+The 0.3.0 source revision adds an opt-in measurement protocol and separate paired
+cohort storage. It deliberately refuses older frozen runtime fingerprints; there
+is no in-place experiment migration. The current local check targets Python
+3.14.8 with the same pinned optional SDKs. Earlier-version checks below remain
+historical and do not substitute for testing the 0.3.0 revision. Consult the exact
+revision's GitHub Actions results for hosted CI; these local checks do not establish
+its status.
+
 Requires Python 3.11+ (`tomllib` is used). No third-party runtime dependencies.
 The 0.2 implementation was tested on Linux/Python 3.11.16, 3.14.7, and a
 source-built 3.14.8 with the optional MCP/judge SDKs installed. The dependency-free

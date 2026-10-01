@@ -172,3 +172,78 @@ The final test seals the selected source hash before it runs. The experiment can
 then keep optimizing against that test. Export creates a **new directory**; it never
 overwrites your working tree, merges a PR or deploys an application.
 
+
+## New timing-sensitive experiments: paired AB/BA mode
+
+The opt-in mode below is for a newly approved experiment. Do not edit an existing
+manifest, evaluator, database or runtime fingerprint to retrofit it. Existing
+frozen runs must continue with their original runtime; their historical results
+remain variant-blocked. A changed runtime is intentionally rejected on old state.
+No command migrates a frozen experiment or re-labels old measurements as paired.
+
+1. Copy the suite to a new review directory and add the following to its
+   `eval.toml`, before `start`:
+
+   ```toml
+   [measurement]
+   design = "paired_ab_ba"
+   ```
+
+2. Keep the scientific objective, effect threshold, guardrails and workload design
+   prespecified. Review and approve the changed measurement protocol and its
+   additional budget. Do not reuse an already exposed final test for independent
+   confirmation; use an appropriate fresh holdout when prior test evidence has
+   informed development. Keep the original state and report for the record.
+3. Run `audit`, then `start` into a new state directory with explicit case, grader
+   and execution approvals. Use this runtime for every command on that new state.
+4. Run development measurements as usual, register a candidate, then invoke
+   `select --candidate LABEL`. In this mode selection performs the fresh
+   reference/candidate validation calls. A rejection exits nonzero and retains
+   both the records and the current selection. Use `compare --candidate LABEL`
+   to inspect its recorded comparison to the original baseline; pass
+   `--baseline INCUMBENT` for its incumbent comparison. `loop` uses the same
+   paired protocol automatically. Do not run standalone validation matrices.
+5. Once development is over, request final-test approval and use
+   `finalize --approve-final`. The one winner and both source hashes are sealed
+   before any final-test call. `report` shows cohort-specific comparisons.
+
+### Budget before approving
+
+For V validation cases and R repetitions, one candidate needs 2 × V × R
+application-plus-grader trials while incumbent and original baseline have the same
+source hash. After they differ, each candidate needs 4 × V × R trials: two fresh
+reference/candidate cohorts, including two measurements of the candidate. Add
+ordinary development calls and 2 × T × R final-test trials for T test cases. The
+unchanged final winner also costs 2 × T × R for a genuine A/A control. Both dollar
+reservations and wall-time approval must cover this work; optimizer charges remain
+separate. No budget is increased automatically. Before starting a pair the engine
+checks that the remaining trial and cost budget can cover both calls.
+
+### Interruptions and diagnostics
+
+An interruption at a completed pair boundary may resume with the identical
+persisted schedule; completed rows are not replaced or repeated. If the first arm
+completed but the second did not, that half-pair is invalid. A pending attempt is
+indeterminate; use the existing `recover --confirm-no-running-process` procedure
+only after confirming no process is active. Recovery conservatively charges its
+reservation and does not retry the attempt. Do not manually delete the partial
+pair or generate another cohort to cherry-pick a clean result. Review the failure
+and start a new approved experiment if valid confirmation is still needed. A
+failed final cohort does not unseal the winner.
+
+To inspect unchanged controls before a search, register an unchanged copy under a
+new label in a separately approved diagnostic experiment, then use `select` and
+`compare` as above. The lack of a credible improvement is expected; it is not a
+command failure to hide by rerunning until accepted. A control passing an
+improvement gate is a measurement warning, not evidence that identical code became
+better. Keep diagnostic results separate from a confirmatory experiment.
+
+### Manual decisions in the report
+
+Every completed manual `select` attempt records both gate comparisons and whether
+it actually promoted the candidate. Rejections remain visible in the HTML report;
+a promotion and its audit event commit together. This applies to both measurement
+modes. `compare` remains read-only and does not create a decision or promote an
+eligible candidate. Save its JSON output separately if you need a record of an
+analysis-only comparison. In paired mode the underlying measured cohort comparison
+is already durable independently of promotion.

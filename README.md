@@ -6,7 +6,7 @@ Improving an application takes two kinds of work: deciding how to measure succes
 
 The goal is a reviewable change supported by evidence. The search can edit prompts, skills, tool descriptions, model parameters, or application code within the approved files. That might produce a more reliable agent, a cheaper configuration, or a faster implementation. Your application keeps its existing language, provider, and runner.
 
-**0.2.0 alpha · Python 3.11+ · no third-party core runtime dependencies · [MIT](LICENSE)**
+**0.3.0 · Python 3.11+ · no third-party core runtime dependencies · [MIT](LICENSE)**
 
 ## Start with a measurement you can trust
 
@@ -200,3 +200,15 @@ The automated suite covers the execution engine, human-review/calibration workfl
 ## Inspiration
 
 This independent project was inspired by Lance Martin's [Automating eval design and hillclimbing with Claude](https://claude.dev/blog/automating-eval-design-and-hillclimbing/). It implements its own Codex skills, controller, adapters, and experiment lifecycle; no Anthropic source files are vendored. It is not an official OpenAI or Anthropic product.
+
+### Timing-sensitive measurements
+
+For a newly approved timing experiment, opt in to `[measurement]` with
+`design = "paired_ab_ba"`. Selection and final testing then execute persisted,
+adjacent, counterbalanced reference/candidate pairs, with fresh baseline and
+incumbent measurements for every candidate. This costs more trials and reduces
+slow drift; it does not make noisy hardware or self-reported timings trustworthy
+by itself. The default still uses whole variant matrices and cached validation
+references. Existing frozen runs cannot be retrofitted. See the
+[paired-mode operating instructions](docs/OPERATING_GUIDE.md#new-timing-sensitive-experiments-paired-abba-mode)
+and [statistical limits](docs/STATISTICS.md#opt-in-temporal-pairing-for-timing-sensitive-experiments).
