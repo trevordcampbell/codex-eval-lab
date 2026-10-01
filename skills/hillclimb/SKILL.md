@@ -10,6 +10,21 @@ Read `references/OPERATING_GUIDE.md`, `references/PROTOCOL.md`, and
 baseline. Otherwise route to `$build-eval`. Preserve the existing model provider
 and application stack unless migration is itself an explicitly approved objective.
 
+## Check readiness before optimization
+
+Read `references/EVIDENCE.md`. For a real semantic-grader workflow, require trace-first
+human review and independently validated criteria before accepting the measurement.
+Recompute the configured evidence gate; do not trust a supplied passed flag or the
+composite score. If no evidence gate is configured, disclose that fact and complete
+measurement review before a real optimizer run. Offline synthetic demos are explicitly
+limited fixtures, not permission to skip review for the user's application.
+
+Stop if judge tuning/validation groups overlap, mandatory criteria lack positive and
+negative human examples, labels are uncertain or stale, a semantic component was
+skipped behind code checks, or judge configuration no longer matches calibration.
+Changing the evaluator requires a new approved experiment and baseline. Human review
+and approval are decisions the agent cannot manufacture.
+
 ## Approve the experiment
 
 Identify one primary objective (quality, cost, latency or another measurable outcome),

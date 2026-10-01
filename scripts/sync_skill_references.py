@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 import sys
 ROOT = Path(__file__).resolve().parents[1]
-NAMES = ("OPERATING_GUIDE.md", "PROTOCOL.md", "SECURITY.md", "STATISTICS.md")
+NAMES = ("OPERATING_GUIDE.md", "PROTOCOL.md", "SECURITY.md", "STATISTICS.md", "EVIDENCE.md")
 
 def sync(check=False):
     mismatches=[]

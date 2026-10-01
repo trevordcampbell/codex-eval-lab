@@ -33,3 +33,20 @@ Deliver findings with severity, concrete evidence/location, effect on validity,
 and a recommended fix. Distinguish checks that passed, failed, and could not be tested.
 An executable harness is not automatically a trustworthy eval. Recommend stopping
 optimization when the instrument is unreliable, not quietly changing it mid-climb.
+
+## Inspect measurement evidence, not only agreement
+
+Read `references/EVIDENCE.md`. Check raw per-criterion judge verdicts against
+independent human labels, including missed failures and false alarms. Inspect the
+actual calls and both rationales. A deterministic failure that makes a composite
+score correct does not validate an LLM component. Missing/skipped/abstained judgments
+are not correct answers. Require both human-pass and human-fail support; undefined
+rates must remain undefined. Report failure recall and good-output specificity with
+explicit polarity and denominators, not ambiguous TPR/TNR alone.
+
+Check related-case separation between judge tuning and judge validation, frozen
+rubric/judge/output hashes, anchor provenance, and configured versus served model
+identities. Same-model roles are a bias warning; changing providers is not proof of
+independence. Recheck fixed human anchors and inspect fresh samples after meaningful
+judge, rubric or source-distribution changes. Never silently relabel ground truth
+to improve agreement. A gate marked not_configured is not a successful evidence audit.

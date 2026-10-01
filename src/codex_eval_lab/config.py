@@ -10,7 +10,7 @@ from typing import Any
 
 from .util import LabError, canonical, contained, digest, finite, integer, relative_name, safe_name, strict_json, unknown_keys
 
-TOP = {"schema_version", "name", "cases", "repetitions", "seed", "source_paths", "harness_paths", "execution", "metrics", "objective", "guardrails", "budget", "search", "optimizer"}
+TOP = {"schema_version", "name", "cases", "repetitions", "seed", "source_paths", "harness_paths", "execution", "metrics", "objective", "guardrails", "budget", "search", "optimizer", "evidence"}
 
 
 def strings(value: Any, name: str, *, nonempty: bool = True) -> list[str]:
@@ -153,6 +153,12 @@ def validate_config(cfg: dict[str, Any]) -> dict[str, Any]:
         raise LabError("optimizer.backend must be codex or command")
     if opt["backend"] == "command":
         strings(opt.get("command"), "optimizer.command")
+    if "evidence" in cfg:
+        evidence = cfg["evidence"]
+        if not isinstance(evidence, dict):
+            raise LabError("evidence must be a table")
+        unknown_keys(evidence, {"bundle"}, "evidence")
+        evidence["bundle"] = relative_name(evidence.get("bundle", ""))
     return cfg
 
 
@@ -256,11 +262,20 @@ def audit(suite: Path) -> dict[str, Any]:
         warnings.append("Too few independent validation groups for automatic acceptance; add groups, not merely repeats.")
     for path in cfg["harness_paths"]:
         contained(suite, path)
+    from .evidence import public_evidence_summary, validate_evidence
+    evidence_gate = validate_evidence(suite, cfg)
+    if evidence_gate["status"] == "not_configured":
+        warnings.append("Evidence gate not configured; structural checks do not establish evaluation readiness or grader trust.")
+    elif not evidence_gate["ready"]:
+        warnings.append("Evidence gate is not ready; initialization and optimization are blocked until the recorded evidence passes.")
+    if evidence_gate.get("source_kind") == "synthetic":
+        warnings.append("Synthetic calibration evidence exercises the workflow; it does not establish production performance.")
     full_trials = len(cases) * cfg["repetitions"]
     return {"suite": cfg["name"], "cases": len(cases), "groups": len({c["group"] for c in cases}),
             "splits": {s: len(v) for s, v in splits.items()}, "repetitions": cfg["repetitions"],
             "full_pass_trials": full_trials,
             "full_pass_reserved_eval_usd": full_trials * cfg["budget"]["trial_reserve_usd"],
             "optimizer_cost": "separate; tokens/calls recorded, dollar cost may be unknown",
+            "evidence_gate": public_evidence_summary(evidence_gate),
             "warnings": warnings,
             "human_checks": ["Representative cases and realistic difficulty", "Human-reviewed labels and rubric calibration", "No training contamination or production side effects", "Meaningful minimum effect and sufficient measurement resolution", "Source, dependencies, fixture and model identity reproducible"]}

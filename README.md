@@ -6,7 +6,7 @@ Improving an application takes two kinds of work: deciding how to measure succes
 
 The goal is a reviewable change supported by evidence. The search can edit prompts, skills, tool descriptions, model parameters, or application code within the approved files. That might produce a more reliable agent, a cheaper configuration, or a faster implementation. Your application keeps its existing language, provider, and runner.
 
-**0.1.0 alpha · Python 3.11+ · no third-party core runtime dependencies · [MIT](LICENSE)**
+**0.2.0 alpha · Python 3.11+ · no third-party core runtime dependencies · [MIT](LICENSE)**
 
 ## Start with a measurement you can trust
 
@@ -37,6 +37,30 @@ Decide how much improvement would justify a change, then check the baseline's no
 ![Evaluation design: representative grouped cases pass through the application and an independent grader, with human review before the baseline.](docs/assets/eval-design.svg)
 
 *Figure 1. Build the measurement first: review the cases, calibrate the grader, and establish a baseline before searching for improvements.*
+
+## Inspect failures before automating their score
+
+The review workflow starts before a rubric exists. Open an approved packet of real
+development traces, inspect the actual calls and outputs, and record human
+pass/fail/uncertain judgments with explanations. Only then choose failure modes to
+measure. Each atomic criterion links back to reviewed failure and passing anchors.
+Agent suggestions remain separate from those judgments.
+
+A semantic judge is calibrated on its own criterion, even when a deterministic check
+also fails. The disagreement viewer puts the input, output, tool trace, human reason,
+and judge reason beside each other, with filters for missed failures and false
+alarms. An aggregate score cannot make a skipped or weak judge look correct.
+
+Judge-tuning groups and judge-validation groups remain distinct. Readiness checks
+use prespecified per-class support and conservative group-level lower confidence
+bounds. A perfect score on a tiny sample still has uncertainty. Changing the grader,
+model, rubric, or bound outputs invalidates its old evidence. The engine recomputes
+the configured evidence gate before accepting a new experiment; imported pass flags
+are insufficient.
+
+These are content-bound, cooperative-local records, not cryptographic proof that a
+human reviewed them. [The evidence guide](docs/EVIDENCE.md) explains the complete
+workflow, provenance limits, calibration policy, and drift checks.
 
 ## Build and audit an evaluation
 
@@ -139,10 +163,35 @@ python scripts/demo.py --out ../eval-lab-offline-demo
 
 Choose a new output directory outside the repository, then open its `report.html`. This scripted demonstration needs no API key, Codex installation, network access, or paid calls. For actual Codex proposals, [install and authenticate the Codex CLI](https://developers.openai.com/codex/cli), then run `python scripts/prepare_codex_demo.py --out ../eval-lab-codex-suite` to prepare a new, unapproved suite. Follow the [operating guide](docs/OPERATING_GUIDE.md) for review and execution.
 
+### Use it as a plugin
+
+The optional local plugin packages the same four skills with read-only MCP tools
+and an MCP Apps review UI. Where the host renders Apps UI, you can review tuning
+traces in context and export annotation drafts. A standalone HTML viewer supports
+human labeling and detailed calibration-disagreement review without a native panel.
+The model has no tool for approving labels, running experiments, or opening the
+application's final test.
+
+```sh
+python -m pip install -e ".[plugin]"
+python scripts/build_plugin.py --out ../eval-lab-plugin
+python scripts/validate_plugin.py ../eval-lab-plugin/catalog/plugins/codex-eval-lab
+```
+
+Read the [plugin guide](docs/PLUGIN.md) for local installation and selecting the
+review artifacts the server may access. Codex CLI plugin installation and MCP
+protocol behavior are tested; native in-app rendering is host-dependent and has
+not been verified here. Public-directory submission is separate from a GitHub/local
+plugin package and requires a production-hosted, authenticated MCP integration.
+
 ### Project status and further reading
 
-The current automated suite passes **186 tests**, including simulated Codex and provider integrations and release-packaging checks. Authenticated live Codex runs, live provider judging, and actual Docker execution remain unverified. Read the [validation record](docs/VALIDATION.md) before relying on those integrations.
+The automated suite covers the execution engine, human-review/calibration workflow, adversarial evidence cases, plugin packaging, and MCP contracts. See the [validation record](docs/VALIDATION.md) for current counts and exact environments. Authenticated live Codex runs, live provider judging, and actual Docker execution remain unverified. Read the [validation record](docs/VALIDATION.md) before relying on those integrations.
 
+- [Evidence workflow](docs/EVIDENCE.md): trace review, human anchors, judge validation, and drift
+- [Plugin guide](docs/PLUGIN.md): build, install, read-only tools, and host support
+- [Current toolchain](docs/DEPENDENCIES.md): verified stable versions, locks, and compatibility decisions
+- [Research and design decisions](docs/RESEARCH.md): the critique, primary sources, and implementation choices
 - [Operating guide](docs/OPERATING_GUIDE.md): design, approval, execution, and recovery
 - [Protocol](docs/PROTOCOL.md): adapters, assets, metrics, and configuration
 - [Statistics](docs/STATISTICS.md) and [security](docs/SECURITY.md): interpreting results and choosing isolation

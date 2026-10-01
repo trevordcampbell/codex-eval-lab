@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "eval_lab": {
+      "command": "python3",
+      "args": ["${PLUGIN_ROOT}/scripts/mcp_server.py"],
+      "cwd": "${PLUGIN_ROOT}"
+    }
+  }
+}

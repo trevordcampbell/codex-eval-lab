@@ -1,14 +1,16 @@
 # Compatibility and integration status
 
-Documentation checked September 30, 2026. This file separates documented APIs from
+Documentation and stable toolchain checked October 1, 2026. This file separates documented APIs from
 integrations actually exercised during development.
 
 ## Core
 
 Requires Python 3.11+ (`tomllib` is used). No third-party runtime dependencies.
-Development was exercised on Linux/Python 3.13.5 and rechecked on Python 3.12.14.
-Hosted CI passed on Linux/Python 3.11, 3.12, and 3.13 for publication commit
-`d01b1770bcee381f77b54b417874016c1880aaab`. Check GitHub Actions for later revisions.
+The 0.2 implementation was tested on Linux/Python 3.11.16, 3.14.7, and a
+source-built 3.14.8 with the optional MCP/judge SDKs installed. The dependency-free
+core was also checked separately. CI covers stable Python 3.11–3.14 with latest
+available patch selection. See [validation](VALIDATION.md) for exact counts and
+[the toolchain audit](DEPENDENCIES.md) for source-build and hosted-artifact limits.
 macOS should use the POSIX path but was not executed here. Native Windows kills only
 the immediate timed-out child; use WSL or a properly isolated worker for agents.
 
@@ -38,7 +40,9 @@ Authenticated CLI execution was **not available in the development environment**
 Tests simulate the CLI's process response and verify flags, strict JSON, event capture,
 failed-turn handling and output consumption. This establishes an integration contract,
 not proof of actual CLI authentication, model quality, prompt-budget fit, API billing
-or sandbox operation. Run the [live Codex smoke workflow](OPERATING_GUIDE.md#live-codex-smoke-workflow) on your own machine.
+or sandbox operation. Stable Codex CLI 0.159.3 flag/help parsing was checked in isolated configuration,
+without making a model request. Incomplete/error JSONL streams are rejected even
+when a proposal file exists. Run the [live Codex smoke workflow](OPERATING_GUIDE.md#live-codex-smoke-workflow) on your own machine.
 
 Saved authentication remains local to your Codex installation. The adapter does not
 copy `auth.json`. Treat HOME, CODEX_HOME and any custom agent plugins/settings as part
@@ -55,10 +59,22 @@ provisioned there. Installing skills on one computer does not install them every
 
 ## Optional provider grader
 
-The OpenAI structured grader example has fake-client tests for request shape,
+The optional judge extra targets OpenAI SDK 3.22.1. The structured grader example
+has fake-client and real-SDK offline-transport tests for request shape,
 approval/rate prerequisites, usage calculation, served-model checks and invalid
 verdicts. It requires the operator to install/pin the official SDK and select a
 supported exact model identifier. Live provider compatibility was not tested.
+
+## Plugin transport and UI
+
+The optional plugin uses the current stable Python MCP 2.2 SDK and pinned MCP Apps
+bridge 2.0.3. Tests exercise both modern and legacy client protocol paths, strict
+arguments, read-only tools and the zero-argument thread entrypoint. The plugin
+includes portable and compatibility manifests and a relocatable local catalog.
+Native CLI installation was tested in an isolated profile. UI behavior is tested
+with DOM and real released App/AppBridge protocol harnesses; actual native visual
+rendering, host download behavior and public-directory registration remain
+separately unverified. See [plugin guide](PLUGIN.md).
 
 ## Docker
 

@@ -20,3 +20,6 @@ htmlcov/
 experiments/
 optimizer-runs/
 trial-artifacts/
+
+# Optional review UI build dependencies
+node_modules/

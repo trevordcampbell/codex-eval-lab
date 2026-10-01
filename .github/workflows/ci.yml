@@ -11,22 +11,79 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.11', '3.12', '3.13']
+        # Keep the supported minimum and test every stable minor through 3.14.
+        # 3.15 is still a prerelease as of the 2026-10-01 toolchain audit.
+        python: ['3.11', '3.12', '3.13', '3.14']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: ${{ matrix.python }}
-      - name: Install local package
-        run: python -m pip install -e .
+          check-latest: true
+      - name: Install pinned packaging tools and local core
+        run: |
+          python -m pip install --require-hashes -r requirements/ci.txt
+          python -m pip install -e .
+          python -m pip check
       - name: Test contracts (no credentials or paid calls)
         run: python -m unittest discover -v
       - name: Verify installable skill references
         run: python scripts/sync_skill_references.py --check
       - name: CLI smoke check
         run: eval-lab doctor
+      - name: Build source distribution and wheel
+        if: matrix.python == '3.14'
+        run: python -m build --outdir "$RUNNER_TEMP/eval-lab-dist"
       - name: Offline full-loop demo
-        if: matrix.python == '3.13'
+        if: matrix.python == '3.14'
         run: python scripts/demo.py --out "$RUNNER_TEMP/eval-lab-demo"
+  plugin:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Newest stable toolchain; Node 26 is Current, not prerelease.
+          - python: '3.14'
+            node: '26.10.0'
+          # Preserve Python minimum and newest Node LTS compatibility.
+          - python: '3.11'
+            node: '24.21.0'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+          check-latest: true
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      - name: Install pinned packaging tools and optional adapters
+        run: |
+          python -m pip install --require-hashes -r requirements/ci.txt
+          python -m pip install --require-hashes -r requirements/plugin.txt -r requirements/judge.txt
+          python -m pip install -e '.[plugin,judge]'
+          python -m pip check
+      - name: Test actual MCP protocol and adversarial review contracts
+        run: python -m unittest discover -v
+      - name: Install pinned npm
+        run: npm install --global npm@12.2.0
+      - name: Rebuild pinned UI and test interactions
+        working-directory: plugin-ui
+        run: |
+          npm ci
+          npm run build
+          npm test
+      - name: Verify committed UI bundle matches pinned source
+        run: git diff --exit-code -- src/codex_eval_lab/ui
+      - name: Build self-contained local plugin
+        run: |
+          python scripts/build_plugin.py --out "$RUNNER_TEMP/eval-lab-plugin"
+          python scripts/validate_plugin.py "$RUNNER_TEMP/eval-lab-plugin/catalog/plugins/codex-eval-lab"
+      - name: Exercise offline review and independent calibration
+        run: python examples/review_calibration/demo.py --out "$RUNNER_TEMP/eval-lab-review-demo"

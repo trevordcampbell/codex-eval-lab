@@ -1,34 +1,153 @@
 {
-  "date": "2026-09-30",
-  "python": "3.13.5",
+  "schema_version": 2,
+  "date": "2026-10-01",
+  "version": "0.2.0",
   "platform": "Linux x86_64",
-  "tests": 184,
+  "record_scope": "Final local 0.2.0 working-tree checks; exact final hosted commit checks remain pending",
+  "tests": 358,
   "failures": 0,
-  "coverage": {
-    "covered_lines": 1332,
-    "num_statements": 1458,
-    "percent_covered": 91.35802469135803,
-    "missing_lines": 126
+  "errors": 0,
+  "python_environments": [
+    {
+      "python": "3.11.16",
+      "extras": [
+        "plugin",
+        "judge"
+      ],
+      "tests": 358,
+      "passed": 358,
+      "skipped": 0,
+      "failures": 0,
+      "pip_check": "passed"
+    },
+    {
+      "python": "3.14.8",
+      "extras": [
+        "plugin",
+        "judge"
+      ],
+      "tests": 358,
+      "passed": 358,
+      "skipped": 0,
+      "failures": 0,
+      "pip_check": "passed"
+    },
+    {
+      "python": "3.14.8",
+      "extras": [],
+      "tests": 358,
+      "passed": 354,
+      "skipped": 4,
+      "failures": 0,
+      "pip_check": "passed",
+      "skip_scope": "Two installed OpenAI SDK tests and two installed MCP SDK protocol tests"
+    }
+  ],
+  "earlier_current_release_check": {
+    "python": "3.14.7",
+    "tests": 326,
+    "passed": 326,
+    "skipped": 0,
+    "scope": "Before the final 32 atomic judge tests were added; not a final 358-test pass"
   },
-  "coverage_scope": "src/codex_eval_lab only; optional adapters, scripts and subprocess-executed fixture code are not included in this percentage",
-  "wheel_build": "passed",
-  "wheel_install_in_clean_venv": "passed",
-  "cli_smoke": "passed",
-  "live_codex": "not run; no authenticated CLI available",
-  "live_judge": "not run; no paid calls made",
-  "docker_runtime": "not run; binary unavailable",
-  "hosted_github_ci": "passed Python 3.11, 3.12, 3.13 at d01b1770bcee381f77b54b417874016c1880aaab; see Actions for later commits",
-  "github_publication": "Full structured repository published and 89 initial file paths, Git blob hashes, sizes and modes verified at d01b1770bcee381f77b54b417874016c1880aaab; editorial update adds two documentation figures",
-  "record_scope": "Original Python 3.13.5 validation plus explicitly separated publication-session updates",
-  "publication_session_checks": {
-    "date": "2026-09-30",
-    "python": "3.12.14",
-    "tests": 186,
+  "python_3148_runtime": {
+    "sqlite": "3.53.4; transaction/query passed",
+    "ctypes": "native function call passed",
+    "ssl": "OpenSSL 3.5.7; context creation passed",
+    "missing_optional_extensions": [
+      "_bz2",
+      "_curses",
+      "_curses_panel",
+      "_dbm",
+      "_gdbm",
+      "_lzma",
+      "_tkinter",
+      "_uuid",
+      "readline"
+    ],
+    "scope": "Project validation only; CPython full regression suite not run"
+  },
+  "optional_sdks": {
+    "mcp": "2.2.0; actual client dispatch and stdio protocol passed",
+    "openai": "3.22.1; rubric and atomic adapters passed with offline HTTP MockTransport"
+  },
+  "codex_cli": {
+    "version": "0.159.3",
+    "check": "Isolated version/help/full adapter arguments passed; help short-circuits model execution"
+  },
+  "packaging_tools": {
+    "pip": "26.2.1",
+    "setuptools": "84.0.0",
+    "build": "1.6.1",
+    "wheel": "0.48.0"
+  },
+  "ui": {
+    "node_versions": [
+      "26.10.0",
+      "24.21.0"
+    ],
+    "npm": "12.2.0",
+    "mcp_apps": "2.0.3",
+    "tests_per_environment": 17,
     "failures": 0,
-    "skill_reference_sync": "passed",
-    "cli_doctor": "passed",
-    "offline_demo": "passed; 560 trials; scripted proposals; no paid calls",
-    "coverage": "not remeasured",
-    "note": "Two additional tests cover documentation SVG inclusion and symlink rejection; runtime engine unchanged"
+    "skipped": 0,
+    "clean_locked_installs": "passed",
+    "dependency_tree": "passed",
+    "cross_version_bundle_identity": "passed",
+    "scope": "Released App/AppBridge integration and DOM event/state checks; synthetic fixtures/window transport; native rendering unverified"
+  },
+  "skill_reference_sync": "passed",
+  "cli_smoke": "passed",
+  "source_archive_build": "passed",
+  "sdist_build": "passed",
+  "wheel_build": "passed",
+  "wheel_install_in_clean_venv": "not repeated for 0.2.0",
+  "plugin": {
+    "build": "passed",
+    "repeat_build_identity": "passed",
+    "validator": "structure/checksums/relocated launcher passed",
+    "native_rendering": "unverified"
+  },
+  "coverage": null,
+  "coverage_scope": "Not remeasured for 0.2.0; original 0.1 coverage is only in historical_0_1 below",
+  "live_codex": "not run; no authenticated/model execution",
+  "live_judge": "not run; no paid/provider requests",
+  "docker_runtime": "not run",
+  "macos_windows_runtime": "not run",
+  "hosted_github_ci": "Pending verification for exact final 0.2.0 commit; local results are not hosted CI",
+  "bundled_gh_publisher": "not run live",
+  "historical_0_1": {
+    "date": "2026-09-30",
+    "python": "3.13.5",
+    "platform": "Linux x86_64",
+    "tests": 184,
+    "failures": 0,
+    "coverage": {
+      "covered_lines": 1332,
+      "num_statements": 1458,
+      "percent_covered": 91.35802469135803,
+      "missing_lines": 126
+    },
+    "coverage_scope": "src/codex_eval_lab only; optional adapters, scripts and subprocess-executed fixture code are not included in this percentage",
+    "wheel_build": "passed",
+    "wheel_install_in_clean_venv": "passed",
+    "cli_smoke": "passed",
+    "live_codex": "not run; no authenticated CLI available",
+    "live_judge": "not run; no paid calls made",
+    "docker_runtime": "not run; binary unavailable",
+    "hosted_github_ci": "passed Python 3.11, 3.12, 3.13 at d01b1770bcee381f77b54b417874016c1880aaab; see Actions for later commits",
+    "github_publication": "Full structured repository published and 89 initial file paths, Git blob hashes, sizes and modes verified at d01b1770bcee381f77b54b417874016c1880aaab; editorial update adds two documentation figures",
+    "record_scope": "Original Python 3.13.5 validation plus explicitly separated publication-session updates",
+    "publication_session_checks": {
+      "date": "2026-09-30",
+      "python": "3.12.14",
+      "tests": 186,
+      "failures": 0,
+      "skill_reference_sync": "passed",
+      "cli_doctor": "passed",
+      "offline_demo": "passed; 560 trials; scripted proposals; no paid calls",
+      "coverage": "not remeasured",
+      "note": "Two additional tests cover documentation SVG inclusion and symlink rejection; runtime engine unchanged"
+    }
   }
 }

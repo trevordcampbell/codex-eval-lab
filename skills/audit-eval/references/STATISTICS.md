@@ -60,3 +60,34 @@ For an objective whose metric has a ceiling/floor, compare remaining headroom ag
 the minimum useful effect and baseline variance before launching the loop. The skill
 requires that review; v0.1 does not automatically infer every metric's attainable
 ceiling or an adequate power calculation from a bounds declaration.
+
+## Judge calibration uncertainty (0.2)
+
+Calibration measures each atomic criterion separately from composite business
+metrics. Failure is the positive class. It reports missed failures, false alarms,
+failure recall, failure precision and good-output specificity with explicit
+class-conditional denominators. Undefined quantities remain null. Every missing,
+uncertain, skipped, abstained or errored row is visible and blocks readiness.
+
+Rows are grouped by their declared independent source. Rates first average the
+relevant binary outcomes within a group, then give eligible groups equal weight.
+Raw confusion counts describe rows; they are not independent sample counts.
+This group-average estimand differs from a traffic-weighted production metric.
+
+The prespecified lower-bound policy uses finite-sample Hoeffding bounds on bounded
+independent group means, with a simultaneous correction for three rate checks per
+criterion. This is deliberately conservative and retains uncertainty even for a
+small sample with perfect observed agreement. Intervals rely on the declared
+group independence and fixed sampling/criteria; they do not establish those
+assumptions. A group construction that hides dependence invalidates inference.
+
+Point-estimate policy is available for exploration, but a semantic-judge evidence
+gate requires lower-bound readiness. Confidence and thresholds must be chosen
+before inspecting the validation result. A failed support/bound check should
+prompt more independent data or better measurement, not post-hoc threshold tuning.
+
+Curated failures alter class prevalence. In particular, precision measured on a
+failure-enriched set does not estimate production positive predictive value. Label
+provenance, sampling notes, label uncertainty, model-role overlap and rubric drift
+must be reviewed independently of any interval. Same-anchor judge drift reports
+are diagnostic; after using them for judge tuning, collect fresh confirmation data.

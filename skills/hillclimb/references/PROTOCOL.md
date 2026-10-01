@@ -151,3 +151,42 @@ are rejected. File creation is supported within the allowlist. Deletion, binary
 edits, model-weight fine-tuning, and arbitrary shell patch application are not part
 of the v0.1 proposal format. Adapt a different artifact through a textual manifest
 or use a manually registered candidate. Never edit the frozen evaluator to win.
+
+## Measurement evidence (0.2)
+
+Optional `[evidence]` configuration contains exactly `bundle = "relative-path.json"`.
+It references a recomputable bundle of review packet, human walkthrough, anchored
+rubric, criterion labels, judge configuration, raw outputs and prespecified policy.
+The engine freezes this file with the evaluator. See [EVIDENCE](EVIDENCE.md) for the
+artifact schemas and workflow. Absence is reported as `not_configured`, never ready.
+
+A gated semantic grader must assert both `execution.expected_app_model` and
+`execution.expected_judge_model`. Record the evaluator fingerprint in judge
+configuration before sealing its calibration outputs. Source/config/model changes
+invalidate this binding; a new experiment is required for a changed evaluator.
+
+Raw grader responses can additionally contain:
+
+```json
+{
+  "metrics": {"confirmation_ok": 0},
+  "criterion_results": {
+    "confirmation": {"status": "fail", "explanation": "Required confirmation was absent."}
+  },
+  "usage": {"cost_usd": 0},
+  "model": "actual-served-judge-id"
+}
+```
+
+Statuses are `pass`, `fail`, `abstain`, `skipped`, or `error`. Explanation is required
+and bounded. Each rubric criterion has one unique numeric success metric, pass=1
+and fail=0; that metric must affect a maximized objective or guardrail. Minimized
+cost/latency objectives remain supported separately. With an evidence contract,
+coverage must be exact and values consistent. Nondecisions invalidate a trial;
+the raw component evidence remains available for diagnosis. A composite business
+metric may be an additional metric, but cannot substitute for component evidence.
+
+Trace packets use calibration partitions `tuning` and `validation`. These are
+separate from experiment splits. They carry immutable trace digests and explicit
+provenance. File import does not verify provenance or human identity. Never pass
+private calibration or application-heldout records into optimizer feedback.

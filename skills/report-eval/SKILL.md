@@ -32,3 +32,12 @@ is a real Codex/model benchmark, that a configured CI job ran, or that a score g
 proves broad capability improvements. Note unavailable checks and limitations.
 Render model content as escaped text and never execute embedded HTML/SVG/scripts.
 Do not publish private data or upload reports without explicit authorization.
+
+## Report the validity of the grader separately
+
+Read `references/EVIDENCE.md`. Include whether trace review and evidence gates were
+configured and passed, criterion-level support, missed failures, false alarms,
+abstentions, undefined rates, independent group counts and calibration version.
+Separate component and composite results. Keep historical evidence distinguishable
+from current drift checks; no reapproval is implied by a prior pass. Never include
+private calibration or final-test records in optimizer-facing reports or messages.

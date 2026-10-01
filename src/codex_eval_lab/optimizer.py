@@ -106,12 +106,38 @@ def generate_proposal(state: Path, store: Store, manifest: dict[str, Any], label
             # CLI event shapes can evolve. Preserve all raw events; normalize only
             # the documented turn.completed usage and failure events.
             events = []
+            turn_complete = False
+            turn_pending = False
             for line in run.stdout.splitlines():
                 if line.strip():
                     from .util import strict_json
-                    events.append(strict_json(line))
-            if any(e.get("type") in ("turn.failed", "error") for e in events):
-                raise LabError("Codex emitted a failed turn/error; proposal will not be applied")
+                    event = strict_json(line)
+                    if not isinstance(event, dict) or not isinstance(event.get("type"), str) or not event["type"]:
+                        raise LabError("Codex JSONL events must be objects with a nonempty string type")
+                    event_type = event["type"]
+                    if event_type in ("turn.failed", "error"):
+                        raise LabError("Codex emitted a failed turn/error; proposal will not be applied")
+                    if turn_complete and (event_type == "thread.started" or event_type.startswith("item.")):
+                        raise LabError("Codex emitted new work after turn.completed without starting another turn")
+                    if event_type == "turn.started":
+                        if turn_pending:
+                            raise LabError("Codex started another turn before completing the previous turn")
+                        turn_pending, turn_complete = True, False
+                    elif event_type == "turn.completed":
+                        event_usage = event.get("usage")
+                        if not isinstance(event_usage, dict):
+                            raise LabError("Codex turn.completed must include a usage object")
+                        for key in ("input_tokens", "output_tokens"):
+                            value = event_usage.get(key)
+                            if type(value) is not int or value < 0:
+                                raise LabError(f"Codex turn.completed has invalid {key}")
+                        for key in ("cached_input_tokens", "reasoning_output_tokens"):
+                            if key in event_usage and (type(event_usage[key]) is not int or event_usage[key] < 0):
+                                raise LabError(f"Codex turn.completed has invalid {key}")
+                        turn_pending, turn_complete = False, True
+                    events.append(event)
+            if not turn_complete or turn_pending:
+                raise LabError("Codex event stream ended without a completed turn; proposal will not be applied")
             usage = [e.get("usage", {}) for e in events if e.get("type") == "turn.completed"]
             write_json(out_dir / "execution.json", {"command": command, "elapsed_s": run.elapsed_s,
                        "usage": usage, "cost_usd": None, "user_config_ignored": ignored_config,

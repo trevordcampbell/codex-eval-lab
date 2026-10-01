@@ -11,6 +11,32 @@ explain the missing prerequisite; do not claim these instructions alone install 
 Do not change the application's provider, SDK, language or architecture to fit an
 example. The engine is optional plumbing around the project's real entry point.
 
+## Walk through real traces before choosing evals
+
+Start with the user's approved, redacted development traces and existing failures,
+not a metric menu or generated labels. Build a review packet and let the user inspect
+inputs, actual outputs, tool calls and outcomes in context. Keep judge predictions
+and agent-suggested labels hidden during the first human pass. The human marks
+pass/fail/uncertain, explains what went wrong, and identifies failure modes.
+Do not ask the user to bless an aggregate score or label-count table.
+
+Use representative samples and separately identified stress cases. Preserve source,
+time window, sampling rationale and related-case groups. Never import final-test
+or experiment-validation traces into development review. Calibration validation
+is a distinct partition and must not be used to invent/tune criteria.
+
+Only after this walkthrough, summarize human-observed failure modes and ask which
+are worth measuring. Link each proposed atomic criterion to reviewed tuning anchors.
+Offer a separate deterministic check for exact invariants and an independently
+calibrated judge for semantic judgments. Do not combine several behaviors into one
+criterion that hides the reason for failure. If the user has no suitable data,
+help them collect a small authorized sample; synthetic demonstrations do not become
+human-reviewed production evidence.
+
+Read `references/EVIDENCE.md` for the review and calibration commands. Record actual
+human judgments; do not fill review forms or set confirmation flags on their behalf
+without those judgments. A local reviewer field is an attestation, not authentication.
+
 ## Establish the contract
 
 Inspect the requested codebase and existing evaluation/test infrastructure first.

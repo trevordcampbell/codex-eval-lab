@@ -1,0 +1,18 @@
+{
+  "name": "codex-eval-lab",
+  "version": "0.2.0",
+  "description": "Trace-first evaluation design, human review, calibrated judges, and bounded hillclimbing workflows.",
+  "author": {"name": "Trevor Campbell"},
+  "license": "MIT",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Codex Eval Lab",
+    "shortDescription": "Review traces. Calibrate judges. Improve with evidence.",
+    "longDescription": "Local-first evaluation skills and read-only MCP tools with optional human trace review UI. Does not run evaluations or approve spending through MCP.",
+    "developerName": "Trevor Campbell",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": ["Review a trace packet before designing the rubric.", "Audit my judge's per-criterion calibration.", "Plan a bounded, approved hillclimb."]
+  }
+}

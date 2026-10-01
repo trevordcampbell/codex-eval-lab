@@ -92,3 +92,36 @@ OS quotas. The grader can deliberately execute code: it is part of the trusted
 computing base. The report never executes app-supplied HTML or SVG; use a separate,
 sandboxed artifact viewer for active content. Never open untrusted generated files
 in a privileged browser context.
+
+## Review provenance and plugin boundary (0.2)
+
+Human-review artifacts are cooperative attestations with content digests, not
+signatures. An actor with write access to the same files can fabricate identities
+and new hashes. The local tools detect stale data and enforce workflow consistency;
+they do not authenticate a human, prove chronology, or certify true labels. The
+agent must not invent annotations, reviewer confirmations, or approvals.
+
+The optional MCP server is read-only and has no evaluation-execution, shell,
+approval, final-test-reveal, or arbitrary-path tool. The operator selects artifact
+paths or a narrow review root at startup; tools use registered opaque IDs. It
+snapshots only explicitly registered review artifacts, bounds file sizes, and
+rejects symlinks/traversal. This remains a same-OS-account trust boundary.
+
+Native annotation UI receives tuning-only packet data in tool metadata where
+supported; ordinary model results contain IDs/counts and safe aggregates. Metadata
+is not secret storage or authentication. The standalone rubric-labeling and
+calibration-disagreement views are explicit human-only exports: they can contain
+calibration-validation content and must never be provided to the optimizer.
+
+Review text is untrusted. The UI renders it as inert text, uses bundled scripts
+and styles with content-security hashes, and makes no external network requests in
+standalone mode. Draft exports require an operator action and are not approval
+receipts. Native rendering and browser download support vary by host; use the
+offline renderer when a client lacks the MCP Apps bridge.
+
+A public hosted service requires a separate deployment, authenticated per-user
+scoping, authorization on every read, retention/deletion rules, OAuth/security
+review, and approved HTTPS endpoints. No such service, credential, webhook, or
+persistent installation is created by building this local plugin. App-only tool
+visibility must never be substituted for authorization if future write tools are
+added.

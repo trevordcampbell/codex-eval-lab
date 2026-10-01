@@ -1,21 +1,30 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools==84.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "codex-eval-lab"
-version = "0.1.0"
+version = "0.2.0"
 description = "Provider-neutral, evidence-driven evaluation and hillclimbing workflows for Codex"
 readme = "README.md"
 requires-python = ">=3.11"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{name = "Trevor Campbell"}]
 keywords = ["codex", "evals", "agents", "hillclimbing", "evaluation"]
-classifiers = ["Development Status :: 3 - Alpha", "Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License"]
+classifiers = ["Development Status :: 3 - Alpha", "Programming Language :: Python :: 3"]
 dependencies = []
+
+[project.optional-dependencies]
+plugin = ["mcp>=2.2.0,<3"]
+judge = ["openai>=3.22.1,<4"]
 
 [project.scripts]
 eval-lab = "codex_eval_lab.cli:main"
+eval-lab-plugin = "codex_eval_lab.plugin_server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+codex_eval_lab = ["ui/*.html", "ui/*.js", "ui/*.css", "ui/*.txt"]

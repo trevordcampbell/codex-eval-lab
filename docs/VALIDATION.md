@@ -1,93 +1,150 @@
-# Validation — Codex Eval Lab 0.1.0
+# Validation — Codex Eval Lab 0.2.0
 
-Updated September 30, 2026. This record distinguishes current local checks,
-verified GitHub checks, and earlier recorded experiments.
+Updated October 1, 2026. This record distinguishes final local checks for the
+0.2.0 working tree, hosted CI, and historical 0.1 measurements. Local checks do
+not establish live model performance or production security.
 
 ## Current local checks
 
-On Linux / Python 3.12.14, the editorial update passed **186 tests, zero failures**.
-Two tests were added to the original 184-test suite to verify documentation SVG
-packaging and symlink rejection. Runtime engine code is unchanged.
+On Linux x86_64, with the frozen atomic judge example included:
 
-Skill-reference synchronization passed after copying the updated operating guide
-into all four self-contained skills. All source hashes in RELEASE_MANIFEST.json
-were regenerated. Both new SVG figures were rendered and visually inspected;
-they contain no scripts, external references, or embedded HTML.
+| Environment | Result |
+| --- | --- |
+| Python 3.11.16, MCP 2.2.0 and OpenAI 3.22.1 | **358 tests passed, zero skips** |
+| Python 3.14.8, MCP 2.2.0 and OpenAI 3.22.1 | **358 tests passed, zero skips** |
+| Python 3.14.8, dependency-free core | **358 discovered: 354 passed, 4 expected SDK skips** |
 
-Reproduce after installing the package:
+Every environment passed `pip check`. The core-only skips are two installed
+OpenAI SDK contracts and two installed MCP SDK protocol checks; all four passed
+with the optional extras. Before the final 32 atomic-judge tests were added,
+Python 3.14.7 also passed all then-current 326 tests, without skips. That earlier
+result is not a 358-test pass.
+
+The core continues to require no third-party runtime dependencies. Both optional
+extras and packaging tools were installed from the committed hash locks. Packaging
+used pip 26.2.1, setuptools 84.0.0, build 1.6.1 and wheel 0.48.0. See the
+[dependency record](DEPENDENCIES.md) for versions, sources and compatibility limits.
+
+The final checks cover:
+
+- Existing configuration, grouped splits, paired statistics, guardrails, frozen
+  evaluator/source changes, edit scope, time/output limits, budget reservations,
+  recovery, final-test sealing, report escaping and release/install safeguards
+- Content-bound review packets, human annotations and criterion anchors,
+  independent judge-tuning/validation groups, per-criterion calibration support
+  and uncertainty, disagreement reporting, drift and executable evidence gates
+- Adversarial stale/tampered records, incomplete or skipped criteria, malformed
+  provider evidence, model/usage mismatches and approval-boundary handling
+- Both rubric and atomic OpenAI judge adapters using the installed 3.22.1 SDK
+  with an offline HTTP transport, explicit retry policy and served-usage costs
+- MCP 2.2.0 real client dispatch and stdio protocol, read-only tool scope,
+  resource metadata and relocated plugin launcher behavior
+- Codex CLI 0.159.3 in an isolated temporary home: version, help flags and the
+  complete adapter argument shape, with `--help` short-circuiting execution
+
+No authenticated Codex run, provider request or paid call occurred. The real SDK
+checks verify local request/response contracts with synthetic fixtures, not live
+service behavior or the accuracy of a model judge.
+
+### Python 3.14.8 build scope
+
+The current Python.org stable source release was built locally because available
+prebuilt 3.14 toolchains lagged at 3.14.7. SQLite 3.53.4 transactions, ctypes native
+calls and OpenSSL 3.5.7 context creation were verified after installation. The
+source-built interpreter lacks nine optional extensions because host development
+headers were unavailable: `_bz2`, `_curses`, `_curses_panel`, `_dbm`, `_gdbm`,
+`_lzma`, `_tkinter`, `_uuid` and `readline`. Project tests passed; this is not a
+claim of a complete general-purpose Python build or a CPython regression-suite run.
+
+### Browser UI and packaging
+
+The pinned UI was rebuilt and tested on **Node 26.10.0 Current and Node 24.21.0
+LTS**, each with npm 12.2.0: **17 tests passed on each, zero skips**. Both clean
+locked installs and dependency-tree checks passed. The generated assets were
+byte-for-byte identical across those two builds. The tests use the released
+MCP Apps 2.0.3 App/AppBridge classes and cover connection, packet selection,
+annotation persistence, validated draft import/export, cancellation, asynchronous
+race handling, filters and disagreement navigation.
+
+These are executable DOM/protocol tests with synthetic window transport. They do
+not verify native host rendering, pixel layout, browser-enforced CSP or real
+browser download dialogs. Native in-app rendering remains unverified.
+
+Skill-reference synchronization and CLI `doctor` passed. Source release ZIP,
+sdist, wheel and self-contained local plugin builds passed. Repeated plugin
+builds were byte-for-byte identical; plugin validation checked structure,
+checksums and the relocated no-scope launcher. The root release manifest is
+regenerated from the release allowlist and excludes itself from its file hashes.
+The 0.2.0 wheel was built, but a clean-environment wheel installation has not been
+repeated for this revision.
+
+Reproduce the Python checks after installing the desired dependency set:
 
 ```sh
+python -m pip install --require-hashes -r requirements/ci.txt
+python -m pip install --require-hashes -r requirements/plugin.txt -r requirements/judge.txt
+python -m pip install -e '.[plugin,judge]'
+python -m pip check
 python -m unittest discover -v
 python scripts/sync_skill_references.py --check
 ```
 
-The tests cover configuration validation, grouping/leakage, metric and cost checks,
-paired statistics, guardrails, frozen evaluator/source changes, malformed proposals,
-protected files, time/output limits, recovery, final-test sealing, report escaping,
-private-data filtering, packaging and non-overwriting installation behavior.
-Simulated Codex and provider responses test integration contracts, not live services.
+To include the no-model CLI check, set `EVAL_LAB_CODEX_BINARY` to an isolated
+Codex 0.159.3 executable. Without it, that optional check is skipped. For core-only
+validation, omit both optional dependency locks and install `-e .` instead.
 
-## GitHub publication and hosted CI
+## Hosted CI and publication
 
-The complete structured repository is public at
-https://github.com/trevordcampbell/codex-eval-lab .
+The repository is public at
+[trevordcampbell/codex-eval-lab](https://github.com/trevordcampbell/codex-eval-lab).
+Hosted CI for the final **0.2.0 commit is pending verification** in this local
+record. Consult the exact commit's
+[GitHub Actions results](https://github.com/trevordcampbell/codex-eval-lab/actions);
+a local pass is not a hosted-CI result. The workflow tests Python 3.11–3.14, plus
+optional extras and UI builds on the newest stable and LTS Node lines.
 
-Initial publication commit `d01b1770bcee381f77b54b417874016c1880aaab` was independently
-verified: all 89 initial files matched the reviewed source by path, Git blob hash,
-byte size, and mode. The editorial update adds two original documentation figures.
+The historical initial publication commit
+`d01b1770bcee381f77b54b417874016c1880aaab` was verified by path, Git blob hash,
+size and mode for all 89 initial files. Its
+[CI run](https://github.com/trevordcampbell/codex-eval-lab/actions/runs/36675694829)
+passed the original 184 tests on Python 3.11–3.13 and the offline demo on Python
+3.13. Those results do not certify 0.2.0. The bundled `gh` publisher has not been
+executed live; publication used a separate authenticated workflow.
 
-[The initial publication CI run](https://github.com/trevordcampbell/codex-eval-lab/actions/runs/36675694829)
-passed on Python 3.11, 3.12, and 3.13: installation, the original 184-test suite,
-skill synchronization and CLI smoke checks. The full offline demo passed on
-Python 3.13; it was intentionally skipped on the other versions.
+## Historical 0.1 measurements retained for provenance
 
-For later revisions, including the 186-test editorial update, use that revision's
-[GitHub Actions results](https://github.com/trevordcampbell/codex-eval-lab/actions)
-as the authoritative hosted-CI status. A local pass is not a hosted-CI result.
-The bundled private-repository `gh` publishing script itself remains untested live;
-this public repository was published through a separate authenticated workflow.
+The original Linux/Python 3.13.5 run measured **91.4% core statement coverage**
+(1,332 / 1,458 statements) with 184 tests. The later editorial check on Python
+3.12.14 passed 186 tests. **Coverage has not been remeasured for 0.2.0**; the old
+percentage excludes scripts, optional adapters and the newly added runtime code.
+These records remain separately labeled in [summary.json](validation/summary.json).
 
-## Reproduced offline experiment
+The recorded offline routing study used 560 application-plus-grader trials and
+three hand-authored proposals at $0 evaluation cost. It retained normalization,
+rejected two harmful proposals and recorded final synthetic accuracy of
+0.70 → 1.00 on 20 cases. See the [record](validation/routing-demo.json) and
+[sample report](sample-report.html). This is historical fixture evidence, not
+live Codex performance or secret-holdout security.
 
-The routing demo was rerun successfully during publication: **560 trials**, three
-scripted proposals, no pending reservations, and **$0 evaluation cost**. It retained
-case normalization and rejected two deliberately harmful proposals. Its recorded
-final accuracy on 20 synthetic cases was **0.70 → 1.00**.
+The historical 120-trial software benchmark used a hand-authored ordered
+hash-deduplication change, recording case-averaged median kernel timing of about
+1.097489 ms → 0.023789 ms with measured correctness passing. This is cooperative
+self-reported kernel timing, not a Codex-discovered speedup or end-to-end latency
+result. See the [benchmark record](validation/benchmark-demo.json).
 
-These are synthetic inputs and hand-authored proposals. They verify experiment
-mechanics, not Codex intelligence, real customer performance, or secret-holdout
-security. See [recorded results](validation/routing-demo.json) and the
-[sample report](sample-report.html).
-
-```sh
-python scripts/demo.py --out ../new-offline-demo
-```
-
-## Earlier measurements retained for provenance
-
-The original Linux / Python 3.13.5 report measured **91.4% core statement coverage**
-(1,332 / 1,458 statements) with the then-current 184-test suite. Coverage was not
-remeasured for this update; the number excludes scripts and optional adapters.
-
-The original separate **120-trial** software benchmark used a hand-authored ordered
-hash-deduplication change. Its recorded final case-averaged median kernel timing
-was approximately **1.097489 ms → 0.023789 ms**, with measured correctness passing.
-It is cooperative self-reported kernel timing, not a Codex-discovered speedup or
-end-to-end latency result. See [record](validation/benchmark-demo.json).
-
-The original wheel build, clean-environment wheel installation and CLI check passed.
-The original HTML report was rendered at desktop and mobile widths in Chromium;
-search/disclosure behavior passed without horizontal overflow or JavaScript errors.
-These earlier records are preserved in `docs/validation/` with their measurement
-scope; they do not certify every later environment or integration.
+The original 0.1 wheel installation in a clean environment and desktop/mobile
+Chromium report checks passed. They do not certify the new plugin or every later
+revision. Older raw reports under `docs/validation/` retain their historical scope.
 
 ## Still unverified
 
+- Hosted CI for the exact final 0.2.0 commit
 - Authenticated live Codex optimization and live provider-judge requests
-- Actual Docker container execution and its platform-specific behavior
-- macOS and Windows execution
+- Native Codex/MCP Apps host rendering and production-hosted authenticated service
+- Actual Docker container execution; macOS and Windows execution
+- Clean-environment 0.2.0 wheel installation and current statement coverage
 - Live execution of the bundled `gh` publisher
 
-No model-quality parity, superiority, universal improvement, or production-security
-certification is established by these checks. Read [security](SECURITY.md) before
-running untrusted code, using sensitive data, or making paid calls.
+No model-quality parity, superiority, universal improvement or production-security
+certification is established. Read [security](SECURITY.md) before running
+untrusted code, using sensitive data or making paid calls.

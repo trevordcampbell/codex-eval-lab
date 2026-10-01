@@ -10,6 +10,7 @@ import shutil
 import sys
 
 from . import __version__
+from . import review_cli
 from .config import audit
 from .engine import compare, export_best, feedback, finalize, initialize, manifest_for, register, run, select
 from .optimizer import export_workspace, import_proposal, loop
@@ -81,10 +82,13 @@ def parser() -> argparse.ArgumentParser:
     s = sub.add_parser("export-best", help="Copy selected source to a NEW directory; never overwrite the working tree")
     s.add_argument("state", type=Path)
     s.add_argument("--out", type=Path, required=True)
+    review_cli.add_parsers(sub)
     return p
 
 
 def dispatch(a: argparse.Namespace):
+    if a.command in review_cli.COMMANDS:
+        return review_cli.dispatch(a)
     if a.command == "doctor":
         return {"version": __version__, "python": platform.python_version(), "platform": platform.platform(),
                 "codex_cli": shutil.which("codex"), "docker": shutil.which("docker"), "git": shutil.which("git"),
