@@ -1,0 +1,16 @@
+Toy routing contract, version 1
+
+This specification defines the synthetic demonstration task; it is not an
+established production policy. Codex authored these controls and reference code.
+No labels or outcomes in this example are attested as human/expert reviewed.
+
+Input is an object with a string field "text". Match case-insensitive literal
+substrings after Unicode casefold. Priority is invoice -> billing, then
+crash -> technical, then tracking -> shipping. With no matches, return other.
+The result is one JSON string, never an object or a success claim in a trace.
+
+The anchors include empty input, uppercase, multiple matches, and an embedded
+substring. Expected outputs follow directly from the rule and precedence here.
+The separate reference implementation and known-wrong mutations test execution
+of this finite contract. They do not establish that the contract is useful for
+real support traffic, implementation independence, or universal correctness.

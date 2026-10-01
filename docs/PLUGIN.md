@@ -1,4 +1,4 @@
-# Local plugin and human review UI
+# Local plugin and optional evidence UI
 
 Codex Eval Lab 0.3 ships a **local plugin source and reproducible distribution
 builder**, not a hosted service. It combines the four evaluation skills with
@@ -225,3 +225,18 @@ deployment or registration is performed here.
 - [MCP Apps authorization boundaries](https://apps.extensions.modelcontextprotocol.io/api/documents/authorization.html)
 - [Official Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 - [Official v2 migration guide](https://py.sdk.modelcontextprotocol.io/migration/)
+
+## Automation-first native use
+
+The same four bundled skills now default to Codex doing objective contract/case/oracle
+work and driving authorized `automation-plan`/`automate` commands in its native
+execution environment. The hosted/local evidence MCP is still read-only, and UI
+rendering is optional. Existing semantic review/calibration tools remain available;
+a machine-authored control must never be imported as a human label. See
+[AUTOMATION.md](AUTOMATION.md) for JSON-only oracle limits, accounting and exact
+provenance/readiness semantics. This change does not grant execution tools to the
+hosted plugin or turn an evidence viewer into an approval system.
+
+The Sites-hosted read-only companion can guide and inspect runs from clients without
+a coding runtime. Installing it does not give ChatGPT/mobile a Rust runner; native
+Codex needs an authorized coding environment to execute the workflow.

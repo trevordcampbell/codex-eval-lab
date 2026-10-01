@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "proposal_data_access": "Engine-exported application source and complete development trials only",
+  "additional_selection_feedback": [
+    {
+      "after": "round-1-clean",
+      "shared": "It was now accepted by validation gates; no validation rows provided."
+    },
+    {
+      "after": "round-3",
+      "shared": "Selection feedback: round3 was NOT promoted. It passed correctness and had a favorable speed point estimate, but its uncertainty lower bound narrowly missed the prespecified1.05\u00d7 minimum. We will not rerun/tweak thresholds to flip that result. Incumbent remains round2."
+    }
+  ],
+  "not_shared": [
+    "validation case inputs/outputs/labels",
+    "numeric validation aggregate measurements or confidence bounds",
+    "any final-test case data or results before the selection was sealed"
+  ],
+  "interpretation": "Qualitative gate feedback is validation-derived information beyond a binary keep/reject. Development data exports remain train-only, but do not describe the entire proposal context as containing zero validation information. All validation comparisons are adaptive/exploratory; final confirmation remains separate."
+}

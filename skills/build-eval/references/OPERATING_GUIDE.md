@@ -247,3 +247,41 @@ modes. `compare` remains read-only and does not create a decision or promote an
 eligible candidate. Save its JSON output separately if you need a record of an
 analysis-only comparison. In paired mode the underlying measured cohort comparison
 is already durable independently of promotion.
+
+
+### Bounded HTML case previews
+
+Normal `report` output bounds inline case evidence: at most 4,096 serialized
+Unicode characters per top-level field value/key, 16,384 per row, 512 per title,
+200 rows, and 1,048,576 UTF-8 bytes for all escaped trace HTML including row
+markup. Truncation markers count toward character caps. Long nested values are
+text fragments and may not be parseable JSON. Limits apply across legacy and
+paired-cohort rows together, after the usual privacy gates. The report discloses
+shown, truncated and omitted row counts. Rows are the first eligible records in
+report order, not a representative sample; search covers displayed text only.
+
+This changes presentation only: all numerical analyses, comparisons and sample
+counts use complete records. The cap is for the inline trace portion, not score,
+decision or provenance sections. It does not bound the memory needed to load raw
+state or calculate statistics. Full records remain in the experiment's
+`state.sqlite3` (`trials` or `paired_trials`); each record's `artifact_dir` points
+to retained raw process streams/artifacts relative to the state directory.
+The HTML identifies the database location and lookup keys, without loading or
+linking external content. Keep state private: it may also hold sealed test data.
+
+For an intentionally unbounded inline export, use `eval-lab report STATE --out
+REPORT.html --full-traces`. It can be very large and contain sensitive content.
+This option does not authorize held-out detail export: `--include-private` is
+still separate, and neither flag reveals unfinished final-test details. Keep all
+private reports away from the optimizer. Preview limits are not redaction.
+
+## Native automation-first workflow
+
+See [AUTOMATION.md](AUTOMATION.md) for the default end-to-end objective workflow:
+Codex authors and audits the suite, `automation-plan` creates a byte-bound read-only
+plan, `automate` executes within existing authorization through a sealed final test,
+and `resume-automation` continues eligible durable work. The plan protects final
+trial/dollar capacity; preflight calls count toward the same evaluation budget.
+Do not retrofit frozen historical experiments. A new evaluator/runtime requires a
+new experiment and baseline. Exact controls need no human-label attestation;
+semantic criteria retain their existing expert calibration requirements.

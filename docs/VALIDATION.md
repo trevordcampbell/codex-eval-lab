@@ -1,92 +1,101 @@
-# Validation — Codex Eval Lab 0.3.0
+# Validation — Codex Eval Lab 0.4.0 core
 
-Recorded October 1, 2026. This is a dated record of local checks on the 0.3.0
-source revision. It does not establish publication, tagging or hosted-CI status.
-Consult the exact revision's [GitHub Actions results](https://github.com/trevordcampbell/codex-eval-lab/actions)
-for hosted CI; local checks are not hosted-CI results.
+Recorded October 1, 2026. These are local source checks, not publication, tagging,
+hosted CI or a claim about a redesigned UI. The prior [0.3 record](VALIDATION-0.3.0.md)
+and [0.2 record](VALIDATION-0.2.0.md) remain available.
 
-## Current local scope
+## Regression and independent review
 
-The final 0.3.0 source revision passed **379 tests, zero skips** on
-Linux x86_64 using Python 3.14.8, MCP 2.2.0 and OpenAI SDK 3.22.1. This includes
-**21 new regression tests** for the temporal protocol and manual decision audit
-trail. The complete suite was rerun after the version metadata and MCP server
-version binding were updated.
+The final core passed **445 tests** on Linux x86_64 with Python 3.14.8, MCP 2.2.0
+and OpenAI SDK 3.22.1. The actual installed Codex CLI 0.159.3 was checked with
+isolated configuration and `--help`; no model turn or provider request occurred.
+The complete suite also passed independently from a separate source copy. An
+initial system-Python run hit its preexisting old-MCP API mismatch; the pinned
+supported environment passed, rather than weakening the plugin tests.
 
-The tests cover deterministic adjacent AB/BA schedules, per-case/overall order
-balance, complete matching case/repetition/seed matrices, fresh incumbent and
-original-baseline cohorts, source-hash reference deduplication, independent A/A
-roles, budget limits, conservative indeterminate recovery, no partial-pair retry,
-source/schedule identity, final seals, development-only optimizer evidence,
-cohort-specific reports and atomic manual promotion/rejection records.
+New coverage includes byte-bound plans and real CLI dispatch, positive/negative
+oracle controls, all-case reference/grader consistency, truthful provenance, strict
+metric parity, stale/forged/partial receipts, duplicate/private-group leakage,
+private error redaction, direct local executable launchers, recorded toolchain
+identity, preflight accounting, known-cost failures, no replay after missing
+receipts, indeterminate optimizer blockers, final capacity and final sealing.
 
-A synthetic unchanged-code monotone-drift regression demonstrates an artifact:
-blocked measurements can clear the improvement gate while balanced adjacent
-pairs do not. This is a constructed protocol counterexample, not empirical
-performance evidence about Rust or any production application. Pairing reduces
-slow drift but does not eliminate environmental confounding or adaptive selection.
+The independent audit reproduced and verified fixes for accounting and privacy
+edge cases. It additionally checked failed final comparisons in both measurement
+modes, unchanged budgets on resume, the existing synthetic expert-calibration path,
+core import without site packages, and exclusion of private receipts from default
+reports/development exports. No unresolved blocker remained in that reviewed scope.
 
-## Offline integration demonstrations
+The runner now shares one grader-protocol validator between preflight and real
+trials. Parity tests cover missing/extra metrics, runner-owned metrics, booleans,
+nonfinite/out-of-range numbers, raw criterion statuses and retained trace values.
+Known reported costs are retained even when another response field is invalid or
+a subprocess exits unsuccessfully after emitting its cost.
 
-The final 0.3.0 revision reran both completely offline routing workflows:
+## Executed automation demonstration
 
-| Design | Trials | Cohorts | Decisions | Evaluation cost |
-| --- | ---: | ---: | --- | ---: |
-| Default variant-blocked | 560 | Not applicable | Keep first proposal, reject next two, final passes | $0 |
-| Opt-in paired AB/BA | 800 | 6 | Keep first proposal, reject next two, final passes | $0 |
+`python scripts/automation_demo.py --out <new-external-directory>` ran from a
+separate frozen copy of the final 0.4.0 runtime:
 
-These use synthetic cases and hand-authored proposals. They do not establish live
-Codex performance, model quality, production latency or independent holdout
-security. See the new [paired routing record](validation/paired-routing-demo.json)
-and [default routing record](validation/default-routing-demo-0.3.json).
+- 80 synthetic cases, grouped partitions, two repetitions per application trial
+- 16 reference/positive/negative anchor calls plus 160 private case-consistency calls
+- 560 application-plus-grader trials across baseline, three candidate proposals
+  and the final comparison; **736 total reserved/completed ledger attempts**
+- The first scripted proposal was selected; both deliberately harmful proposals
+  were rejected; the selected source passed the sealed final comparison
+- Final routing accuracy 70% → 100%; measured evaluation charges $0
+- Three scripted optimizer calls; optimizer dollars remain null/unknown in the
+  generic accounting schema, not a claimed measurement of model spending
+- A report, bound plan, raw controller-private receipt, exact snapshots, decisions
+  and machine-readable automation result were generated
 
-The SDK checks use offline transports; the Codex CLI 0.159.3 check uses isolated
-configuration and `--help` to stop before model execution. No authenticated model,
-provider request or paid service call occurred during this revision's validation.
+This is executed integration evidence for the machinery, not live model-discovered
+improvement. See the [record](validation/automation-demo-0.4.0.json).
 
-## Packaging and UI
+## Reports, packaging and skills
 
-The source version is 0.3.0 across Python, skill installer, MCP server, plugin
-manifests and review UI metadata. The dependency locks remain unchanged apart from
-the UI package's own version. The review UI was rebuilt with Node 26.10.0; all 17 DOM/protocol tests passed,
-with zero skips. Source archive, sdist, wheel and self-contained plugin builds
-passed, including plugin structure/checksums and relocated launcher validation.
-The wheel installed into a fresh isolated target directory and its CLI doctor
-reported version 0.3.0. This is an install-target smoke check, not a repeated
-clean-virtualenv cross-platform certification. The release manifest is regenerated
-from the reviewed allowlist after final documentation updates. Native host
-rendering, real browser download dialogs, actual Docker
-execution and macOS/Windows execution remain unverified.
+The existing UI behavior was preserved; all **17 DOM/protocol tests** passed. No
+visual redesign was integrated, and screenshot/host-rendering checks are not claimed.
+The two workflow SVGs were updated to avoid mandatory human-control wording and
+parsed as well-formed XML; visual raster inspection was unavailable.
 
-## Reproduction
+Default HTML reports now use bounded trace previews, preserving raw SQLite/JSONL
+records and an explicit full-trace export option. New provenance sections distinguish
+executed controls from expert calibration and disclose model authorship, finite
+claim scope and trust assumptions without embedding private control rows.
 
-Use the committed dependency locks and existing commands:
+SQLite still commits every trial. Blocked-mode JSONL is derived once per invocation,
+including ordinary interruption/failure; resume reconstructs it without replaying
+completed trials. Tests verify both the single materialization and recovery path.
+This removes a code-level quadratic rewrite pattern; no measured end-to-end speedup
+is attributed to it.
 
-```sh
-python -m unittest discover -v
-python scripts/sync_skill_references.py --check
-python -m codex_eval_lab doctor
-python scripts/package_release.py --out /a/new/source-archive-directory
-python -m build --no-isolation --outdir /a/new/package-directory
-python scripts/build_plugin.py --out /a/new/plugin-directory
-python scripts/validate_plugin.py /a/new/plugin-directory/catalog/plugins/codex-eval-lab
-```
+The four automation-first skills passed the skill validator, and bundled reference
+copies match source docs. Source/plugin packaging tests retain specification text,
+Rust source and skill metadata. Distribution version metadata is 0.4.0 across the
+runner, installer, source package, plugin and unchanged UI package. Dependency
+versions were not changed. Local archive/wheel/plugin validation results are recorded
+with the delivery artifacts; no remote publish or install is implied.
 
-Set `PYTHONPATH=src` when the checkout is not installed. Set
-`EVAL_LAB_CODEX_BINARY` to the already provisioned stable CLI to include its
-no-model argument check. Optional SDK contract tests require the pinned extras.
-Review dependencies before installation; none are fetched by the tests.
+## Honest boundaries
 
-## Prior validation retained
-
-The complete [0.2.0 validation record](VALIDATION-0.2.0.md) and its
-[machine-readable summary](validation/summary-0.2.0.json) are retained unchanged.
-They include the earlier Python 3.11/3.14 checks, UI/toolchain audit, historical
-0.1 benchmark and coverage evidence, and their original limitations. Those
-measurements do not certify 0.3.0. Statement coverage has not been remeasured for
-this revision.
-
-Existing frozen Rust experiment source and state are separate and unchanged.
-Its performance findings are not claimed as validation of the new measurement
-protocol. Read [the operating guide](OPERATING_GUIDE.md) before approving a new
-paired experiment; a protocol change must not be retrofitted into old state.
+- The executable-oracle route is trusted local JSON-input/output code, with no case
+  file assets, generated artifact transport, credential environment or paid checks;
+  up to 1,000 combined anchor and all-case calls within the experiment budget
+- Reference agreement and mutation rejection are finite executable evidence, not
+  proof of specification truth, independent authorship, source authenticity,
+  semantic correctness or production representativeness
+- The existing expert semantic calibration path remains separate and strict; mixed
+  semantic/deterministic tasks use it rather than hiding a judge behind an oracle
+- Same-account local code is not a hostile-code or private-file security boundary;
+  cost reservations are not provider-side hard caps
+- An unresolved proposal-dispatch/commit phase is preserved and blocked; automatic
+  reconstruction of that uncertain phase is not implemented
+- Authenticated Codex/provider integration, actual Docker execution and native
+  macOS/Windows execution remain unverified here
+- The included historical Rust source example reports a real model-guided synthetic
+  study on the 0.2 engine/custom timing driver. It did not use this 0.4 workflow,
+  its public final data are no longer unseen, and a complete replay was not rerun
+- Native Codex plus an authorized coding environment runs experiments. The
+  Sites-hosted plugin remains a read-only companion for inspecting evidence; it
+  does not create an execution runtime in every ChatGPT/mobile client

@@ -1,0 +1,10 @@
+{
+  "candidate": "round-1",
+  "stage": "preflight_before_trials",
+  "error": "Frozen candidate changed: round-1",
+  "cause": "Operator prebuild imported runner without -B, creating __pycache__/runner.cpython-312.pyc inside protected snapshot",
+  "trials_reserved": 0,
+  "replacement": "round-1-clean",
+  "remediation": "Preserve rejected-to-run snapshot, import identical structured proposal under new label, disable bytecode for prebuild/contract-test imports",
+  "not_a_correctness_or_performance_result": true
+}

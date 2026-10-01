@@ -1,0 +1,43 @@
+{
+  "engine_git_commit": "841a8ac4396bedd992b956338e42efbd9d4954c8",
+  "engine_file_hashes": {
+    "src/codex_eval_lab/artifacts.py": "d871725ad740e2d35eb3aee0fcc43aade5cd3b3dcc83728617a8fa29689ce923",
+    "src/codex_eval_lab/__init__.py": "b28f98105f4f674c6827bb982b5d2b9ea55dea992de7e780878ff4ba6f2afd3a",
+    "src/codex_eval_lab/evidence.py": "060686d28af3885f56bd63898a4f369c8c6130f1b039cb0c96c244651137b337",
+    "src/codex_eval_lab/util.py": "0ea7d626958925c4e05e555812311ecba2f2e9d6f6daaa34254be69d7a456611",
+    "src/codex_eval_lab/config.py": "cb52602203d5c179761e7e0636b388fde63452224b54177adf2432845a8ea6f9",
+    "src/codex_eval_lab/calibration.py": "58fbc39c4760d7e19dad312776aa41ff5c614c7547748979eda409cb9323d6d1",
+    "src/codex_eval_lab/store.py": "dcc47174580b1e90942ba44d3b3eebf00cfb0864f4eafb748c7721fe92074198",
+    "src/codex_eval_lab/review_ui.py": "93b4fd6748cb8ef7226911d02496ea459c6d8118d23d7d2c1c740ed55df81e71",
+    "src/codex_eval_lab/review_cli.py": "8e87ac60c4a0a552ebe58d2df9a729a9e64b4ad0800c9be0e49bf31e626b4be1",
+    "src/codex_eval_lab/engine.py": "1899b82579fd56196821dac51debdaafd01de88e86d68defa5144755c3538fe5",
+    "src/codex_eval_lab/process.py": "1fc6dc16ea02d9beaa1326c38b2a83c44f5c85c6417224b8cac393d94e8f3bc6",
+    "src/codex_eval_lab/report.py": "32c9e6d02291bc750a1edadc69cd50301b4e56e6a3957bc636426ea43fd3bc13",
+    "src/codex_eval_lab/stats.py": "15f648c693d9183d62db665c02680a13f0e2629b075ca651f38ca872954234b2",
+    "src/codex_eval_lab/cli.py": "6afdebad0849cb22eaeeafa9642c5fd940cc495c7ca8f8c862827432864a885d",
+    "src/codex_eval_lab/plugin_server.py": "869169518bb60c1227fdfe6cecd05c60738a26333fd3cf05e3cd4dd1796a0842",
+    "src/codex_eval_lab/review.py": "03e8cebc0d31e8abaae808422e0c7fe1eca8d726dd8813870f55c8d187e330c3",
+    "src/codex_eval_lab/__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "src/codex_eval_lab/optimizer.py": "6b30e69f0653ff364ed834d56114e3933662daaa61a2c755df768cb9b3990df1"
+  },
+  "engine_archive_sha256": "e21d81753b62b3d9a9da1771242c63817f935d26302c697c128a640968760f84",
+  "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)\nbinary: rustc\ncommit-hash: 48a229ceaefd4985c50990b14116b6d856af0985\ncommit-date: 2026-09-01\nhost: x86_64-unknown-linux-gnu\nrelease: 1.98.1\nLLVM version: 22.1.8\n",
+  "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)\n",
+  "python": "3.12.14",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "cpuinfo": "processor\t: 0\nvendor_id\t: AuthenticAMD\ncpu family\t: 25\nmodel\t\t: 17\nmodel name\t: AMD EPYC 9V74 80-Core Processor\nstepping\t: 1\nmicrocode\t: 0x1000065\ncpu MHz\t\t: 2596.140\ncache size\t: 1024 KB\nphysical id\t: 0\nsiblings\t: 9\ncore id\t\t: 0\ncpu cores\t: 9\napicid\t\t: 0\ninitial apicid\t: 0\nfpu\t\t: yes\nfpu_exception\t: yes\ncpuid level\t: 28\nwp\t\t: yes\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx512_bf16 clzero xsaveerptr arat npt nrip_save tsc_scale vmcb_clean flushbyasid pausefilter pfthreshold v_vmsave_vmload avx512vbmi umip avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid fsrm arch_capabilities\nbugs\t\t: sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso spectre_v2_user tsa\nbogomips\t: 5192.28\nTLB size\t: 3584 4K pages\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 46 bits physical, 48 bits virtual\npower management:",
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "c_linker_driver": "cc (Debian 14.2.0-19) 14.2.0\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "system_linker": "GNU ld (GNU Binutils for Debian) 2.44\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or (at your option) a later version.\nThis program has absolutely no warranty.",
+  "glibc": "glibc 2.41"
+}

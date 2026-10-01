@@ -1,121 +1,41 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "date": "2026-10-01",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "platform": "Linux x86_64",
-  "record_scope": "Dated local 0.3.0 source checks recorded 2026-10-01; not evidence of publication, tagging or hosted-CI status",
-  "tests": 379,
-  "new_regression_tests": 21,
+  "record_scope": "Local core verification only; no publication, hosted CI or redesigned UI claim",
+  "tests": 445,
   "failures": 0,
   "errors": 0,
   "skipped": 0,
-  "test_scope": "Complete suite rerun after version edits; 379 passed, zero skips",
-  "python_environments": [
-    {
-      "python": "3.14.8",
-      "extras": [
-        "plugin",
-        "judge"
-      ],
-      "tests": 379,
-      "passed": 379,
-      "skipped": 0,
-      "failures": 0
-    }
-  ],
+  "python": "3.14.8",
   "optional_sdks": {
-    "mcp": "2.2.0; actual client dispatch and stdio protocol passed",
-    "openai": "3.22.1; rubric and atomic adapters passed with offline HTTP MockTransport"
+    "mcp": "2.2.0",
+    "openai": "3.22.1; offline mock transports"
   },
-  "codex_cli": {
-    "version": "0.159.3",
-    "check": "Isolated version/help/full adapter arguments passed; help short-circuits model execution"
+  "codex_cli": "0.159.3; help-only in isolated configuration, no model turn",
+  "ui_tests": 17,
+  "ui_scope": "Existing UI DOM/protocol tests; visual redesign not integrated or claimed",
+  "offline_automation": {
+    "trials": 736,
+    "oracle_anchor_calls": 16,
+    "case_consistency_calls": 160,
+    "application_plus_grader_trials": 560,
+    "optimizer_calls": 3,
+    "optimizer_kind": "scripted fixture",
+    "selected": "round-0001",
+    "final_passed": true,
+    "eval_cost_usd": 0,
+    "optimizer_dollars": null
   },
-  "packaging_tools": {
-    "pip": "26.2.1",
-    "setuptools": "84.0.0",
-    "build": "1.6.1",
-    "wheel": "0.48.0"
-  },
-  "offline_demos": {
-    "default": {
-      "trials": 560,
-      "eval_cost_usd": 0,
-      "decisions": [
-        true,
-        false,
-        false
-      ],
-      "final_accepted": true
-    },
-    "paired": {
-      "trials": 800,
-      "cohorts": 6,
-      "eval_cost_usd": 0,
-      "decisions": [
-        true,
-        false,
-        false
-      ],
-      "final_accepted": true
-    },
-    "scope": "Both rerun after the final 0.3.0 version edits; synthetic routing and scripted proposals, not performance evidence"
-  },
-  "post_version_verification": "379 tests passed, zero skips",
-  "ui_rebuild": {
-    "node": "26.10.0",
-    "tests": 17,
-    "passed": 17,
-    "skipped": 0,
-    "scope": "Rebuilt committed bundle and DOM/protocol tests; native rendering unverified"
-  },
-  "source_archive_build": "passed",
-  "sdist_build": "passed",
-  "wheel_build": "passed",
-  "plugin_build": "passed; structure, checksums and relocated launcher validation",
-  "release_manifest": "regenerated from allowlisted final source files; excludes itself",
-  "hosted_github_ci": "Not established by this dated local record; consult the exact revision at https://github.com/trevordcampbell/codex-eval-lab/actions",
-  "live_codex": "not run",
-  "live_judge": "not run; no paid calls",
-  "docker_runtime": "not run",
-  "macos_windows_runtime": "not run",
-  "native_rendering": "unverified",
-  "coverage": null,
-  "coverage_scope": "Not remeasured for 0.3.0",
-  "prior_0_2_record": "summary-0.2.0.json",
-  "historical_0_1": {
-    "date": "2026-09-30",
-    "python": "3.13.5",
-    "platform": "Linux x86_64",
-    "tests": 184,
-    "failures": 0,
-    "coverage": {
-      "covered_lines": 1332,
-      "num_statements": 1458,
-      "percent_covered": 91.35802469135803,
-      "missing_lines": 126
-    },
-    "coverage_scope": "src/codex_eval_lab only; optional adapters, scripts and subprocess-executed fixture code are not included in this percentage",
-    "wheel_build": "passed",
-    "wheel_install_in_clean_venv": "passed",
-    "cli_smoke": "passed",
-    "live_codex": "not run; no authenticated CLI available",
-    "live_judge": "not run; no paid calls made",
-    "docker_runtime": "not run; binary unavailable",
-    "hosted_github_ci": "passed Python 3.11, 3.12, 3.13 at d01b1770bcee381f77b54b417874016c1880aaab; see Actions for later commits",
-    "github_publication": "Full structured repository published and 89 initial file paths, Git blob hashes, sizes and modes verified at d01b1770bcee381f77b54b417874016c1880aaab; editorial update adds two documentation figures",
-    "record_scope": "Original Python 3.13.5 validation plus explicitly separated publication-session updates",
-    "publication_session_checks": {
-      "date": "2026-09-30",
-      "python": "3.12.14",
-      "tests": 186,
-      "failures": 0,
-      "skill_reference_sync": "passed",
-      "cli_doctor": "passed",
-      "offline_demo": "passed; 560 trials; scripted proposals; no paid calls",
-      "coverage": "not remeasured",
-      "note": "Two additional tests cover documentation SVG inclusion and symlink rejection; runtime engine unchanged"
-    }
-  },
-  "wheel_install_smoke": "Fresh isolated target directory; doctor reports 0.3.0"
+  "independent_review": "Independent source-copy full suite and adversarial ledger/privacy/protocol/final-seal checks passed; no remaining blocker in reviewed scope",
+  "limits": [
+    "JSON-only executable-oracle route; no file assets or generated artifact transport",
+    "At most 1000 total preflight calls; free-local reference/grader, empty grader_env",
+    "Finite source-bound agreement does not establish domain truth or representativeness",
+    "No native authenticated Codex/provider call in this validation",
+    "No Docker execution or macOS/Windows validation",
+    "No screenshot-based validation of unchanged UI or diagrams; SVG XML is well-formed",
+    "Historical Rust example used 0.2 with a custom protected paired driver, not 0.4 automation; full replay not rerun"
+  ]
 }

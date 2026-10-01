@@ -10,7 +10,7 @@ import shutil
 import sys
 
 from . import __version__
-from . import review_cli
+from . import review_cli, automation
 from .config import audit
 from .engine import compare, export_best, feedback, finalize, initialize, manifest_for, register, run, select
 from .optimizer import export_workspace, import_proposal, loop
@@ -65,6 +65,7 @@ def parser() -> argparse.ArgumentParser:
     s = sub.add_parser("report")
     s.add_argument("state", type=Path)
     s.add_argument("--out", type=Path, required=True)
+    s.add_argument("--full-traces", action="store_true", help="Opt in to unbounded inline traces; can produce very large HTML. Does not include held-out details by itself")
     s.add_argument("--include-private", action="store_true", help="Explicitly include held-out details; never send this to the optimizer")
     s = sub.add_parser("feedback", help="Export ONLY development evidence")
     s.add_argument("state", type=Path)
@@ -82,6 +83,19 @@ def parser() -> argparse.ArgumentParser:
     s = sub.add_parser("export-best", help="Copy selected source to a NEW directory; never overwrite the working tree")
     s.add_argument("state", type=Path)
     s.add_argument("--out", type=Path, required=True)
+    s = sub.add_parser("automation-plan", help="Generate a content-bound end-to-end plan without executing code")
+    s.add_argument("suite", type=Path)
+    s.add_argument("--app", type=Path, required=True)
+    s.add_argument("--out", type=Path, required=True)
+    s = sub.add_parser("automate", help="Execute a scope-authorized plan through final test and report")
+    s.add_argument("suite", type=Path)
+    s.add_argument("--app", type=Path, required=True)
+    s.add_argument("--state", type=Path, required=True)
+    s.add_argument("--plan", type=Path, required=True)
+    s.add_argument("--approve-plan", action="store_true")
+    s.add_argument("--authorization-note", required=True)
+    s = sub.add_parser("resume-automation", help="Resume the frozen authorized workflow without creating a second proposal or reopening a sealed winner")
+    s.add_argument("state", type=Path)
     review_cli.add_parsers(sub)
     return p
 
@@ -98,17 +112,29 @@ def dispatch(a: argparse.Namespace):
                              "Windows native process-tree termination is limited; WSL is recommended for agent workloads."]}
     if a.command == "audit":
         return audit(a.suite.resolve())
+    if a.command == "automation-plan":
+        if a.out.exists():
+            raise LabError("Plan output already exists; do not overwrite a recorded plan")
+        result = automation.make_plan(a.suite, a.app)
+        write_json(a.out, result)
+        return {"plan": str(a.out), **result}
+    if a.command == "automate":
+        return automation.start_automation(a.suite, a.app, a.state, read_json(a.plan), approved=a.approve_plan, authorization_note=a.authorization_note)
     if a.command == "start":
         return initialize(a.suite, a.app, a.state, approvals={key:getattr(a, f"approve_{key}") for key in ("cases", "grader", "execution")}, note=a.note)
     state = a.state.resolve()
     if not (state / "manifest.json").is_file() or not (state / "state.sqlite3").is_file():
         raise LabError("Not an initialized experiment directory")
+    if a.command == "resume-automation":
+        return automation.resume_automation(state)
     if a.command == "status":
         with Store(state / "state.sqlite3") as store:
             manifest = manifest_for(state, store)
             return {"name": manifest["config"]["name"], "best": store.get("best"), "variants": store.variants(),
-                    "budget": store.budget(), "pending_trials": store.pending(), "final_selection": store.get("final_selection"),
-                    "final_completed": store.get("final_result") is not None, "expires_at": manifest["expires_at"]}
+                    "budget": store.budget(), "pending_trials": store.pending(), "unresolved_optimizer_calls": store.unresolved_optimizers(), "final_selection": store.get("final_selection"),
+                    "final_completed": store.get("final_result") is not None, "expires_at": manifest["expires_at"],
+                    "oracle_gate": manifest.get("oracle_gate"), "automation_blocker": store.get("automation_blocker"),
+                    "automation_plan_sha256": manifest.get("automation_plan", {}).get("plan_sha256")}
     if a.command == "register":
         register(state, a.app, a.label, a.hypothesis)
         return {"registered": a.label}
@@ -123,7 +149,7 @@ def dispatch(a: argparse.Namespace):
     if a.command == "finalize":
         return finalize(state, approved=a.approve_final)
     if a.command == "report":
-        return render_report(state, a.out.resolve(), include_private=a.include_private)
+        return render_report(state, a.out.resolve(), include_private=a.include_private, full_traces=a.full_traces)
     if a.command == "feedback":
         write_json(a.out, feedback(state, a.label))
         return {"feedback": str(a.out), "split": "train"}

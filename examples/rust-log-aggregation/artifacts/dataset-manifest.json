@@ -1,0 +1,8 @@
+{
+  "cases": 120,
+  "groups": 60,
+  "train_groups": 24,
+  "validation_groups": 18,
+  "test_groups": 18,
+  "cases_sha256": "1dd3ba3715b595762f07b2c5ac887cdb16d79d24f53595061f5253ebb488795a"
+}

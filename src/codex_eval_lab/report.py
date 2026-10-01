@@ -10,9 +10,10 @@ from typing import Any
 
 from . import paired
 from .engine import manifest_for
+from .evidence import public_evidence_summary
 from .stats import case_means
 from .store import Store
-from .util import LabError, atomic_text, canonical, utc_now
+from .util import LabError, atomic_text, utc_now
 
 CSS = """
 :root{color-scheme:light;--ink:#182432;--muted:#526476;--line:#d9e1e8;--accent:#17626e}
@@ -26,14 +27,127 @@ JS = """document.getElementById('filter').addEventListener('input',function(){co
 
 
 def esc(value: Any) -> str:
-    return html.escape(str(value), quote=True)
+    # JSON permits lone surrogates; keep them inert and UTF-8 writable too.
+    return html.escape(str(value).encode("utf-8", errors="backslashreplace").decode("utf-8"), quote=True)
 
 
 def pretty(value: Any) -> str:
     return esc(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False))
 
 
-def render_report(state: Path, output: Path, *, include_private: bool = False) -> dict[str, Any]:
+# Presentation limits only. Never feed preview data to statistics or write it to state.
+TRACE_FIELD_CHARS = 4_096
+TRACE_ROW_CHARS = 16_384
+TRACE_TITLE_CHARS = 512
+TRACE_MAX_ROWS = 200
+TRACE_HTML_BYTES = 1_048_576
+TRUNCATED = "\n[truncated; full value remains in raw state]"
+
+
+def _text_prefix(value: str, limit: int) -> tuple[str, bool]:
+    # Normalize invalid Unicode before counting; later escaping must not expand
+    # lone surrogates beyond the promised text limits.
+    value = value.encode("utf-8", errors="backslashreplace").decode("utf-8")
+    if len(value) <= limit:
+        return value, False
+    return value[:limit - len(TRUNCATED)] + TRUNCATED, True
+
+
+def _json_prefix(value: Any, limit: int) -> tuple[str, bool]:
+    """Stop traversing large arrays/maps once a text preview is full.
+
+    A truncated preview is explicitly a text fragment, not parseable JSON.
+    The encoder can still allocate one full string token; raw row loading and
+    analysis memory are outside the HTML presentation bounds.
+    """
+    pieces = []
+    size = 0
+    for chunk in json.JSONEncoder(ensure_ascii=False, indent=2, allow_nan=False).iterencode(value):
+        pieces.append(chunk[:limit + 1 - size])
+        size += len(pieces[-1])
+        if size > limit:
+            break
+    return _text_prefix("".join(pieces), limit)
+
+
+def _row_preview(row: dict[str, Any]) -> tuple[str, bool]:
+    # Keep trial identity, numeric evidence and the artifact locator ahead of payloads.
+    first = ("case_id", "rep", "status", "metrics", "artifact_dir", "cohort", "label", "split")
+    keys = dict.fromkeys((*first, *row))
+    pieces = []
+    size = 0
+    truncated = False
+    for key in keys:
+        if key not in row:
+            continue
+        name, name_cut = _json_prefix(key, TRACE_FIELD_CHARS)
+        value, value_cut = _json_prefix(row[key], TRACE_FIELD_CHARS)
+        field = f"{name}: {value}\n"
+        pieces.append(field[:TRACE_ROW_CHARS + 1 - size])
+        size += len(pieces[-1])
+        truncated |= name_cut or value_cut
+        if size > TRACE_ROW_CHARS:
+            break
+    text, row_cut = _text_prefix("".join(pieces), TRACE_ROW_CHARS)
+    return text, truncated or row_cut
+
+
+class _TracePreviews:
+    """One shared budget across legacy and paired rows, after privacy filtering."""
+
+    def __init__(self, full: bool):
+        self.full = full
+        self.details: list[str] = []
+        self.eligible = self.truncated = self.html_bytes = 0
+        self.exhausted = False
+
+    def add(self, title: str, row: dict[str, Any]) -> None:
+        self.eligible += 1
+        if not self.full and (self.exhausted or len(self.details) >= TRACE_MAX_ROWS):
+            return
+        if self.full:
+            body, cut = json.dumps(row, ensure_ascii=False, indent=2, allow_nan=False), False
+        else:
+            title, title_cut = _text_prefix(title, TRACE_TITLE_CHARS)
+            body, cut = _row_preview(row)
+            cut |= title_cut
+        badge = " <span class='pill warn'>Truncated preview</span>" if cut else ""
+        detail = f"<details data-case><summary>{esc(title)}{badge}</summary><pre>{esc(body)}</pre></details>"
+        size = len(detail.encode("utf-8"))
+        if not self.full and self.html_bytes + size > TRACE_HTML_BYTES:
+            self.exhausted = True
+            return
+        self.details.append(detail)
+        self.html_bytes += size
+        self.truncated += int(cut)
+
+    def summary(self) -> dict[str, Any]:
+        return {"eligible_rows": self.eligible, "shown_rows": len(self.details),
+                "omitted_rows": self.eligible - len(self.details), "truncated_rows": self.truncated,
+                "html_bytes": self.html_bytes, "full_traces": self.full}
+
+    def notice(self, state: Path) -> str:
+        counts = self.summary()
+        limits = ("Unbounded full-trace export explicitly requested; this file can be very large."
+                  if self.full else
+                  f"Bounded text previews: at most {TRACE_FIELD_CHARS:,} serialized characters per top-level field value/key, "
+                  f"{TRACE_ROW_CHARS:,} per row, {TRACE_TITLE_CHARS:,} per title, {TRACE_MAX_ROWS:,} rows and "
+                  f"{TRACE_HTML_BYTES:,} UTF-8 bytes of trace HTML in total (including escaped text and row markup). "
+                  "Truncation markers count toward character caps; preview fragments may not be valid JSON.")
+        return (f"<p class='notice'>{limits} Shown: {counts['shown_rows']:,} of {counts['eligible_rows']:,} eligible rows; "
+                f"{counts['truncated_rows']:,} shown rows truncated; {counts['omitted_rows']:,} rows omitted from this HTML. "
+                "Rows are a deterministic prefix of report order, not a representative sample. "
+                "All scores, comparisons and sample counts use full records. Search covers only displayed text.</p>"
+                f"<p class='muted'>Full raw evidence remains in <code>{esc(state / 'state.sqlite3')}</code>, "
+                "table <code>trials</code> keyed by label/split/case_id/rep, or <code>paired_trials</code> "
+                "also keyed by cohort (label is the measurement role). Each record's <code>artifact_dir</code> "
+                "is relative to the experiment state directory. Nothing is removed from state. "
+                "The database and raw artifacts may contain private held-out data; do not send them to the optimizer. "
+                "Use <code>report --full-traces</code> only when a large inline export is needed; "
+                "held-out details still require <code>--include-private</code> and unfinished test details remain sealed.</p>")
+
+
+def render_report(state: Path, output: Path, *, include_private: bool = False, full_traces: bool = False) -> dict[str, Any]:
     with Store(state / "state.sqlite3") as store:
         manifest = manifest_for(state, store)
         cfg, splits = manifest["config"], manifest["splits"]
@@ -42,7 +156,7 @@ def render_report(state: Path, output: Path, *, include_private: bool = False) -
         variants = store.variants()
         metric = cfg["objective"]["metric"]
         rows_html = []
-        details = []
+        previews = _TracePreviews(full_traces)
         for variant in variants:
             label = variant["label"]
             cells = []
@@ -65,7 +179,7 @@ def render_report(state: Path, output: Path, *, include_private: bool = False) -
                 if show_details:
                     for row in rows:
                         title = f"{label} / {split} / {row['case_id']} / repeat {row['rep']}"
-                        details.append(f"<details data-case><summary>{esc(title)} <span class='pill'>{esc(row['status'])}</span></summary><pre>{pretty(row)}</pre></details>")
+                        previews.add(f"{title} / {row['status']}", row)
             badge = " <span class='pill'>Selected</span>" if label == best else ""
             rows_html.append(f"<tr><td><strong>{esc(label)}</strong>{badge}<br><small>{esc(variant['hypothesis'])}</small></td>{''.join(cells)}</tr>")
         paired_html = ""
@@ -86,7 +200,7 @@ def render_report(state: Path, output: Path, *, include_private: bool = False) -
                     for role in spec["arms"]:
                         for row in store.results(role, split, cohort=cohort):
                             title = f"{cohort} / {role} / {row['case_id']} / repeat {row['rep']}"
-                            details.append(f"<details data-case><summary>{esc(title)}</summary><pre>{pretty(row)}</pre></details>")
+                            previews.add(title, row)
             paired_html = "<section><h2>Paired measurement cohorts</h2><p>Each cohort has fresh reference and candidate calls. Scores from different cohorts are not pooled. AB/BA pairing reduces slow drift but does not eliminate environmental confounding.</p>" + "".join(cohort_html) + "</section>"
         decisions = store.get("search_history", [])
         decision_html = "".join(f"<details><summary>Round {d['round']}: {esc(d['label'])} — {'keep' if d['accepted'] else 'do not promote'}</summary><p>{esc(d['hypothesis'])}</p><pre>{pretty(d)}</pre></details>" for d in decisions)
@@ -99,6 +213,18 @@ def render_report(state: Path, output: Path, *, include_private: bool = False) -
             manual_html.append(f"<details><summary>{esc(decision['candidate'])}: {action} / {esc(saved['at'])}</summary><pre>{pretty(decision)}</pre></details>")
         manual_section = ("<section><h2>Manual selection decisions</h2><p>These records show selection actions, including rejections. A comparison's accepted flag describes measurement eligibility; it is not by itself a promotion. Read-only compare commands do not add history.</p>" + "".join(manual_html) + "</section>") if manual_html else ""
         final_html = f"<pre>{pretty(final)}</pre>" if final else "<p>The final test has not been completed. Development and validation improvements are not an independent final result.</p>"
+        oracle_gate = manifest.get("oracle_gate", {})
+        expert_gate = manifest.get("evidence_gate", {})
+        evidence_basis = "expert_calibrated" if expert_gate.get("ready") else "executable_oracle_validated" if oracle_gate.get("ready") else "unverified"
+        evidence_record = {"evidence_basis": evidence_basis,
+                           "interpretation": "Executable checks passed means finite controls passed, not verified domain truth. Model-authored controls are not human labels; local records are attestations, not authenticated identities.",
+                           "executable_oracle": oracle_gate,
+                           "expert_calibration": public_evidence_summary(expert_gate),
+                           "automation_plan_sha256": manifest.get("automation_plan", {}).get("plan_sha256"),
+                           "automation_stop_reason": store.get("automation_stop_reason"),
+                           "automation_blocker": store.get("automation_blocker"),
+                           "unresolved_optimizer_calls": store.unresolved_optimizers()}
+        evidence_section = "<section><h2>Measurement evidence and automation</h2><pre>" + pretty(evidence_record) + "</pre></section>"
         csp_hash = base64.b64encode(hashlib.sha256(JS.encode()).digest()).decode()
         title = esc(cfg["name"])
         doc = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -115,8 +241,9 @@ def render_report(state: Path, output: Path, *, include_private: bool = False) -
 {manual_section}
 <section id="final"><h2>Independent final comparison</h2>{final_html}</section>
 <section><h2>Accounting and provenance</h2><pre>{pretty({'budget':budget,'source_hashes':{v['label']:v['source_hash'] for v in variants},'created':manifest['created'],'environment':manifest['environment'],'runtime_version':manifest['tool_version']})}</pre></section>
-<section id="cases"><h2>Case evidence</h2><p class="muted">{'PRIVATE EXPORT: includes validation details and completed final-test details. Do not feed this report to the optimizer.' if include_private else 'Development evidence only. Validation and unfinished test transcripts are not embedded.'} Model outputs are displayed as escaped text, never executed.</p><label for="filter">Filter by case, candidate, output, or explanation</label><input id="filter" type="search" placeholder="Search evidence…">{''.join(details)}</section>
+{evidence_section}
+<section id="cases"><h2>Case evidence</h2><p class="muted">{'PRIVATE EXPORT: includes validation details and completed final-test details. Do not feed this report to the optimizer.' if include_private else 'Development evidence only. Validation and unfinished test transcripts are not embedded.'} Model outputs are displayed as escaped text, never executed.</p>{previews.notice(state)}<label for="filter">Filter displayed case previews</label><input id="filter" type="search" placeholder="Search displayed evidence…">{''.join(previews.details)}</section>
 <footer>Generated {esc(utc_now())}. Self-contained report; no external scripts, fonts, analytics, or network requests. Keep reports containing real user data private.</footer>
 </main><script>{JS}</script></body></html>"""
         atomic_text(output, doc)
-        return {"report": str(output), "variants": len(variants), "private_details_included": include_private, "final_test_complete": bool(final)}
+        return {"report": str(output), "variants": len(variants), "private_details_included": include_private, "final_test_complete": bool(final), "trace_preview": previews.summary()}

@@ -1,101 +1,69 @@
 ---
 name: hillclimb
-description: Iteratively improve an application, agent, prompt, skill, model configuration, or software implementation against an existing trusted eval. Use only for explicitly authorized metric optimization with scope, guardrails, and budgets; never fabricate an eval win or change protected graders.
+description: Autonomously improve scoped application code, prompts, skills, parameters or tools against a fixed trusted eval, using bounded proposals, guarded selection and a preauthorized final test. Use for requested metric optimization; never invent wins, change protected evaluators or deploy without authority.
 ---
 
-# Hillclimb with evidence, not score-chasing
+# Own the bounded improvement loop
 
-Read `references/OPERATING_GUIDE.md`, `references/PROTOCOL.md`, and
-`references/SECURITY.md`. Confirm a runnable, audited evaluation with a reviewed
-baseline. Otherwise route to `$build-eval`. Preserve the existing model provider
-and application stack unless migration is itself an explicitly approved objective.
+Read `references/AUTOMATION.md`, `references/OPERATING_GUIDE.md` and
+`references/SECURITY.md`. If the eval is missing or untrusted, use `$build-eval` and
+`$audit-eval` to build it. Codex should design, inspect, diagnose and iterate; do not
+send the user a list of manual setup chores or ask permission for every iteration
+already covered by their request.
 
-## Check readiness before optimization
+Require an executable-oracle control gate for exact outcomes or the existing
+expert-calibrated atomic evidence path for semantic/mixed outcomes. Preserve the
+basis and limitations. A model-written expected answer, convincing rationale or
+two-model consensus is not human/expert ground truth. Objective control replay can
+be automatic without asserting human review. Read `references/EVIDENCE.md` before
+working with expert labels; do not replace them or loosen calibration to pass.
 
-Read `references/EVIDENCE.md`. For a real semantic-grader workflow, require trace-first
-human review and independently validated criteria before accepting the measurement.
-Recompute the configured evidence gate; do not trust a supplied passed flag or the
-composite score. If no evidence gate is configured, disclose that fact and complete
-measurement review before a real optimizer run. Offline synthetic demos are explicitly
-limited fixtures, not permission to skip review for the user's application.
+## Establish the scope once
 
-Stop if judge tuning/validation groups overlap, mandatory criteria lack positive and
-negative human examples, labels are uncertain or stale, a semantic component was
-skipped behind code checks, or judge configuration no longer matches calibration.
-Changing the evaluator requires a new approved experiment and baseline. Human review
-and approval are decisions the agent cannot manufacture.
+Use a clear primary objective, minimum useful effect, guardrails, editable paths,
+prohibited changes, evaluation cost/trial/wall limits, separate optimizer-call/time
+limits and final-test intent. Reuse the user's real provider and toolchain. Confirm
+only missing decisions or required action-policy authority. A flag cannot grant
+that authority; record the actual user scope and source in the authorization note.
+Unknown optimizer dollars are unknown, never zero.
 
-## Approve the experiment
+Prefer `automation-plan` then `automate` for a requested complete improvement. The
+native CLI freezes the source-bound plan and evaluator, runs preflight and baseline,
+launches fresh Codex proposals, applies only scoped edits, compares to incumbent and
+original baseline, retains raw decisions, reserves final capacity, seals the winner,
+opens the preauthorized final comparison and writes the result/report. No hosted
+execution service or mandatory UI gate is involved. Use `resume-automation` for the
+same frozen plan after investigating interruptions; do not create duplicate work.
 
-Identify one primary objective (quality, cost, latency or another measurable outcome),
-minimum useful improvement, guardrails, editable file patterns and prohibited changes.
-Inspect baseline failure evidence only from development data. Verify headroom, variance,
-model/parameter propagation, real entry-point wiring, grader calibration and repeat
-semantics. Use unchanged controls and rebuild stochastic artifacts where relevant.
-Do not spend rounds on a metric incapable of detecting the intended change.
+If final opening was not approved, use the individual start/loop/report commands
+and ask once when that new action is needed. If the user asked only for a baseline
+or short experiment, honor that stopping point rather than broadening the task.
 
-Approve maximum rounds, patience, wall-time window, evaluation dollars/trials, separate
-Codex/custom optimizer usage and checkpoint cadence. Never call unknown optimizer cost
-zero. Explain local versus genuinely isolated execution. Approval flags are a record
-of permission, not permission the agent can grant itself.
+## Keep measurement and proposal separate
 
-## Preferred automatic workflow
+Feed proposals only `feedback` development data or an `export-workspace` handed to
+a separate trust domain. Never pass the plan/full report/calibration-validation or
+held-out transcripts to the proposer. A fresh local context is not a read-isolation
+guarantee. If a proposal author did receive validation feedback, record that actual
+exposure; don't retroactively call it development-only.
 
-For a suite configured with optimizer.backend = "codex", after explicit approval:
+Each proposal gives one causal hypothesis and reversible complete scoped edits.
+Fix ordinary implementation failures within scope. Do not change frozen cases,
+grader, metric direction, tolerance, budgets, retries or heldout definitions to
+make a candidate win. Measurement fixes mean a new experiment and baseline.
+Do not hardcode answers, task IDs or benchmark solutions.
 
-```sh
-eval-lab loop <state> --approve-optimizer --rounds <approved-count>
-eval-lab status <state>
-eval-lab report <state> --out <state>/report.html
-```
+Use honest stop outcomes: no credible proposals, patience, limits, or protected final
+reserve. The runner records invalid proposals/errors as blockers; investigate rather
+than bypassing the guard. Completed trials and proposals are reused; pending unknown
+outcomes are conservatively accounted and never silently replayed. Use `recover` or
+`unlock` only after confirming no old process is running. Keep failed receipts.
 
-The controller launches fresh Codex proposal sessions in read-only mode, captures
-structured edits, validates scope, creates immutable candidates and runs the eval.
-It does not permit the proposal model to edit the evaluator or deploy its own changes.
-Each round develops one coherent causal hypothesis, keeps/rejects the whole change,
-and records effects against incumbent and original baseline. Neither model weights
-nor live production are automatically modified. Empty proposals/no credible gains
-are legitimate stopping outcomes.
+## Finish and explain
 
-Do not pass a full report, validation transcript directory or test answers into a
-proposal session. Use `eval-lab feedback` for development-only evidence. For stronger
-separation, `export-workspace` to another trust domain and `import-proposal` on the
-private evaluator machine. A local read-only sandbox is not a holdout read barrier.
-
-## Manual or existing-agent workflow
-
-Register a candidate or unchanged control, execute train/validation, compare, and
-select only if gates pass:
-
-```sh
-eval-lab register <state> --app <candidate-root> --label <variant> --hypothesis "<cause>"
-eval-lab run <state> --label <variant> --split train
-eval-lab run <state> --label <variant> --split validation
-eval-lab compare <state> --baseline <incumbent> --candidate <variant>
-eval-lab select <state> --candidate <variant>
-```
-
-Never quietly alter cases, rubric, metric direction, environment, accepted errors,
-retries or budget mid-climb. A measurement fix requires approval and a new experiment/
-rebaseline. Prevent cumulative tolerated regressions. Never optimize by hardcoding
-evaluation IDs, expected answers or public benchmark solutions.
-
-## Recovery and final confirmation
-
-Use durable status rather than guessing progress. A stopped round resumes its saved
-proposal. An in-flight attempt with unknown outcome is conservatively charged by
-`recover` and invalidates that candidate's comparison; do not erase/retry it invisibly.
-Use `unlock` only after confirming the old process is gone.
-
-Once a winner is selected, obtain final-test approval and run:
-
-```sh
-eval-lab finalize <state> --approve-final
-eval-lab report <state> --out <state>/report.html
-eval-lab export-best <state> --out <new-review-directory>
-```
-
-Report final held-out delta and uncertainty, regressions, failed trials, costs and
-exact artifacts. A validation win is not a final result, and a failed final is not
-permission to keep tuning on that test. Do not push, merge or deploy without separate
-user authorization. Never guarantee improvement, universality, or model superiority.
+Once authorized, final sealing/opening need not wait for a ceremonial human click.
+A failed final comparison is still a completed measurement, not permission to tune
+on that holdout. Report basis, exact selected source, final delta/uncertainty,
+regressions, budget and unknown costs. Export selected source only into a new review
+directory. Do not overwrite, push, merge, publish or deploy without corresponding
+authority. Do not claim universal improvement or live-model validation from fixtures.

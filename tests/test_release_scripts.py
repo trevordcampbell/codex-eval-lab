@@ -134,3 +134,20 @@ class ReleaseScriptTests(unittest.TestCase):
         with self.assertRaises(ValueError):packager.release_files(root)
 
 if __name__=='__main__':unittest.main()
+
+class AutomationExamplePackagingTests(unittest.TestCase):
+    def test_source_release_preserves_rust_and_oracle_specifications(self):
+        names = {p.relative_to(ROOT).as_posix() for p in packager.release_files(ROOT)}
+        self.assertIn('examples/rust-log-aggregation/app/aggregate.rs', names)
+        self.assertIn('examples/rust-log-aggregation/winner/aggregate.rs', names)
+        self.assertIn('examples/automation/specification.txt', names)
+        self.assertIn('docs/AUTOMATION.md', names)
+
+    def test_plugin_bundle_preserves_executable_examples_and_skill_metadata(self):
+        builder = module('build_plugin')
+        with tempfile.TemporaryDirectory() as tmp:
+            result = builder.build(ROOT, Path(tmp) / 'plugin')
+            root = Path(result['plugin'])
+            self.assertTrue((root / 'examples/automation/specification.txt').is_file())
+            self.assertTrue((root / 'examples/rust-log-aggregation/app/aggregate.rs').is_file())
+            self.assertTrue((root / 'skills/build-eval/agents/openai.yaml').is_file())

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1040" height="760" viewBox="0 0 1040 760" role="img" aria-labelledby="title desc">
 <title id="title">Improve on development evidence; select on validation; test only at the end</title>
-<desc id="desc">Iterative search has four stages: inspect development-only feedback, propose a scoped change, evaluate with the frozen evaluator on validation, and keep or reject using gates against both incumbent and original baseline. Continue within approved limits. Once the search stops, seal the selected source, obtain final-test approval, then compare once on the held-out final test and report. Never feed final-test failures back into the same search.</desc>
+<desc id="desc">Iterative search has four stages: inspect development-only feedback, propose a scoped change, evaluate with the frozen evaluator on validation, and keep or reject using gates against both incumbent and original baseline. Continue within approved limits. Once the search stops, seal the selected source and use the plan’s final-test authorization to compare once on the held-out final test and report. Never feed final-test failures back into the same search.</desc>
 <defs>
  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 8 5 L 1 9" fill="none" stroke="#617184" stroke-width="1.5"/></marker>
 </defs>
@@ -53,7 +53,7 @@
 <text x="58" y="553" class="label" >AFTER SELECTION · SEPARATE FROM THE LOOP</text>
 <text x="58" y="595" class="heading" >Seal the source</text>
 <text x="58" y="626" class="body" >Fix the selected version</text>
-<text x="58" y="653" class="small" >Approve opening the test</text>
+<text x="58" y="653" class="small" >Use the approved test scope</text>
 <path class="line" d="M 289 607 H 340"/>
 <text x="365" y="595" class="heading" >Open the final test</text>
 <text x="365" y="626" class="body" >Compare against baseline</text>

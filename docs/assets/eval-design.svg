@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1040" height="632" viewBox="0 0 1040 632" role="img" aria-labelledby="title desc">
 <title id="title">Build the measurement before changing the system</title>
-<desc id="desc">Representative tasks become reviewed cases and expected outcomes. A separate grader measures actual application outputs. An approved, fixed experiment produces a repeatable baseline. Review leakage, noise, metric headroom, and editable scope before optimization. The final test stays unopened.</desc>
+<desc id="desc">Codex derives cases and source-grounded controls from the task. A separate grader measures actual application outputs. An approved, fixed experiment produces a repeatable baseline. Review leakage, noise, metric headroom, and editable scope before optimization. The final test stays unopened.</desc>
 <defs>
  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 8 5 L 1 9" fill="none" stroke="#617184" stroke-width="1.5"/></marker>
 </defs>
@@ -29,10 +29,10 @@
 <rect x="58" y="341" width="256" height="34" rx="6" fill="#edf7fb" stroke="#edf7fb"/>
 <text x="72" y="364" class="small" >What should success mean?</text>
 <text x="392" y="184" class="label" >THE MEASUREMENT</text>
-<text x="392" y="222" class="heading" >Review the answers</text>
-<text x="392" y="257" class="body" >Approved expected outcomes</text>
+<text x="392" y="222" class="heading" >Execute real controls</text>
+<text x="392" y="257" class="body" >Source-derived expectations</text>
 <text x="392" y="285" class="body" >An independent grader</text>
-<text x="392" y="313" class="body" >A pilot to check disagreements</text>
+<text x="392" y="313" class="body" >Probe known-wrong outputs</text>
 <rect x="392" y="341" width="256" height="34" rx="6" fill="#edf7fb" stroke="#edf7fb"/>
 <text x="406" y="364" class="small" >Grade the actual trial output</text>
 <text x="726" y="184" class="label" >THE STARTING POINT</text>
@@ -44,7 +44,7 @@
 <text x="740" y="364" class="small" >Leave the final test unopened</text>
 <path class="line" d="M 339 269 H 366"/><path class="line" d="M 673 269 H 700"/>
 <rect x="36" y="420" width="968" height="80" rx="12" fill="#e8f1f8" stroke="#d4e4ef"/>
-<text x="58" y="448" class="label" >HOLD FIXED AFTER APPROVAL</text>
+<text x="58" y="448" class="label" >HOLD FIXED WITHIN THE PLAN</text>
 <text x="58" y="478" class="body" >Cases · grader · objective · guardrails · execution settings · editable scope · budgets</text>
 <text x="36" y="539" class="heading" >Before searching, challenge the measurement</text>
 <text x="36" y="570" class="body" >Check related-case leakage, ambiguous labels, run-to-run noise, and metric headroom.</text>

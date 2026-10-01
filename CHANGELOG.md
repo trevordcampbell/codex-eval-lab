@@ -49,3 +49,19 @@ release, calibration, and test tools.
 This release has local automated tests and a scripted end-to-end demonstration.
 Live Codex, Docker runtime, other operating systems, and GitHub-hosted CI require
 separate verification. See docs/VALIDATION.md for the exact tested scope.
+
+## 0.4.0 — automation-first revision (local validation)
+
+- Native byte-bound automation plans and bounded start/search/seal/finalize/report
+  orchestration, with eligible resume and protected final trial/dollar capacity
+- Separate executable-oracle provenance: model-authored source-derived controls,
+  executed positive/negative checks, and reference→grader consistency for every
+  frozen JSON-only case; unchanged semantic expert-label calibration gates
+- Raw reserved/charged preflight receipts, conservative failure accounting, replay
+  refusal and pending optimizer blockers; no CLI flag grants user authority
+- Optional evidence UI, automation-first skills, escaped report evidence basis and
+  source/trust assumptions; no hosted arbitrary-code execution service
+- Bounded default report previews with explicit full-trace opt-in, and SQLite-backed
+  once-per-invocation JSONL materialization instead of per-trial full rewrites
+- Offline executable automation fixture and historical model-guided Rust source
+  example with explicit old-engine provenance; no live new-controller model claim

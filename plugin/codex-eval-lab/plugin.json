@@ -1,8 +1,10 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "codex-eval-lab",
-  "version": "0.3.0",
-  "description": "Trace-first evaluation design, human review, calibrated judges, and bounded hillclimbing workflows.",
-  "author": {"name": "Trevor Campbell"},
+  "version": "0.4.0",
+  "description": "Automation-first evaluation design, executable oracle checks, calibrated semantic judgments and bounded hillclimbing.",
+  "author": {
+    "name": "Trevor Campbell"
+  },
   "license": "MIT"
 }

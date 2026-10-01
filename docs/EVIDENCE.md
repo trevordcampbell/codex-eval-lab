@@ -206,3 +206,13 @@ labels, starts paid experiments, or opens application final-test details.
 MCP `_meta` keeps detail out of the ordinary model result, but is not encrypted
 storage or a human-authentication boundary. App-only visibility is also not
 permission. Read [security](SECURITY.md) before providing sensitive traces.
+
+## Objective outcomes and automation
+
+The native executable-oracle path is separate from this expert-label workflow.
+See [AUTOMATION.md](AUTOMATION.md) for source-derived boundary anchors, executed
+reference/positive/negative controls, bounded orchestration and truthful provenance.
+No machine-created output is imported as a human annotation, and no agreement
+threshold in the semantic calibration path is relaxed. Use this existing path for
+mixed semantic/deterministic criteria; the two top-level evidence configurations
+are intentionally exclusive in the first oracle version.

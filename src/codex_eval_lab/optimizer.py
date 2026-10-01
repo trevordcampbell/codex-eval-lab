@@ -184,6 +184,8 @@ def loop(state: Path, *, approved: bool, rounds: int | None = None) -> dict[str,
     with experiment_lock(state), Store(state / "state.sqlite3") as store:
         manifest = manifest_for(state, store, check_time=True)
         cfg = manifest["config"]
+        if store.unresolved_optimizers():
+            raise LabError("Optimizer execution is unresolved; inspect the durable attempt before any continuation")
         if store.get("final_selection"):
             raise LabError("Final test sealed this experiment; no further optimization permitted")
         maximum = cfg["search"]["max_rounds"]
@@ -212,14 +214,22 @@ def loop(state: Path, *, approved: bool, rounds: int | None = None) -> dict[str,
                 completed = store.get("rounds_started", 0)
                 if completed >= maximum:
                     break
+                if manifest.get("automation_plan"):
+                    from .automation import can_start_round
+                    if not can_start_round(store, manifest, best):
+                        stop = "final_budget_reserved"
+                        break
+                    if store.budget()["optimizer_calls"] >= cfg["budget"]["max_optimizer_calls"]:
+                        stop = "optimizer_budget_exhausted"
+                        break
                 call_id = store.begin_optimizer(cfg["budget"]["max_optimizer_calls"])
                 number = completed + 1
                 store.put("rounds_started", number)
                 label = f"round-{number:04d}"
                 try:
                     proposal = generate_proposal(state, store, manifest, best, call_id)
-                    store.finish_optimizer(call_id, "ok", {"hypothesis": proposal.get("hypothesis"), "location": f"optimizer-runs/call-{call_id:04d}"})
                     if proposal.get("edits") == []:
+                        store.finish_optimizer(call_id, "ok", {"hypothesis": proposal.get("hypothesis"), "location": f"optimizer-runs/call-{call_id:04d}"})
                         stop = "no_more_proposals"
                         store.event("search_stopped", {"reason": stop, "hypothesis": proposal.get("hypothesis")})
                         break
@@ -230,6 +240,9 @@ def loop(state: Path, *, approved: bool, rounds: int | None = None) -> dict[str,
                     store.put("active_round", active)
                     write_json(state / "proposals" / f"{label}.json", proposal)
                     store.event("proposal_applied", {"label": label, "base": best, "changes": changes})
+                    # Mark the optimizer complete only after its candidate/active
+                    # round is durable; interruption cannot silently buy a redo.
+                    store.finish_optimizer(call_id, "ok", {"hypothesis": proposal.get("hypothesis"), "location": f"optimizer-runs/call-{call_id:04d}"})
                 except LabError as exc:
                     store.finish_optimizer(call_id, "failed", {"error": str(exc)})
                     stop = "proposal_error_or_noop"

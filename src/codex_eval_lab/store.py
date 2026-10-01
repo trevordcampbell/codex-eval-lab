@@ -126,10 +126,11 @@ class Store:
                     raise LabError("An interrupted trial has indeterminate cost/outcome. Use recover; it will NOT be retried for free.")
                 return False
             totals = self.budget()
-            if totals["trials"] >= budget["max_trials"]:
+            final_reserve = self.get("protected_final_trials", 0) if split != "test" else 0
+            if totals["trials"] + final_reserve >= budget["max_trials"]:
                 raise LabError("Trial budget exhausted")
             reserve = budget["trial_reserve_usd"]
-            if totals["eval_charged_usd"] + totals["pending_reserved_usd"] + reserve > budget["max_eval_cost_usd"] + 1e-9:
+            if totals["eval_charged_usd"] + totals["pending_reserved_usd"] + reserve * (1 + final_reserve) > budget["max_eval_cost_usd"] + 1e-9:
                 raise LabError("Evaluation cost reservation would exceed the approved budget")
             values = (*key, "pending", reserve, 0, None, utc_now(), None)
             self.db.execute(f"INSERT INTO {table} VALUES({','.join('?' for _ in values)})", values)
@@ -168,8 +169,13 @@ class Store:
         self.event("recovery", {"trials_marked_indeterminate": count})
         return count
 
+    def unresolved_optimizers(self) -> int:
+        return self.db.execute("SELECT COUNT(*) FROM optimizers WHERE status IN ('pending','indeterminate')").fetchone()[0]
+
     def begin_optimizer(self, max_calls: int) -> int:
         with self.transaction():
+            if self.unresolved_optimizers():
+                raise LabError("Optimizer execution is unresolved; preserve its response and charges, do not silently dispatch another call")
             if self.db.execute("SELECT COUNT(*) FROM optimizers").fetchone()[0] >= max_calls:
                 raise LabError("Optimizer call budget exhausted")
             cur = self.db.execute("INSERT INTO optimizers(status,started) VALUES('pending',?)", (utc_now(),))

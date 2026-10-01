@@ -2,7 +2,16 @@
 
 Research date: 2026-10-01. This is an implementation recommendation, with verified protocol shapes and explicit limits. No plugin was installed, registered, uploaded, or published in this research.
 
-## Recommendation
+## Current automation-first boundary
+
+The research below describes the original semantic-review workstation. The native
+workflow now defaults to Codex authoring and orchestrating objective evaluation
+through the local runner, with the UI as optional evidence inspection. Human/expert
+labels are required for unresolved semantic judgment, not every executable control.
+The MCP remains read-only; this revision adds no hosted execution service. See
+[AUTOMATION.md](AUTOMATION.md) for the implemented plan/preflight/selection boundary.
+
+## Original architecture recommendation
 
 Keep the existing Python standard-library eval engine. Add an optional Python MCP adapter and a separately built, bundled MCP Apps review UI. Ship a local, distributable plugin first, with a browser-based workstation as a functional fallback. Reuse the same read models and review-store API across both UIs. A future hosted edition can reuse the UI and engine, but needs tenant isolation, authentication, hosting, and a separate public-submission package.
 

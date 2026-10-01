@@ -15,14 +15,14 @@ import time
 import uuid
 from typing import Any
 
-from . import __version__, paired
+from . import __version__, paired, oracle
 from .artifacts import allowed_edit, collect, copy_files, hashes, snapshot
 from .config import audit, load_cases, load_config, make_splits
 from .evidence import evidence_files, validate_evidence, validate_criterion_results
 from .process import ProcessFailure, docker_argv, invoke, minimal_env, substitute
 from .stats import case_means, compare_rows, valid_rows
 from .store import Store
-from .util import LabError, atomic_text, canonical, contained, digest, experiment_lock, finite, file_hash, read_json, safe_name, utc_now, write_json
+from .util import LabError, atomic_text, canonical, contained, digest, experiment_lock, finite, file_hash, read_json, safe_name, strict_json, utc_now, write_json
 
 
 def runtime_fingerprint() -> dict[str, str]:
@@ -30,7 +30,8 @@ def runtime_fingerprint() -> dict[str, str]:
     return {p.name: file_hash(p) for p in sorted(Path(__file__).parent.glob("*.py"))}
 
 
-def initialize(suite: Path, app: Path, state: Path, *, approvals: dict[str, bool], note: str = "") -> dict[str, Any]:
+def initialize(suite: Path, app: Path, state: Path, *, approvals: dict[str, bool], note: str = "", automation_plan: dict | None = None) -> dict[str, Any]:
+    initialization_started = time.time()
     suite, app, state = suite.resolve(), app.resolve(), state.resolve()
     if state.exists():
         raise LabError("Experiment directory already exists; experiments are never overwritten")
@@ -41,11 +42,13 @@ def initialize(suite: Path, app: Path, state: Path, *, approvals: dict[str, bool
     cfg = load_config(suite)
     cases = load_cases(suite, cfg)
     splits = make_splits(cases, cfg["seed"])
-    suite_paths = ["eval.toml", cfg["cases"]] + cfg["harness_paths"] + [a for c in cases for a in c["assets"]] + evidence_files(cfg)
+    suite_paths = ["eval.toml", cfg["cases"]] + cfg["harness_paths"] + [a for c in cases for a in c["assets"]] + evidence_files(cfg) + oracle.oracle_files(cfg)
     evaluator_files = collect(suite, suite_paths)
     app_files = collect(app, cfg["source_paths"])
     # Bind approval to the bytes validated here, not to later reads of mutable paths.
     approved_evaluator_hashes = {name: file_hash(path) for name, path in evaluator_files.items()}
+    if automation_plan is not None and approved_evaluator_hashes != automation_plan["plan"]["evaluator_sha256"]:
+        raise LabError("Evaluator changed after the automation plan was checked")
     evidence_gate = validate_evidence(suite, cfg, require_ready=bool(cfg.get("evidence")))
     if set(p.resolve() for p in evaluator_files.values()) & set(p.resolve() for p in app_files.values()):
         raise LabError("Application source and private evaluator files must not overlap")
@@ -66,22 +69,38 @@ def initialize(suite: Path, app: Path, state: Path, *, approvals: dict[str, bool
         if hashes(state / "evaluator") != frozen:
             raise LabError("Frozen evaluator changed during evidence verification")
         base_hashes = copy_files(app_files, state / "candidates" / "baseline")
+        if automation_plan is not None and base_hashes != automation_plan["plan"]["baseline_sha256"]:
+            raise LabError("Baseline changed after the automation plan was checked")
+        oracle_gate = {"configured": False, "ready": False, "status": "not_configured"}
+        if cfg.get("oracle"):
+            with Store(state / "state.sqlite3") as store:
+                oracle_gate = oracle.preflight(state / "evaluator", frozen_cfg, state / "oracle-receipt.json", store, expires_at=initialization_started + cfg["budget"]["max_wall_time_s"])
+        if hashes(state / "evaluator") != frozen:
+            raise LabError("Frozen evaluator changed during oracle execution")
         manifest = {"schema_version": 1, "tool_version": __version__, "created": utc_now(),
-                    "expires_at": time.time() + cfg["budget"]["max_wall_time_s"],
+                    "expires_at": initialization_started + cfg["budget"]["max_wall_time_s"],
                     "config": cfg, "cases": cases, "splits": splits, "evaluator_hashes": frozen,
                     "environment": {"python": platform.python_version(), "platform": platform.platform()},
-                    "runtime_hashes": runtime_fingerprint(), "evidence_gate": frozen_gate,
+                    "runtime_hashes": runtime_fingerprint(), "evidence_gate": frozen_gate, "oracle_gate": oracle_gate,
                     "approvals": approvals, "approval_note": note,
                     "isolation": "cooperative-local; Docker mode isolates app execution only, not the optimizer"}
+        if automation_plan is not None:
+            manifest["automation_plan"] = automation_plan
         write_json(state / "manifest.json", manifest)
         with Store(state / "state.sqlite3") as store:
             store.put("manifest_digest", digest(manifest))
+            if automation_plan is not None:
+                store.put("protected_final_trials", automation_plan["plan"]["budget_projection"]["protected_final_trials"])
             store.put("best", "baseline")
             store.add_variant("baseline", digest(base_hashes), "Approved unchanged starting point")
             store.event("approved", {"approvals": approvals, "note": note, "audit": audit_result})
         write_json(state / "audit.json", audit_result)
-    except BaseException:
-        shutil.rmtree(state)
+    except BaseException as exc:
+        if (state / "oracle-receipt.json").exists() or (state / "state.sqlite3").exists():
+            write_json(state / "initialization-failed.json", {"error": str(exc), "at": utc_now(),
+                       "note": "Executed or pending preflight retained. Do not retry in this state; inspect charges and create a new experiment."})
+        else:
+            shutil.rmtree(state)
         raise
     return {"state": str(state), **audit_result}
 
@@ -104,6 +123,20 @@ def manifest_for(state: Path, store: Store, *, check_time: bool = False) -> dict
             raise LabError("Frozen evidence readiness changed; start a new reviewed experiment")
         if hashes(state / "evaluator") != manifest["evaluator_hashes"]:
             raise LabError("Frozen evaluator changed during evidence verification")
+    if manifest.get("automation_plan"):
+        record = manifest["automation_plan"]
+        if digest(record["plan"]) != record["plan_sha256"] or store.get("protected_final_trials") != record["plan"]["budget_projection"]["protected_final_trials"]:
+            raise LabError("Frozen automation plan or final reserve changed")
+    if manifest["config"].get("oracle"):
+        try:
+            receipt = read_json(state / "oracle-receipt.json")
+        except (LabError, OSError, ValueError):
+            raise LabError("Frozen oracle receipt cannot be read; inspect private controller records") from None
+        if digest(receipt) != manifest.get("oracle_gate", {}).get("receipt_sha256"):
+            raise LabError("Frozen oracle receipt changed; start a new experiment")
+        gate = oracle.validate_receipt(state / "evaluator", manifest["config"], receipt)
+        if gate != manifest.get("oracle_gate"):
+            raise LabError("Frozen executable-oracle receipt changed; start a new experiment")
     return manifest
 
 
@@ -161,6 +194,42 @@ def response_object(value: Any, *, grader: bool = False) -> dict[str, Any]:
     return value
 
 
+
+def reported_cost(value: Any) -> float:
+    """Conserve a known charge even when the rest of an adapter response is invalid."""
+    try:
+        return finite(value.get("usage", {}).get("cost_usd"), "reported cost", minimum=0)
+    except (AttributeError, LabError, TypeError):
+        return 0.0
+
+
+def validate_grader_metrics(grade: dict, cfg: dict, *, contract: list[dict] | None = None) -> dict:
+    """One grader protocol validator shared by preflight and real trials."""
+    response_object(grade, grader=True)
+    expected_model = cfg["execution"].get("expected_judge_model")
+    if expected_model and grade.get("model") != expected_model:
+        raise LabError("Served judge model does not match the approved model")
+    if not isinstance(grade["metrics"], dict):
+        raise LabError("Grader metrics must be an object")
+    if {"cost_usd", "latency_s"} & set(grade["metrics"]):
+        raise LabError("latency_s and cost_usd are runner-owned metrics")
+    expected_metrics = set(cfg["metrics"]) - {"cost_usd", "latency_s"}
+    if set(grade["metrics"]) - expected_metrics:
+        raise LabError("Grader returned an undeclared metric")
+    if expected_metrics - set(grade["metrics"]):
+        raise LabError("Grader omitted a declared metric (missing or undeclared metrics)")
+    metrics = {}
+    for metric, number in grade["metrics"].items():
+        bounds = cfg["metrics"][metric]
+        metrics[metric] = finite(number, metric, minimum=bounds.get("minimum"), maximum=bounds.get("maximum"))
+    if contract is not None:
+        validate_criterion_results(grade.get("criterion_results"), contract=contract)
+        for item in contract:
+            if metrics[item["metric"]] != (1.0 if grade["criterion_results"][item["id"]]["status"] == "pass" else 0.0):
+                raise LabError("Atomic metric disagrees with its raw criterion result")
+    return metrics
+
+
 def perform_trial(state: Path, manifest: dict[str, Any], source: Path, case: dict[str, Any], rep: int,
                   *, timeout_cap: float) -> dict[str, Any]:
     cfg, suite = manifest["config"], state / "evaluator"
@@ -207,8 +276,8 @@ def perform_trial(state: Path, manifest: dict[str, Any], source: Path, case: dic
                     # Killing a docker client is not sufficient to kill its daemon-side container.
                     subprocess.run(["docker", "rm", "--force", container_name], stdin=subprocess.DEVNULL,
                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=15, check=False)
+            charged += reported_cost(app_result.value)
             answer = response_object(app_result.value)
-            charged += answer["usage"]["cost_usd"]
             if execution.get("expected_app_model") and answer.get("model") != execution["expected_app_model"]:
                 raise LabError("Served application model does not match the approved model")
             grade_req = {"schema_version": 1, "case_id": case["id"], "input": case["input"],
@@ -217,32 +286,25 @@ def perform_trial(state: Path, manifest: dict[str, Any], source: Path, case: dic
             remaining = manifest["expires_at"] - time.time()
             if remaining <= 0:
                 raise LabError("Experiment deadline reached before grading")
-            if cfg.get("evidence") and hashes(suite) != manifest["evaluator_hashes"]:
+            if (cfg.get("evidence") or cfg.get("oracle")) and hashes(suite) != manifest["evaluator_hashes"]:
                 raise LabError("Frozen evaluator changed before grading; start a new experiment")
             grade_cmd = substitute(execution["grader_command"], app=app, suite=suite, artifacts=outputs)
             grade_result = invoke(grade_cmd, grade_req, cwd=suite,
                                   env=minimal_env(execution["grader_env"], home=root),
                                   timeout_s=min(execution["grader_timeout_s"], remaining),
                                   max_output_bytes=execution["max_output_bytes"])
+            charged += reported_cost(grade_result.value)
             grade = response_object(grade_result.value, grader=True)
-            charged += grade["usage"]["cost_usd"]
             if "criterion_results" in grade:
                 # Keep raw criterion judgments even if a later check invalidates the trial.
                 record["criterion_results"] = grade["criterion_results"]
-            if cfg.get("evidence") and hashes(suite) != manifest["evaluator_hashes"]:
+            if (cfg.get("evidence") or cfg.get("oracle")) and hashes(suite) != manifest["evaluator_hashes"]:
                 raise LabError("Frozen evaluator changed during grading; start a new experiment")
-            if cfg.get("evidence"):
-                contract = manifest["evidence_gate"]["criteria_contract"]
-                validate_criterion_results(grade.get("criterion_results"), contract=contract)
-            if execution.get("expected_judge_model") and grade.get("model") != execution["expected_judge_model"]:
-                raise LabError("Served judge model does not match the approved model")
-            if not isinstance(grade["metrics"], dict):
-                raise LabError("Grader metrics must be an object")
-            if {"latency_s", "cost_usd"} & set(grade["metrics"]):
-                raise LabError("latency_s and cost_usd are runner-owned metrics; use distinct names for other measurements")
-            metrics = dict(grade["metrics"])
-            if set(metrics) - set(cfg["metrics"]):
-                raise LabError("Grader returned an undeclared metric")
+            contract = None
+            if cfg.get("evidence") or cfg.get("oracle"):
+                contract = list({item["id"]: item for gate in (manifest["evidence_gate"], manifest.get("oracle_gate", {}))
+                                 for item in gate.get("criteria_contract", [])}.values())
+            metrics = validate_grader_metrics(grade, cfg, contract=contract)
             if "latency_s" in cfg["metrics"]:
                 metrics["latency_s"] = app_result.elapsed_s
             if "cost_usd" in cfg["metrics"]:
@@ -251,11 +313,6 @@ def perform_trial(state: Path, manifest: dict[str, Any], source: Path, case: dic
                 raise LabError("Grader omitted a declared metric")
             for metric, bounds in cfg["metrics"].items():
                 metrics[metric] = finite(metrics[metric], metric, minimum=bounds.get("minimum"), maximum=bounds.get("maximum"))
-            if cfg.get("evidence"):
-                for item in manifest["evidence_gate"]["criteria_contract"]:
-                    raw = grade["criterion_results"][item["id"]]
-                    if metrics[item["metric"]] != (1.0 if raw["status"] == "pass" else 0.0):
-                        raise LabError("Atomic metric disagrees with its raw criterion result")
             record.update({"status": "ok", "metrics": metrics, "output": answer["output"],
                            "model": answer.get("model"), "judge_model": grade.get("model"),
                            "app_usage": answer["usage"], "judge_usage": grade["usage"],
@@ -266,6 +323,10 @@ def perform_trial(state: Path, manifest: dict[str, Any], source: Path, case: dic
     except (LabError, OSError, subprocess.SubprocessError) as exc:
         record["error"] = str(exc)
         if isinstance(exc, ProcessFailure):
+            try:
+                charged += reported_cost(strict_json(exc.stdout))
+            except LabError:
+                pass
             record["failed_process"] = {"stdout": exc.stdout, "stderr": exc.stderr, "elapsed_s": exc.elapsed_s}
     finally:
         # Preserve streams and output artifacts. Never interpret app-supplied HTML as trusted code.
@@ -297,23 +358,26 @@ def run_internal(state: Path, store: Store, manifest: dict[str, Any], label: str
     # Same randomized order across variants; still run interleaved controls for noisy systems.
     import random
     random.Random(cfg["seed"]).shuffle(jobs)
-    for id_, rep in jobs:
-        manifest_for(state, store, check_time=True)
-        check_source(state, store, label)
-        if not store.reserve(label, split, id_, rep, cfg["budget"]):
-            continue
-        result = perform_trial(state, manifest, source, by_id[id_], rep,
-                               timeout_cap=max(.01, manifest["expires_at"] - time.time()))
-        store.complete(label, split, id_, rep, result, result["charged_usd"])
+    try:
+        for id_, rep in jobs:
+            manifest_for(state, store, check_time=True)
+            check_source(state, store, label)
+            if not store.reserve(label, split, id_, rep, cfg["budget"]):
+                continue
+            result = perform_trial(state, manifest, source, by_id[id_], rep,
+                                   timeout_cap=max(.01, manifest["expires_at"] - time.time()))
+            store.complete(label, split, id_, rep, result, result["charged_usd"])
+            if result["status"] != "ok":
+                store.event("trial_error", {"label": label, "split": split, "id": id_, "rep": rep, "error": result.get("error")})
+                raise LabError(f"Trial failed ({label}/{split}/{id_}/{rep}): {result.get('error')}. No automatic retry; inspect the stored evidence.")
+    finally:
+        # SQLite commits every trial. JSONL is a derived export, materialized once
+        # per invocation (also on ordinary failure/interruption), not quadratically
+        # rewritten after each row. A hard kill is reconciled on the next run.
         atomic_text(state / "runs" / label / f"{split}.jsonl", "".join(canonical(row) + "\n" for row in store.results(label, split)))
-        if result["status"] != "ok":
-            store.event("trial_error", {"label": label, "split": split, "id": id_, "rep": rep, "error": result.get("error")})
-            raise LabError(f"Trial failed ({label}/{split}/{id_}/{rep}): {result.get('error')}. No automatic retry; inspect the stored evidence.")
     manifest_for(state, store)
     check_source(state, store, label)
     rows = store.results(label, split)
-    # SQLite is authoritative; rebuild JSONL after a crash between commit and export.
-    atomic_text(state / "runs" / label / f"{split}.jsonl", "".join(canonical(row) + "\n" for row in rows))
     valid_rows(rows, ids, cfg["repetitions"])
     summary = {"label": label, "split": split, "trials": len(rows),
                "metrics": {m: sum(case_means(rows, m).values()) / len(ids) for m in cfg["metrics"]},
@@ -384,6 +448,8 @@ def finalize(state: Path, *, approved: bool) -> dict[str, Any]:
         manifest = manifest_for(state, store)
         if store.get("final_result"):
             return store.get("final_result")
+        if manifest.get("automation_plan") and store.unresolved_optimizers():
+            raise LabError("Unresolved optimizer execution blocks automated finalization")
         manifest_for(state, store, check_time=True)
         selection = store.get("final_selection")
         if selection is None:

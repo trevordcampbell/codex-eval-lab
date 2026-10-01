@@ -1,97 +1,97 @@
 ---
 name: build-eval
-description: Design or extend a representative, runnable evaluation for an application, agent, model, skill, software benchmark, or generated artifact. Use for eval design, case curation, outcome grading, and baseline construction; not merely to rerun an ordinary unit test.
+description: Design and build runnable evaluations for applications, agents, models, skills and software benchmarks; automate contracts, cases, objective oracle checks and baselines, then scoped improvement when authorized. Use for eval design and outcome grading, not merely rerunning an ordinary unit test.
 ---
 
-# Build a trusted, runnable eval
+# Build the measurement and do the work
 
-Read `references/OPERATING_GUIDE.md` and `references/PROTOCOL.md` before building.
-Run `eval-lab doctor` to establish whether the engine is installed. If it is absent,
-explain the missing prerequisite; do not claim these instructions alone install it.
-Do not change the application's provider, SDK, language or architecture to fit an
-example. The engine is optional plumbing around the project's real entry point.
+Read `references/AUTOMATION.md` and `references/PROTOCOL.md`. Run `eval-lab doctor`.
+If unavailable, inspect `references/installation.json` where installed. Reuse the
+project's actual provider, language, entry point and toolchain. Do not redesign the
+application around a toy example or pretend the skill itself installs a runner.
 
-## Walk through real traces before choosing evals
+The default is Codex doing the work. Inspect the requested flow and existing tests;
+derive a concrete contract, representative/stress cases, grouped splits, adapters,
+oracles, controls, scope and budgets. Make sensible reversible choices from the
+user's goal. Do not make users fill evaluation forms, label mechanically checkable
+answers, or approve each already-authorized iteration. Ask only for material
+unresolved domain judgments, unavailable data, spend or action-policy authority.
+Do not infer permission from silence, a plan file or an approval flag.
 
-Start with the user's approved, redacted development traces and existing failures,
-not a metric menu or generated labels. Build a review packet and let the user inspect
-inputs, actual outputs, tool calls and outcomes in context. Keep judge predictions
-and agent-suggested labels hidden during the first human pass. The human marks
-pass/fail/uncertain, explains what went wrong, and identifies failure modes.
-Do not ask the user to bless an aggregate score or label-count table.
+## Choose evidence suited to the task
 
-Use representative samples and separately identified stress cases. Preserve source,
-time window, sampling rationale and related-case groups. Never import final-test
-or experiment-validation traces into development review. Calibration validation
-is a distinct partition and must not be used to invent/tune criteria.
+For exact behavior, prefer executable outcomes: tests, end state, independent
+reference algorithms and source-derived boundary anchors. Write the specification
+and expected-result derivations explicitly, with truthful model/human/imported
+origins. Independently implement the reference, use positive and known-wrong
+mutation controls, and test metamorphic transformations on the application's
+actual outputs where meaningful. Never certify an oracle by comparing it only
+with labels produced by the same oracle. Two-model agreement is not ground truth.
 
-Only after this walkthrough, summarize human-observed failure modes and ask which
-are worth measuring. Link each proposed atomic criterion to reviewed tuning anchors.
-Offer a separate deterministic check for exact invariants and an independently
-calibrated judge for semantic judgments. Do not combine several behaviors into one
-criterion that hides the reason for failure. If the user has no suitable data,
-help them collect a small authorized sample; synthetic demonstrations do not become
-human-reviewed production evidence.
+For JSON-only objective cases, the runner also checks every frozen case via the
+reference and actual grader before search; keep private receipts out of proposer
+context. Artifact-dependent outcomes need the separately validated task-specific
+path until that preflight transport is supported.
 
-Read `references/EVIDENCE.md` for the review and calibration commands. Record actual
-human judgments; do not fill review forms or set confirmation flags on their behalf
-without those judgments. A local reviewer field is an attestation, not authentication.
+Build `[oracle]` and its strict contract following `references/AUTOMATION.md` and
+`examples/automation` in the checkout. Author the files yourself. Exact controls
+need no human labeling ceremony; source authenticity, correctness of the intended
+contract, representativeness and implementation independence remain explicit trust
+assumptions. A model-generated case stays synthetic; an executable result does not
+make its label human-reviewed or prove its production importance.
 
-## Establish the contract
+For semantic/business judgments, read `references/EVIDENCE.md`. Reuse genuinely
+validated domain anchors when their content, source scope and criteria still
+apply; preserve their exposure. Inspect approved redacted development traces,
+record the real human/expert judgments and rationale, then form atomic criteria.
+Keep model suggestions separate. Calibrate each semantic criterion on independent
+judge-validation groups with the existing support and lower-bound gates. Do not
+invent annotations or fill human confirmation fields. Escalate the actual ambiguity
+and representative disagreements, not a blank form or every routine case. For a
+mixed semantic/deterministic grader use that expert-evidence path so a deterministic
+component cannot conceal an unverified semantic one.
 
-Inspect the requested codebase and existing evaluation/test infrastructure first.
-Identify one flow, its actual inputs/state/assets, observable outcome, baseline,
-practical constraints and proposed editable surface. Reuse what works; wrap an
-existing harness. For mixed-language repositories, use the current runner rather
-than rewriting application logic in Python.
+## Build and audit before searching
 
-Propose concrete defaults. Gather only missing decisions: representative input
-sources; output/end-state grading; important metrics/guardrails; budget and execution
-permissions. Check retention and sensitive data before pulling production records.
-Prefer human-verified real cases; label synthetic/stress cases honestly. Use stable
-case IDs and group related users, conversations, documents and templates.
+Use actual inputs/state/assets and grade actual output/end state. Keep expected
+answers private from the application; success claims are not outcomes. Record served
+model, usage including retries, errors and raw per-criterion results. Add malformed,
+negative and boundary cases, preserve sampling origin and independent groups.
+Keep exposed controls out of validation/final groups and never inspect a final
+holdout during optimization. If you saw heldouts while designing, use fresh
+proposal sessions; a clean context is not an OS isolation boundary.
 
-Show actual cases in the user's preferred review format. Get explicit approval of
-cases/labels (or a disclosed stratified review for a large set). Do not infer approval
-from silence. Define deterministic outcome checks first; use calibrated rubric or
-blinded pairwise judging where the output requires judgment. Get separate approval
-of the grader after reviewing a pilot and disagreements. Never use the tested model's
-answers as unverified ground truth.
+Run `eval-lab audit <suite>` (read-only), then `$audit-eval`. Resolve machine-checkable
+failures yourself within scope. Explain uncertain domain assumptions succinctly.
+Check measurement noise/headroom against the minimum useful effect. For timing use
+trusted measurement, unchanged controls and a new paired AB/BA suite where warranted;
+self-reported timers remain cooperative evidence. Do not silently shrink the scope
+to fit a budget or change a frozen grader to improve scores.
 
-## Build the runnable path
+## Execute within one explicit scope
 
-Create a versioned suite with eval.toml, cases.jsonl, a thin app adapter, a separate
-grader and declared fixtures. The app receives no expected answers. Log the actual
-application output/trace, served model, usage, artifact paths and independent grade
-from the same trial. Internal retries must be explicit and charged. For coding and
-tool agents, grade hidden tests and end state, not success claims in transcripts.
+For a requested end-to-end improvement, generate a plan with `automation-plan` and
+use `automate` after existing authority covers exact commands, data, source scope,
+eval limits, separate optimizer usage and final-test intent. See the command recipe
+in `references/AUTOMATION.md`. The runner freezes/rechecks evidence, establishes the
+baseline, iterates bounded fresh proposals, selects, seals, finalizes and reports.
+No extra iteration approval is needed within that authority. Required spending,
+private-data/security actions and new scope still follow host policy.
 
-Add smoke and negative-control tests. Run `eval-lab audit <suite>` before paid calls.
-Explain what the automated audit cannot establish: representativeness, label truth,
-judge calibration, model wiring, real-world proxy validity and environment drift.
-Size independent cases/repeats against the minimum useful effect and noise; do not
-silently reduce the experiment to fit a budget.
+If the user requested measurement only, use the individual start/run/report commands
+and leave final testing unopened unless included. Approval notes describe real
+execution permission, not fictional human case review. Do not start provider calls,
+Docker pulls, production side effects or arbitrary installations without authority.
+Hosted evidence MCP tools stay read-only; native Codex drives the CLI with its own
+authorized environment tools. The optional UI is for inspecting evidence, never a
+mandatory gate or an agent-granted approval mechanism.
 
-Obtain approval for commands, scope, isolation mode, per-trial reservation, total
-evaluation limits and separate optimizer usage. For an approved suite:
+Deliver the concrete files, commands/run identity, evidence basis and unresolved
+assumptions, measured result, costs versus unknown optimizer dollars, and report.
+Changing evaluator bytes or semantics means a new experiment and baseline. Preserve
+all failed attempts and the original runtime; do not retrofit old frozen runs.
 
-```sh
-eval-lab start <suite> --app <application-root> --state <external-state-dir> \
-  --approve-cases --approve-grader --approve-execution --note "<actual human approval>"
-eval-lab run <state> --label baseline --split train
-eval-lab run <state> --label baseline --split validation
-eval-lab report <state> --out <state>/report.html
-```
-
-Never set approval flags without the corresponding authorization. There is no
-universal sandbox in local mode. Use Docker for app isolation and the documented
-export/import workflow with a separate trust domain for real optimizer/holdout
-separation. Do not claim merely placing files outside the repo hides them.
-
-## Handoff
-
-Deliver exact commands, case/group/repeat counts, baseline evidence, limitations,
-actual versus unknown costs and report location. Leave the final test unopened.
-Transition to `$hillclimb` only with a working trusted eval and approved plan. An
-agent that reviewed all cases must not become the optimizer with that same context;
-use fresh proposal sessions or an exported development-only workspace.
+Build and smoke-test candidate code in disposable copies before immutable
+registration. Keep Python bytecode, Rust targets and other caches outside frozen
+snapshots; bind cache keys to source, trusted driver/reference, compiler and flags.
+Do not weaken hashing or ignore arbitrary changed files to hide a cache write.

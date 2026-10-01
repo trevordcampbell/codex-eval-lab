@@ -23,7 +23,7 @@ def build(root: Path, out: Path) -> dict:
     template = root / "plugin" / "codex-eval-lab"
     version = tomllib.loads((root / "pyproject.toml").read_text())["project"]["version"]
     planned: list[tuple[Path, Path]] = []
-    for directory, extensions in [(template, {".json", ".py"}), (root / "src", {".py", ".html", ".js", ".css", ".txt"}), (root / "skills", {".md", ".json", ".py", ".txt", ".toml"}), (root / "docs", {".md", ".html", ".json", ".txt", ".svg"}), (root / "examples", {".md", ".py", ".toml", ".json", ".jsonl"}), (root / "scripts", {".py"}), (root / "requirements", {".txt"})]:
+    for directory, extensions in [(template, {".json", ".py"}), (root / "src", {".py", ".html", ".js", ".css", ".txt"}), (root / "skills", {".md", ".json", ".py", ".txt", ".toml", ".yaml"}), (root / "docs", {".md", ".html", ".json", ".txt", ".svg"}), (root / "examples", {".md", ".py", ".toml", ".json", ".jsonl", ".txt", ".rs"}), (root / "scripts", {".py"}), (root / "requirements", {".txt"})]:
         for file in sorted(directory.rglob("*")):
             if "__pycache__" in file.parts or "node_modules" in file.parts:
                 continue

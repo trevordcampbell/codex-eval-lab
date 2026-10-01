@@ -125,3 +125,19 @@ review, and approved HTTPS endpoints. No such service, credential, webhook, or
 persistent installation is created by building this local plugin. App-only tool
 visibility must never be substituted for authorization if future write tools are
 added.
+
+## Native automation and executable-oracle scope
+
+Automation adds no network execution API. The hosted plugin's read-only boundary
+is unchanged. CLI flags and authorization notes are cooperative records; they do
+not grant authority, authenticate a user, or prove human labeling. The host must
+apply its usual spend, private-data, credential and security action policies.
+A plan's explicit scope can cover repeated iterations and final-test opening so
+objective workflows need no ceremonial per-step human confirmation.
+
+Oracle preflight executes trusted local reference/grader code in disposable source
+copies, with no extra credential environment. This is still same-account code,
+not a network/side-effect sandbox. Source provenance and implementation independence
+are declared assumptions, not cryptographic or epistemic proof. Raw receipts are
+bound to the evaluator and rechecked; a same-account actor capable of rewriting
+all records can fabricate them. Model-authored anchors remain model-authored.

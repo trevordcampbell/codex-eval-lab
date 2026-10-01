@@ -48,7 +48,8 @@ The optional expected model fields make a mismatch invalidate the run.
 Keep image/video/binary artifacts in `artifacts_dir`, not base64 in a transcript.
 An output may describe their paths relative to that directory. Graders can inspect
 those artifacts. The HTML report preserves the artifact-directory reference and
-shows model content as text; it intentionally does not execute arbitrary HTML/SVG
+shows bounded model-content previews as escaped text, with explicit truncation/omission
+and raw-state locations (see the operating guide); it intentionally does not execute arbitrary HTML/SVG
 or automatically render/download external media. For rich media review, use a
 separately sandboxed viewer. Artifact disk usage needs an OS/container quota for
 untrusted apps; the core caps stdout/stderr, not arbitrary disk writes.
@@ -215,3 +216,27 @@ Reports display separate cohort comparisons instead of pooling them into a
 single per-source validation score. All legacy and paired attempts count toward
 the same approved trial, cost and wall-time limits. See the operating guide for
 budgeting and recovery behavior.
+
+## Executable-oracle and orchestration contracts
+
+A new suite may declare `[oracle] contract = "oracle.json"` instead of the expert
+`[evidence]` bundle path. The strict schema and complete example are documented in
+[AUTOMATION.md](AUTOMATION.md) and `examples/automation`. Oracle controls use a
+separate declared local reference, specification-derived anchors, actual grader
+responses and known-wrong output mutations. The artifact records model/human/imported
+origin; it is not a human-review receipt. Free-local preflight requires an empty
+`grader_env` to keep checks and actual grader execution consistent. Private cases
+cannot also serve as exposed development controls. The runner checks declared anchors/mutations and separately runs the reference
+on every frozen case without its expected value, then requires the actual grader
+to pass that exact reference output under the frozen expected data. This detects
+consistency errors; it does not prove reference/specification validity. Raw private
+case receipts stay in the controller, never proposal or default report context.
+This route supports JSON-only cases without file assets or artifact-dependent grading.
+
+`automation-plan` records scope and bytes without executing code. `automate` verifies
+that plan and consumes authority already granted through the user's host policy.
+Every oracle check is reserved before execution in the same SQLite trial ledger
+(split `oracle`, label `oracle-preflight`); it contributes to `budget.trials` and
+charges. A separate raw receipt preserves commands' responses and streams. Final
+capacity is protected for automated plans. `automation-result.json` exposes
+provenance, selection/final status and accounting without private control rows.

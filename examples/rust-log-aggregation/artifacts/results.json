@@ -1,0 +1,2664 @@
+{
+  "schema_version": 1,
+  "title": "Actual Rust log aggregation hillclimb with Codex Eval Lab",
+  "generated_at": "2026-10-01T06:06:24.583252+00:00",
+  "engine_commit": "841a8ac4396bedd992b956338e42efbd9d4954c8",
+  "selected": "round-2",
+  "final": {
+    "accepted": true,
+    "baseline": "baseline",
+    "candidate": "round-2",
+    "cases": 36,
+    "caveats": [
+      "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+      "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+      "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+    ],
+    "decision": "keep",
+    "final_selection": {
+      "label": "round-2",
+      "sealed_at": "2026-10-01T06:00:44.375806+00:00",
+      "source_hash": "ad0376546d6a7ba19c626554b85f2da50626d83e84422ba23e3dc7ceeec73aff"
+    },
+    "groups": 18,
+    "interpretation": "Independent held-out comparison for the preselected winner; not a guarantee about unsampled tasks. Do not tune further on this test set.",
+    "metrics": {
+      "correctness": {
+        "baseline": 1.0,
+        "candidate": 1.0,
+        "direction": "maximize",
+        "favorable_delta": {
+          "cases": 36,
+          "confidence": 0.975,
+          "groups": 18,
+          "high": 0.0,
+          "low": 0.0,
+          "mean": 0.0,
+          "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+        },
+        "passes": true,
+        "raw_delta": 0.0,
+        "threshold": -0.0
+      },
+      "log_ratio": {
+        "baseline": -0.001247355096735052,
+        "candidate": -0.49058968403761494,
+        "direction": "minimize",
+        "favorable_delta": {
+          "cases": 36,
+          "confidence": 0.975,
+          "groups": 18,
+          "high": 0.550057031239576,
+          "low": 0.42696006561168465,
+          "mean": 0.48934232894087987,
+          "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+        },
+        "passes": true,
+        "raw_delta": -0.48934232894087987,
+        "threshold": 0.048790164169432
+      }
+    },
+    "repetitions": 3,
+    "split": "test"
+  },
+  "summaries": {
+    "baseline": {
+      "train": {
+        "label": "baseline",
+        "split": "train",
+        "trials": 144,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": 0.0045154745440873735,
+          "kernel_ns": 690895.1654212304,
+          "external_process_ns": 311912824.25,
+          "latency_s": 0.37118431168052113,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 144,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      },
+      "validation": {
+        "label": "baseline",
+        "split": "validation",
+        "trials": 108,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.0005950307782394793,
+          "kernel_ns": 691843.3032939305,
+          "external_process_ns": 315656706.9351852,
+          "latency_s": 0.3774138886851856,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 252,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      },
+      "test": {
+        "label": "baseline",
+        "split": "test",
+        "trials": 108,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.001247355096735052,
+          "kernel_ns": 703092.6512703823,
+          "external_process_ns": 326206449.5648148,
+          "latency_s": 0.3905650468795506,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 1908,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      }
+    },
+    "unchanged-before": {
+      "train": {
+        "label": "unchanged-before",
+        "split": "train",
+        "trials": 144,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.0020788931206000413,
+          "kernel_ns": 690972.9938916973,
+          "external_process_ns": 314413078.5138889,
+          "latency_s": 0.37511502691663484,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 396,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      }
+    },
+    "round-1": {},
+    "round-1-clean": {
+      "train": {
+        "label": "round-1-clean",
+        "split": "train",
+        "trials": 144,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.15824788497594938,
+          "kernel_ns": 473003.92314516957,
+          "external_process_ns": 266158719.10416666,
+          "latency_s": 0.32728647881952433,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 540,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      },
+      "validation": {
+        "label": "round-1-clean",
+        "split": "validation",
+        "trials": 108,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.15582957501345482,
+          "kernel_ns": 474343.7457724844,
+          "external_process_ns": 264155704.79629627,
+          "latency_s": 0.3239018224629338,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 648,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      }
+    },
+    "negative-sign-shortcut": {
+      "train": {
+        "label": "negative-sign-shortcut",
+        "split": "train",
+        "trials": 144,
+        "metrics": {
+          "correctness": 0.6666666666666666,
+          "log_ratio": -0.2333866030838423,
+          "kernel_ns": 443559.98230698524,
+          "external_process_ns": 257522788.98611113,
+          "latency_s": 0.3176796501805307,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 792,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      },
+      "validation": {
+        "label": "negative-sign-shortcut",
+        "split": "validation",
+        "trials": 108,
+        "metrics": {
+          "correctness": 0.6944444444444444,
+          "log_ratio": -0.2322345504501747,
+          "kernel_ns": 465753.1413888038,
+          "external_process_ns": 263192744.6111111,
+          "latency_s": 0.3258418620556329,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 900,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      }
+    },
+    "round-2": {
+      "train": {
+        "label": "round-2",
+        "split": "train",
+        "trials": 144,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.46623865544737536,
+          "kernel_ns": 360811.94267721736,
+          "external_process_ns": 237375148.6597222,
+          "latency_s": 0.29854659427078584,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 1044,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      },
+      "validation": {
+        "label": "round-2",
+        "split": "validation",
+        "trials": 108,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.47955261562154394,
+          "kernel_ns": 348535.749340448,
+          "external_process_ns": 235039509.5462963,
+          "latency_s": 0.29390374002773734,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 1152,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      },
+      "test": {
+        "label": "round-2",
+        "split": "test",
+        "trials": 108,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.49058968403761494,
+          "kernel_ns": 358061.51096345653,
+          "external_process_ns": 242719253.0277778,
+          "latency_s": 0.30609479932406797,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 2016,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      }
+    },
+    "round-3": {
+      "train": {
+        "label": "round-3",
+        "split": "train",
+        "trials": 144,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.5787346966246216,
+          "kernel_ns": 315265.6376953125,
+          "external_process_ns": 222541803.52083334,
+          "latency_s": 0.2826426798541459,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 1296,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      },
+      "validation": {
+        "label": "round-3",
+        "split": "validation",
+        "trials": 108,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.5779241262639191,
+          "kernel_ns": 319325.1551915254,
+          "external_process_ns": 226034851.76851854,
+          "latency_s": 0.2870142840462601,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 1404,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      }
+    },
+    "round-4": {
+      "train": {
+        "label": "round-4",
+        "split": "train",
+        "trials": 144,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.560410856683598,
+          "kernel_ns": 321545.05518695107,
+          "external_process_ns": 226895508.73611113,
+          "latency_s": 0.2886130428958672,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 1548,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      },
+      "validation": {
+        "label": "round-4",
+        "split": "validation",
+        "trials": 108,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.5842578546903509,
+          "kernel_ns": 312730.46922977094,
+          "external_process_ns": 225119454.25925925,
+          "latency_s": 0.28838577600922854,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 1656,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      }
+    },
+    "unchanged-after": {
+      "train": {
+        "label": "unchanged-after",
+        "split": "train",
+        "trials": 144,
+        "metrics": {
+          "correctness": 1.0,
+          "log_ratio": -0.0005863371261198735,
+          "kernel_ns": 689575.0406055326,
+          "external_process_ns": 312265983.4444445,
+          "latency_s": 0.37498059676383694,
+          "cost_usd": 0.0
+        },
+        "budget": {
+          "trials": 1800,
+          "eval_charged_usd": 0.0,
+          "pending_reserved_usd": 0,
+          "optimizer_calls": 0,
+          "optimizer_dollars": null,
+          "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+        }
+      }
+    }
+  },
+  "candidate_history": [
+    {
+      "candidate": "round-1-clean",
+      "base": "baseline",
+      "accepted": true,
+      "vs_incumbent": {
+        "baseline": "baseline",
+        "candidate": "round-1-clean",
+        "split": "validation",
+        "accepted": true,
+        "metrics": {
+          "log_ratio": {
+            "baseline": -0.0005950307782394793,
+            "candidate": -0.15582957501345482,
+            "raw_delta": -0.15523454423521535,
+            "direction": "minimize",
+            "favorable_delta": {
+              "mean": 0.15523454423521535,
+              "low": 0.10283581918002586,
+              "high": 0.20366369541981214,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": 0.048790164169432,
+            "passes": true
+          },
+          "correctness": {
+            "baseline": 1.0,
+            "candidate": 1.0,
+            "raw_delta": 0.0,
+            "direction": "maximize",
+            "favorable_delta": {
+              "mean": 0.0,
+              "low": 0.0,
+              "high": 0.0,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": -0.0,
+            "passes": true
+          }
+        },
+        "cases": 36,
+        "groups": 18,
+        "repetitions": 3,
+        "decision": "keep",
+        "caveats": [
+          "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+          "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+          "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+        ]
+      },
+      "vs_original": {
+        "baseline": "baseline",
+        "candidate": "round-1-clean",
+        "split": "validation",
+        "accepted": true,
+        "metrics": {
+          "log_ratio": {
+            "baseline": -0.0005950307782394793,
+            "candidate": -0.15582957501345482,
+            "raw_delta": -0.15523454423521535,
+            "direction": "minimize",
+            "favorable_delta": {
+              "mean": 0.15523454423521535,
+              "low": 0.10283581918002586,
+              "high": 0.20366369541981214,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": 0.048790164169432,
+            "passes": true
+          },
+          "correctness": {
+            "baseline": 1.0,
+            "candidate": 1.0,
+            "raw_delta": 0.0,
+            "direction": "maximize",
+            "favorable_delta": {
+              "mean": 0.0,
+              "low": 0.0,
+              "high": 0.0,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": -0.0,
+            "passes": true
+          }
+        },
+        "cases": 36,
+        "groups": 18,
+        "repetitions": 3,
+        "decision": "keep",
+        "caveats": [
+          "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+          "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+          "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+        ]
+      },
+      "at": "2026-10-01T05:38:22.687207+00:00"
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "base": "round-1-clean",
+      "accepted": false,
+      "vs_incumbent": {
+        "baseline": "round-1-clean",
+        "candidate": "negative-sign-shortcut",
+        "split": "validation",
+        "accepted": false,
+        "metrics": {
+          "log_ratio": {
+            "baseline": -0.15582957501345482,
+            "candidate": -0.2322345504501747,
+            "raw_delta": -0.07640497543671983,
+            "direction": "minimize",
+            "favorable_delta": {
+              "mean": 0.07640497543671983,
+              "low": 0.04103659822181235,
+              "high": 0.11139974348711783,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": 0.048790164169432,
+            "passes": false
+          },
+          "correctness": {
+            "baseline": 1.0,
+            "candidate": 0.6944444444444444,
+            "raw_delta": -0.3055555555555556,
+            "direction": "maximize",
+            "favorable_delta": {
+              "mean": -0.3055555555555556,
+              "low": -0.5555555555555556,
+              "high": -0.08333333333333333,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": -0.0,
+            "passes": false
+          }
+        },
+        "cases": 36,
+        "groups": 18,
+        "repetitions": 3,
+        "decision": "do_not_promote",
+        "caveats": [
+          "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+          "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+          "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+        ]
+      },
+      "vs_original": {
+        "baseline": "baseline",
+        "candidate": "negative-sign-shortcut",
+        "split": "validation",
+        "accepted": false,
+        "metrics": {
+          "log_ratio": {
+            "baseline": -0.0005950307782394793,
+            "candidate": -0.2322345504501747,
+            "raw_delta": -0.2316395196719352,
+            "direction": "minimize",
+            "favorable_delta": {
+              "mean": 0.2316395196719352,
+              "low": 0.17865473939459253,
+              "high": 0.2823299843033143,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": 0.048790164169432,
+            "passes": true
+          },
+          "correctness": {
+            "baseline": 1.0,
+            "candidate": 0.6944444444444444,
+            "raw_delta": -0.3055555555555556,
+            "direction": "maximize",
+            "favorable_delta": {
+              "mean": -0.3055555555555556,
+              "low": -0.5555555555555556,
+              "high": -0.08333333333333333,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": -0.0,
+            "passes": false
+          }
+        },
+        "cases": 36,
+        "groups": 18,
+        "repetitions": 3,
+        "decision": "do_not_promote",
+        "caveats": [
+          "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+          "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+          "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+        ]
+      },
+      "at": "2026-10-01T05:42:38.837159+00:00"
+    },
+    {
+      "candidate": "round-2",
+      "base": "round-1-clean",
+      "accepted": true,
+      "vs_incumbent": {
+        "baseline": "round-1-clean",
+        "candidate": "round-2",
+        "split": "validation",
+        "accepted": true,
+        "metrics": {
+          "log_ratio": {
+            "baseline": -0.15582957501345482,
+            "candidate": -0.47955261562154394,
+            "raw_delta": -0.3237230406080891,
+            "direction": "minimize",
+            "favorable_delta": {
+              "mean": 0.3237230406080891,
+              "low": 0.2601022864447155,
+              "high": 0.3798700687027769,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": 0.048790164169432,
+            "passes": true
+          },
+          "correctness": {
+            "baseline": 1.0,
+            "candidate": 1.0,
+            "raw_delta": 0.0,
+            "direction": "maximize",
+            "favorable_delta": {
+              "mean": 0.0,
+              "low": 0.0,
+              "high": 0.0,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": -0.0,
+            "passes": true
+          }
+        },
+        "cases": 36,
+        "groups": 18,
+        "repetitions": 3,
+        "decision": "keep",
+        "caveats": [
+          "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+          "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+          "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+        ]
+      },
+      "vs_original": {
+        "baseline": "baseline",
+        "candidate": "round-2",
+        "split": "validation",
+        "accepted": true,
+        "metrics": {
+          "log_ratio": {
+            "baseline": -0.0005950307782394793,
+            "candidate": -0.47955261562154394,
+            "raw_delta": -0.4789575848433045,
+            "direction": "minimize",
+            "favorable_delta": {
+              "mean": 0.4789575848433045,
+              "low": 0.4101087905987163,
+              "high": 0.5533027137526645,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": 0.048790164169432,
+            "passes": true
+          },
+          "correctness": {
+            "baseline": 1.0,
+            "candidate": 1.0,
+            "raw_delta": 0.0,
+            "direction": "maximize",
+            "favorable_delta": {
+              "mean": 0.0,
+              "low": 0.0,
+              "high": 0.0,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": -0.0,
+            "passes": true
+          }
+        },
+        "cases": 36,
+        "groups": 18,
+        "repetitions": 3,
+        "decision": "keep",
+        "caveats": [
+          "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+          "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+          "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+        ]
+      },
+      "at": "2026-10-01T05:45:56.727584+00:00"
+    },
+    {
+      "candidate": "round-3",
+      "base": "round-2",
+      "accepted": false,
+      "vs_incumbent": {
+        "baseline": "round-2",
+        "candidate": "round-3",
+        "split": "validation",
+        "accepted": false,
+        "metrics": {
+          "log_ratio": {
+            "baseline": -0.47955261562154394,
+            "candidate": -0.5779241262639191,
+            "raw_delta": -0.09837151064237515,
+            "direction": "minimize",
+            "favorable_delta": {
+              "mean": 0.09837151064237515,
+              "low": 0.048653987486259986,
+              "high": 0.15493802898968578,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": 0.048790164169432,
+            "passes": false
+          },
+          "correctness": {
+            "baseline": 1.0,
+            "candidate": 1.0,
+            "raw_delta": 0.0,
+            "direction": "maximize",
+            "favorable_delta": {
+              "mean": 0.0,
+              "low": 0.0,
+              "high": 0.0,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": -0.0,
+            "passes": true
+          }
+        },
+        "cases": 36,
+        "groups": 18,
+        "repetitions": 3,
+        "decision": "do_not_promote",
+        "caveats": [
+          "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+          "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+          "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+        ]
+      },
+      "vs_original": {
+        "baseline": "baseline",
+        "candidate": "round-3",
+        "split": "validation",
+        "accepted": true,
+        "metrics": {
+          "log_ratio": {
+            "baseline": -0.0005950307782394793,
+            "candidate": -0.5779241262639191,
+            "raw_delta": -0.5773290954856796,
+            "direction": "minimize",
+            "favorable_delta": {
+              "mean": 0.5773290954856796,
+              "low": 0.5102896838849851,
+              "high": 0.6354684728956359,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": 0.048790164169432,
+            "passes": true
+          },
+          "correctness": {
+            "baseline": 1.0,
+            "candidate": 1.0,
+            "raw_delta": 0.0,
+            "direction": "maximize",
+            "favorable_delta": {
+              "mean": 0.0,
+              "low": 0.0,
+              "high": 0.0,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": -0.0,
+            "passes": true
+          }
+        },
+        "cases": 36,
+        "groups": 18,
+        "repetitions": 3,
+        "decision": "keep",
+        "caveats": [
+          "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+          "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+          "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+        ]
+      },
+      "at": "2026-10-01T05:51:10.131031+00:00"
+    },
+    {
+      "candidate": "round-4",
+      "base": "round-2",
+      "accepted": false,
+      "vs_incumbent": {
+        "baseline": "round-2",
+        "candidate": "round-4",
+        "split": "validation",
+        "accepted": false,
+        "metrics": {
+          "log_ratio": {
+            "baseline": -0.47955261562154394,
+            "candidate": -0.5842578546903509,
+            "raw_delta": -0.1047052390688069,
+            "direction": "minimize",
+            "favorable_delta": {
+              "mean": 0.1047052390688069,
+              "low": 0.0478704796415386,
+              "high": 0.16357486285669023,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": 0.048790164169432,
+            "passes": false
+          },
+          "correctness": {
+            "baseline": 1.0,
+            "candidate": 1.0,
+            "raw_delta": 0.0,
+            "direction": "maximize",
+            "favorable_delta": {
+              "mean": 0.0,
+              "low": 0.0,
+              "high": 0.0,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": -0.0,
+            "passes": true
+          }
+        },
+        "cases": 36,
+        "groups": 18,
+        "repetitions": 3,
+        "decision": "do_not_promote",
+        "caveats": [
+          "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+          "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+          "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+        ]
+      },
+      "vs_original": {
+        "baseline": "baseline",
+        "candidate": "round-4",
+        "split": "validation",
+        "accepted": true,
+        "metrics": {
+          "log_ratio": {
+            "baseline": -0.0005950307782394793,
+            "candidate": -0.5842578546903509,
+            "raw_delta": -0.5836628239121113,
+            "direction": "minimize",
+            "favorable_delta": {
+              "mean": 0.5836628239121113,
+              "low": 0.5041272620688532,
+              "high": 0.653467790847321,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": 0.048790164169432,
+            "passes": true
+          },
+          "correctness": {
+            "baseline": 1.0,
+            "candidate": 1.0,
+            "raw_delta": 0.0,
+            "direction": "maximize",
+            "favorable_delta": {
+              "mean": 0.0,
+              "low": 0.0,
+              "high": 0.0,
+              "groups": 18,
+              "cases": 36,
+              "confidence": 0.975,
+              "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+            },
+            "threshold": -0.0,
+            "passes": true
+          }
+        },
+        "cases": 36,
+        "groups": 18,
+        "repetitions": 3,
+        "decision": "keep",
+        "caveats": [
+          "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+          "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+          "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+        ]
+      },
+      "at": "2026-10-01T05:57:51.344282+00:00"
+    }
+  ],
+  "controls": {
+    "unchanged-before": {
+      "baseline": "baseline",
+      "candidate": "unchanged-before",
+      "split": "train",
+      "accepted": false,
+      "metrics": {
+        "log_ratio": {
+          "baseline": 0.0045154745440873735,
+          "candidate": -0.0020788931206000413,
+          "raw_delta": -0.006594367664687416,
+          "direction": "minimize",
+          "favorable_delta": {
+            "mean": 0.006594367664687416,
+            "low": -0.001332275789977182,
+            "high": 0.014331347972746527,
+            "groups": 24,
+            "cases": 48,
+            "confidence": 0.975,
+            "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+          },
+          "threshold": 0.048790164169432,
+          "passes": false
+        },
+        "correctness": {
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "raw_delta": 0.0,
+          "direction": "maximize",
+          "favorable_delta": {
+            "mean": 0.0,
+            "low": 0.0,
+            "high": 0.0,
+            "groups": 24,
+            "cases": 48,
+            "confidence": 0.975,
+            "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+          },
+          "threshold": -0.0,
+          "passes": true
+        }
+      },
+      "cases": 48,
+      "groups": 24,
+      "repetitions": 3,
+      "decision": "do_not_promote",
+      "caveats": [
+        "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+        "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+        "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+      ]
+    },
+    "unchanged-after": {
+      "baseline": "baseline",
+      "candidate": "unchanged-after",
+      "split": "train",
+      "accepted": false,
+      "metrics": {
+        "log_ratio": {
+          "baseline": 0.0045154745440873735,
+          "candidate": -0.0005863371261198735,
+          "raw_delta": -0.005101811670207248,
+          "direction": "minimize",
+          "favorable_delta": {
+            "mean": 0.005101811670207248,
+            "low": -0.0053142176799007785,
+            "high": 0.016054168517067004,
+            "groups": 24,
+            "cases": 48,
+            "confidence": 0.975,
+            "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+          },
+          "threshold": 0.048790164169432,
+          "passes": false
+        },
+        "correctness": {
+          "baseline": 1.0,
+          "candidate": 1.0,
+          "raw_delta": 0.0,
+          "direction": "maximize",
+          "favorable_delta": {
+            "mean": 0.0,
+            "low": 0.0,
+            "high": 0.0,
+            "groups": 24,
+            "cases": 48,
+            "confidence": 0.975,
+            "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+          },
+          "threshold": -0.0,
+          "passes": true
+        }
+      },
+      "cases": 48,
+      "groups": 24,
+      "repetitions": 3,
+      "decision": "do_not_promote",
+      "caveats": [
+        "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+        "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+        "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+      ]
+    }
+  },
+  "preflight_failures": [
+    {
+      "candidate": "round-1",
+      "stage": "preflight_before_trials",
+      "error": "Frozen candidate changed: round-1",
+      "cause": "Operator prebuild imported runner without -B, creating __pycache__/runner.cpython-312.pyc inside protected snapshot",
+      "trials_reserved": 0,
+      "replacement": "round-1-clean",
+      "remediation": "Preserve rejected-to-run snapshot, import identical structured proposal under new label, disable bytecode for prebuild/contract-test imports",
+      "not_a_correctness_or_performance_result": true
+    }
+  ],
+  "trial_counts": [
+    {
+      "label": "baseline",
+      "split": "test",
+      "status": "ok",
+      "count": 108
+    },
+    {
+      "label": "baseline",
+      "split": "train",
+      "status": "ok",
+      "count": 144
+    },
+    {
+      "label": "baseline",
+      "split": "validation",
+      "status": "ok",
+      "count": 108
+    },
+    {
+      "label": "negative-sign-shortcut",
+      "split": "train",
+      "status": "ok",
+      "count": 144
+    },
+    {
+      "label": "negative-sign-shortcut",
+      "split": "validation",
+      "status": "ok",
+      "count": 108
+    },
+    {
+      "label": "round-1-clean",
+      "split": "train",
+      "status": "ok",
+      "count": 144
+    },
+    {
+      "label": "round-1-clean",
+      "split": "validation",
+      "status": "ok",
+      "count": 108
+    },
+    {
+      "label": "round-2",
+      "split": "test",
+      "status": "ok",
+      "count": 108
+    },
+    {
+      "label": "round-2",
+      "split": "train",
+      "status": "ok",
+      "count": 144
+    },
+    {
+      "label": "round-2",
+      "split": "validation",
+      "status": "ok",
+      "count": 108
+    },
+    {
+      "label": "round-3",
+      "split": "train",
+      "status": "ok",
+      "count": 144
+    },
+    {
+      "label": "round-3",
+      "split": "validation",
+      "status": "ok",
+      "count": 108
+    },
+    {
+      "label": "round-4",
+      "split": "train",
+      "status": "ok",
+      "count": 144
+    },
+    {
+      "label": "round-4",
+      "split": "validation",
+      "status": "ok",
+      "count": 108
+    },
+    {
+      "label": "unchanged-after",
+      "split": "train",
+      "status": "ok",
+      "count": 144
+    },
+    {
+      "label": "unchanged-before",
+      "split": "train",
+      "status": "ok",
+      "count": 144
+    }
+  ],
+  "source_variants": [
+    {
+      "label": "baseline",
+      "source_hash": "f23c943e6ffc939369ddded028f8aaf9ce20dc47e0a21d9afc8a002da953ea31",
+      "hypothesis": "Approved unchanged starting point",
+      "created": "2026-10-01T05:24:01.609351+00:00"
+    },
+    {
+      "label": "unchanged-before",
+      "source_hash": "f23c943e6ffc939369ddded028f8aaf9ce20dc47e0a21d9afc8a002da953ea31",
+      "hypothesis": "Unchanged build A/A timing-noise control before adaptive search",
+      "created": "2026-10-01T05:27:41.656760+00:00"
+    },
+    {
+      "label": "round-1",
+      "source_hash": "cdd0600b3010bec8aaaed297fda986cc2ff36f6cd49e50d51d6bb8856cb4c031",
+      "hypothesis": "Replace allocation-heavy per-record aggregation with borrowed-key hash aggregation: split the three fields without collecting a Vec, keep endpoint slices in the standard randomized HashMap, allocate each endpoint once when producing the result, and sort only the unique output rows. Development evidence spans 512 and 8192 records with roughly 8 to 3554 distinct endpoints; removing allocations on repeated records should improve both sizes, while expected constant-time lookup should reduce the high-cardinality tree-comparison cost. Exact numeric, Unicode-control, line-ending and invalid-row validation is unchanged.",
+      "created": "2026-10-01T05:30:04.337885+00:00"
+    },
+    {
+      "label": "round-1-clean",
+      "source_hash": "cdd0600b3010bec8aaaed297fda986cc2ff36f6cd49e50d51d6bb8856cb4c031",
+      "hypothesis": "Replace allocation-heavy per-record aggregation with borrowed-key hash aggregation: split the three fields without collecting a Vec, keep endpoint slices in the standard randomized HashMap, allocate each endpoint once when producing the result, and sort only the unique output rows. Development evidence spans 512 and 8192 records with roughly 8 to 3554 distinct endpoints; removing allocations on repeated records should improve both sizes, while expected constant-time lookup should reduce the high-cardinality tree-comparison cost. Exact numeric, Unicode-control, line-ending and invalid-row validation is unchanged.",
+      "created": "2026-10-01T05:35:05.535637+00:00"
+    },
+    {
+      "label": "negative-sign-shortcut",
+      "source_hash": "82b4b159a8c70d88b5849ad649c9b697aa77bb64edd92c76428c358496022b13",
+      "hypothesis": "Injected negative control: remove redundant-looking ASCII digit scans from the selected borrowed-key HashMap parser and trust Rust integer parsing. This can be faster but Rust accepts leading plus signs, violating the frozen strict grammar.",
+      "created": "2026-10-01T05:39:22.190756+00:00"
+    },
+    {
+      "label": "round-2",
+      "source_hash": "ad0376546d6a7ba19c626554b85f2da50626d83e84422ba23e3dc7ceeec73aff",
+      "hypothesis": "Fuse delimiter discovery, field validation, and numeric conversion into one allocation-free byte parser while retaining the incumbent borrowed-key standard HashMap and final ordering. Round-1 development measurements improve all 8192-record cases (mean case log ratios about -0.10 to -0.54), but the 512-record high-cardinality cases still regress (+0.08 to +0.17); removing repeated parser scans should lower per-record work without adding another cardinality heuristic. ASCII endpoint control checks are fused with the first-TAB scan, and non-ASCII endpoints still use char::is_control. Numeric grammar and conversion share a scan. Status values reject monotonically above 599; byte fields of at most 19 digits cannot overflow u64, and longer fields use checked arithmetic to preserve both u64::MAX and arbitrarily many leading zeroes.",
+      "created": "2026-10-01T05:42:46.979424+00:00"
+    },
+    {
+      "label": "round-3",
+      "source_hash": "63eb072f1fcd68827b2c73769ff3a8cef6f9859498923c79c8600077f9240292",
+      "hypothesis": "Validate endpoint control characters only on first insertion into the per-call aggregation map. Existing keys necessarily passed the same char::is_control predicate, and exact str equality certifies subsequent occurrences without rescanning their characters. This enables the standard split_once TAB search instead of a scalar endpoint scan on every record. Round-2 development evidence leaves Unicode-endpoint cases at roughly 92-105 ns per record versus about 60-76 ns for low-cardinality ASCII cases; repeated Unicode decoding and per-record endpoint scanning are a concrete remaining cost, although this is not profiling evidence. The change can also benefit repeated ASCII endpoints while leaving numeric parsing, randomized hashing and final sorting unchanged.",
+      "created": "2026-10-01T05:48:01.469281+00:00"
+    },
+    {
+      "label": "round-4",
+      "source_hash": "c82aec18cb4057d1a7a3a118c00cef9f7797f999f7e228bba938c8c21a121550",
+      "hypothesis": "Refine the endpoint-validation-hoisting proposal with direct recognition of the status field grammar. A valid status is exactly zero or more leading ASCII zeroes followed by [1-5][0-9][0-9] and TAB, so status arithmetic and the per-digit upper-bound loop can be replaced by direct byte checks while preserving every accepted spelling. Combined with validating each new endpoint once using char::is_control, this removes redundant parsing work on repeated and distinct endpoints. Round-3 development data reduced the Unicode-endpoint cost from round-2 roughly 92-105 ns/record to roughly 64-76, but remaining ASCII repeated-key costs around 55-65 ns/record and essentially unchanged high-cardinality costs leave plausible common-path headroom. Direct status recognition applies to all records rather than a workload-size threshold.",
+      "created": "2026-10-01T05:54:41.401713+00:00"
+    },
+    {
+      "label": "unchanged-after",
+      "source_hash": "f23c943e6ffc939369ddded028f8aaf9ce20dc47e0a21d9afc8a002da953ea31",
+      "hypothesis": "Unchanged original source post-search A/A timing control; diagnostic only",
+      "created": "2026-10-01T05:58:03.516728+00:00"
+    }
+  ],
+  "external_paid_evaluation_cost_usd": 0,
+  "native_model_cost_usd": null,
+  "native_model_note": "Native model proposal sessions were used; authenticated Codex CLI/API not invoked and engine optimizer count is 0. No additional paid API calls; native session cost not measured.",
+  "profile_summaries": [
+    {
+      "candidate": "baseline",
+      "split": "train",
+      "profile": "unicode",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": 0.009949346825362089,
+      "speedup_vs_same_trial_reference": 0.9900999841864259,
+      "correctness": 1.0,
+      "mean_kernel_ns": 715312.240234375
+    },
+    {
+      "candidate": "baseline",
+      "split": "train",
+      "profile": "zipf-like",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.0003907843137823225,
+      "speedup_vs_same_trial_reference": 1.0003908606799194,
+      "correctness": 1.0,
+      "mean_kernel_ns": 495670.5461425781
+    },
+    {
+      "candidate": "baseline",
+      "split": "train",
+      "profile": "high-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.0031220900802520317,
+      "speedup_vs_same_trial_reference": 1.0031269688795157,
+      "correctness": 1.0,
+      "mean_kernel_ns": 1079309.4014485676
+    },
+    {
+      "candidate": "baseline",
+      "split": "train",
+      "profile": "malformed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": 0.006952640361975628,
+      "speedup_vs_same_trial_reference": 0.9930714733250642,
+      "correctness": 1.0,
+      "mean_kernel_ns": 605867.8232230393
+    },
+    {
+      "candidate": "baseline",
+      "split": "train",
+      "profile": "low-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": 0.00662039174703161,
+      "speedup_vs_same_trial_reference": 0.9934014747648418,
+      "correctness": 1.0,
+      "mean_kernel_ns": 554620.1315917969
+    },
+    {
+      "candidate": "baseline",
+      "split": "train",
+      "profile": "mixed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": 0.00708334272418927,
+      "speedup_vs_same_trial_reference": 0.9929416850196574,
+      "correctness": 1.0,
+      "mean_kernel_ns": 694590.8498870251
+    },
+    {
+      "candidate": "baseline",
+      "split": "validation",
+      "profile": "unicode",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.005912376723488787,
+      "speedup_vs_same_trial_reference": 1.0059298893194257,
+      "correctness": 1.0,
+      "mean_kernel_ns": 724823.1814236111
+    },
+    {
+      "candidate": "baseline",
+      "split": "validation",
+      "profile": "malformed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": 0.005142110696428378,
+      "speedup_vs_same_trial_reference": 0.9948710873231958,
+      "correctness": 1.0,
+      "mean_kernel_ns": 604214.3640407986
+    },
+    {
+      "candidate": "baseline",
+      "split": "validation",
+      "profile": "low-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": 0.004708487803222285,
+      "speedup_vs_same_trial_reference": 0.9953025797481837,
+      "correctness": 1.0,
+      "mean_kernel_ns": 555553.8582899305
+    },
+    {
+      "candidate": "baseline",
+      "split": "validation",
+      "profile": "high-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": 0.001496390044966042,
+      "speedup_vs_same_trial_reference": 0.9985047289883776,
+      "correctness": 1.0,
+      "mean_kernel_ns": 1074048.3843315972
+    },
+    {
+      "candidate": "baseline",
+      "split": "validation",
+      "profile": "zipf-like",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.0034207369418078402,
+      "speedup_vs_same_trial_reference": 1.003426594339388,
+      "correctness": 1.0,
+      "mean_kernel_ns": 502273.37221073324
+    },
+    {
+      "candidate": "baseline",
+      "split": "validation",
+      "profile": "mixed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.0055840595487569545,
+      "speedup_vs_same_trial_reference": 1.0055996794699347,
+      "correctness": 1.0,
+      "mean_kernel_ns": 690146.6594669118
+    },
+    {
+      "candidate": "unchanged-before",
+      "split": "train",
+      "profile": "unicode",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.007903574451009516,
+      "speedup_vs_same_trial_reference": 1.007934890143162,
+      "correctness": 1.0,
+      "mean_kernel_ns": 717391.070719401
+    },
+    {
+      "candidate": "unchanged-before",
+      "split": "train",
+      "profile": "zipf-like",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.02022344362567862,
+      "speedup_vs_same_trial_reference": 1.020429322982814,
+      "correctness": 1.0,
+      "mean_kernel_ns": 502077.58048502606
+    },
+    {
+      "candidate": "unchanged-before",
+      "split": "train",
+      "profile": "high-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": 0.010639674257293669,
+      "speedup_vs_same_trial_reference": 0.9894167268697553,
+      "correctness": 1.0,
+      "mean_kernel_ns": 1077640.4665527344
+    },
+    {
+      "candidate": "unchanged-before",
+      "split": "train",
+      "profile": "malformed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": 0.0012866348453920227,
+      "speedup_vs_same_trial_reference": 0.998714192514346,
+      "correctness": 1.0,
+      "mean_kernel_ns": 601711.6954561122
+    },
+    {
+      "candidate": "unchanged-before",
+      "split": "train",
+      "profile": "low-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": 6.843068822340401e-05,
+      "speedup_vs_same_trial_reference": 0.9999315716531028,
+      "correctness": 1.0,
+      "mean_kernel_ns": 561080.7257486979
+    },
+    {
+      "candidate": "unchanged-before",
+      "split": "train",
+      "profile": "mixed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": 0.003658919562178794,
+      "speedup_vs_same_trial_reference": 0.9963477661273833,
+      "correctness": 1.0,
+      "mean_kernel_ns": 685936.4243882123
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "train",
+      "profile": "unicode",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.20362432152206408,
+      "speedup_vs_same_trial_reference": 1.2258375461579663,
+      "correctness": 1.0,
+      "mean_kernel_ns": 471702.1350097656
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "train",
+      "profile": "zipf-like",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.025665112667657426,
+      "speedup_vs_same_trial_reference": 1.025997297436535,
+      "correctness": 1.0,
+      "mean_kernel_ns": 410202.94287109375
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "train",
+      "profile": "high-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.10374447386722072,
+      "speedup_vs_same_trial_reference": 1.1093169592242291,
+      "correctness": 1.0,
+      "mean_kernel_ns": 741503.0421549479
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "train",
+      "profile": "malformed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.23088535565652796,
+      "speedup_vs_same_trial_reference": 1.2597148119929111,
+      "correctness": 1.0,
+      "mean_kernel_ns": 371416.0937691483
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "train",
+      "profile": "low-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.14010756780765826,
+      "speedup_vs_same_trial_reference": 1.150397537943029,
+      "correctness": 1.0,
+      "mean_kernel_ns": 411546.4911295573
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "train",
+      "profile": "mixed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.24546047833456783,
+      "speedup_vs_same_trial_reference": 1.2782097656137943,
+      "correctness": 1.0,
+      "mean_kernel_ns": 431652.8339365043
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "validation",
+      "profile": "unicode",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.20573081715642502,
+      "speedup_vs_same_trial_reference": 1.2284224892271765,
+      "correctness": 1.0,
+      "mean_kernel_ns": 478685.2942708333
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "validation",
+      "profile": "malformed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.2305324802827575,
+      "speedup_vs_same_trial_reference": 1.2592703680790531,
+      "correctness": 1.0,
+      "mean_kernel_ns": 394214.3196614583
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "validation",
+      "profile": "low-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.13847758905187196,
+      "speedup_vs_same_trial_reference": 1.1485239417712703,
+      "correctness": 1.0,
+      "mean_kernel_ns": 403912.1574435764
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "validation",
+      "profile": "high-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.13644837165157922,
+      "speedup_vs_same_trial_reference": 1.1461957000571956,
+      "correctness": 1.0,
+      "mean_kernel_ns": 719454.9697265625
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "validation",
+      "profile": "zipf-like",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": 0.015530400279429724,
+      "speedup_vs_same_trial_reference": 0.9845895744985725,
+      "correctness": 1.0,
+      "mean_kernel_ns": 420006.9619459763
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "validation",
+      "profile": "mixed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.23931859221752505,
+      "speedup_vs_same_trial_reference": 1.2703832063209075,
+      "correctness": 1.0,
+      "mean_kernel_ns": 429788.7715864992
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "train",
+      "profile": "unicode",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.22325721365121534,
+      "speedup_vs_same_trial_reference": 1.2501420859960173,
+      "correctness": 1.0,
+      "mean_kernel_ns": 456561.16227213544
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "train",
+      "profile": "zipf-like",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.10369422463915709,
+      "speedup_vs_same_trial_reference": 1.109261218303831,
+      "correctness": 1.0,
+      "mean_kernel_ns": 392288.14567057294
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "train",
+      "profile": "high-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.15875468217403954,
+      "speedup_vs_same_trial_reference": 1.1720503865576013,
+      "correctness": 1.0,
+      "mean_kernel_ns": 697280.1838378906
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "train",
+      "profile": "malformed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.312387057408387,
+      "speedup_vs_same_trial_reference": 1.3666835756717892,
+      "correctness": 0.0,
+      "mean_kernel_ns": 365866.9404775582
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "train",
+      "profile": "low-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.23271507465772365,
+      "speedup_vs_same_trial_reference": 1.2620218460889254,
+      "correctness": 1.0,
+      "mean_kernel_ns": 357799.0549316406
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "train",
+      "profile": "mixed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.36951136597253115,
+      "speedup_vs_same_trial_reference": 1.4470273750725922,
+      "correctness": 0.0,
+      "mean_kernel_ns": 391564.40665211395
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "validation",
+      "profile": "unicode",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.21741615809504974,
+      "speedup_vs_same_trial_reference": 1.2428612212869028,
+      "correctness": 1.0,
+      "mean_kernel_ns": 482643.9459635417
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "validation",
+      "profile": "malformed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.27360483869037033,
+      "speedup_vs_same_trial_reference": 1.3146951829085167,
+      "correctness": 0.0,
+      "mean_kernel_ns": 416426.87782118056
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "validation",
+      "profile": "low-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.29955486613041027,
+      "speedup_vs_same_trial_reference": 1.3492580734150672,
+      "correctness": 1.0,
+      "mean_kernel_ns": 358202.55523003475
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "validation",
+      "profile": "high-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.18685432093636675,
+      "speedup_vs_same_trial_reference": 1.2054516631884726,
+      "correctness": 1.0,
+      "mean_kernel_ns": 702611.9264322916
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "validation",
+      "profile": "zipf-like",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.07416516178517377,
+      "speedup_vs_same_trial_reference": 1.0769846675181032,
+      "correctness": 1.0,
+      "mean_kernel_ns": 430659.4250217014
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "validation",
+      "profile": "mixed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.34181195706367706,
+      "speedup_vs_same_trial_reference": 1.407495603021864,
+      "correctness": 0.16666666666666666,
+      "mean_kernel_ns": 403974.11786407273
+    },
+    {
+      "candidate": "round-2",
+      "split": "train",
+      "profile": "unicode",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.33649973366606495,
+      "speedup_vs_same_trial_reference": 1.400038496392059,
+      "correctness": 1.0,
+      "mean_kernel_ns": 414000.92032877606
+    },
+    {
+      "candidate": "round-2",
+      "split": "train",
+      "profile": "zipf-like",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.38040868148732704,
+      "speedup_vs_same_trial_reference": 1.4628823202075611,
+      "correctness": 1.0,
+      "mean_kernel_ns": 297771.91056315106
+    },
+    {
+      "candidate": "round-2",
+      "split": "train",
+      "profile": "high-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.34622046519655436,
+      "speedup_vs_same_trial_reference": 1.4137142562548566,
+      "correctness": 1.0,
+      "mean_kernel_ns": 602709.1388346354
+    },
+    {
+      "candidate": "round-2",
+      "split": "train",
+      "profile": "malformed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.5668991498217568,
+      "speedup_vs_same_trial_reference": 1.7627924126361387,
+      "correctness": 1.0,
+      "mean_kernel_ns": 280357.1901328891
+    },
+    {
+      "candidate": "round-2",
+      "split": "train",
+      "profile": "low-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.5115360346865531,
+      "speedup_vs_same_trial_reference": 1.667851105536944,
+      "correctness": 1.0,
+      "mean_kernel_ns": 280968.26969401044
+    },
+    {
+      "candidate": "round-2",
+      "split": "train",
+      "profile": "mixed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.6558678678259956,
+      "speedup_vs_same_trial_reference": 1.9268140118408699,
+      "correctness": 1.0,
+      "mean_kernel_ns": 289064.2265098422
+    },
+    {
+      "candidate": "round-2",
+      "split": "validation",
+      "profile": "unicode",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.3587191171404068,
+      "speedup_vs_same_trial_reference": 1.4314946627829812,
+      "correctness": 1.0,
+      "mean_kernel_ns": 391475.65093315975
+    },
+    {
+      "candidate": "round-2",
+      "split": "validation",
+      "profile": "malformed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.6327254458399268,
+      "speedup_vs_same_trial_reference": 1.8827348850435677,
+      "correctness": 1.0,
+      "mean_kernel_ns": 254767.39811197916
+    },
+    {
+      "candidate": "round-2",
+      "split": "validation",
+      "profile": "low-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.518438815565325,
+      "speedup_vs_same_trial_reference": 1.679403743047531,
+      "correctness": 1.0,
+      "mean_kernel_ns": 259915.06749131944
+    },
+    {
+      "candidate": "round-2",
+      "split": "validation",
+      "profile": "high-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.3523525302287226,
+      "speedup_vs_same_trial_reference": 1.4224098778217127,
+      "correctness": 1.0,
+      "mean_kernel_ns": 596652.9377170139
+    },
+    {
+      "candidate": "round-2",
+      "split": "validation",
+      "profile": "zipf-like",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.37569764622242896,
+      "speedup_vs_same_trial_reference": 1.4560068380442501,
+      "correctness": 1.0,
+      "mean_kernel_ns": 299143.16219873365
+    },
+    {
+      "candidate": "round-2",
+      "split": "validation",
+      "profile": "mixed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.6393821387324533,
+      "speedup_vs_same_trial_reference": 1.8953094791436456,
+      "correctness": 1.0,
+      "mean_kernel_ns": 289260.279590482
+    },
+    {
+      "candidate": "round-3",
+      "split": "train",
+      "profile": "unicode",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.6505586405626663,
+      "speedup_vs_same_trial_reference": 1.9166112267763935,
+      "correctness": 1.0,
+      "mean_kernel_ns": 286277.1669921875
+    },
+    {
+      "candidate": "round-3",
+      "split": "train",
+      "profile": "zipf-like",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.4893914273086266,
+      "speedup_vs_same_trial_reference": 1.631323139091825,
+      "correctness": 1.0,
+      "mean_kernel_ns": 259065.67244466147
+    },
+    {
+      "candidate": "round-3",
+      "split": "train",
+      "profile": "high-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.3398908339960994,
+      "speedup_vs_same_trial_reference": 1.4047942264206699,
+      "correctness": 1.0,
+      "mean_kernel_ns": 592178.1149088541
+    },
+    {
+      "candidate": "round-3",
+      "split": "train",
+      "profile": "malformed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.6597480969716097,
+      "speedup_vs_same_trial_reference": 1.9343050157347903,
+      "correctness": 1.0,
+      "mean_kernel_ns": 249686.27237477023
+    },
+    {
+      "candidate": "round-3",
+      "split": "train",
+      "profile": "low-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.6272174933668692,
+      "speedup_vs_same_trial_reference": 1.8723933771889076,
+      "correctness": 1.0,
+      "mean_kernel_ns": 246637.2687174479
+    },
+    {
+      "candidate": "round-3",
+      "split": "train",
+      "profile": "mixed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.7056016875418587,
+      "speedup_vs_same_trial_reference": 2.025064774677264,
+      "correctness": 1.0,
+      "mean_kernel_ns": 257749.33073395374
+    },
+    {
+      "candidate": "round-3",
+      "split": "validation",
+      "profile": "unicode",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.6409285438942177,
+      "speedup_vs_same_trial_reference": 1.8982426628660316,
+      "correctness": 1.0,
+      "mean_kernel_ns": 290940.17328559025
+    },
+    {
+      "candidate": "round-3",
+      "split": "validation",
+      "profile": "malformed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.667543839208974,
+      "speedup_vs_same_trial_reference": 1.9494432894184768,
+      "correctness": 1.0,
+      "mean_kernel_ns": 248883.38910590278
+    },
+    {
+      "candidate": "round-3",
+      "split": "validation",
+      "profile": "low-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.6041238099850914,
+      "speedup_vs_same_trial_reference": 1.82964838671466,
+      "correctness": 1.0,
+      "mean_kernel_ns": 252536.00336371528
+    },
+    {
+      "candidate": "round-3",
+      "split": "validation",
+      "profile": "high-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.34709841453175,
+      "speedup_vs_same_trial_reference": 1.41495597074774,
+      "correctness": 1.0,
+      "mean_kernel_ns": 596275.7072482639
+    },
+    {
+      "candidate": "round-3",
+      "split": "validation",
+      "profile": "zipf-like",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.5119829494248784,
+      "speedup_vs_same_trial_reference": 1.6685966593644284,
+      "correctness": 1.0,
+      "mean_kernel_ns": 264753.3647301368
+    },
+    {
+      "candidate": "round-3",
+      "split": "validation",
+      "profile": "mixed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.6958672005386028,
+      "speedup_vs_same_trial_reference": 2.0054474451785937,
+      "correctness": 1.0,
+      "mean_kernel_ns": 262562.29341554333
+    },
+    {
+      "candidate": "round-4",
+      "split": "train",
+      "profile": "unicode",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.642839880882551,
+      "speedup_vs_same_trial_reference": 1.9018743138292087,
+      "correctness": 1.0,
+      "mean_kernel_ns": 291274.53466796875
+    },
+    {
+      "candidate": "round-4",
+      "split": "train",
+      "profile": "zipf-like",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.4713810307351469,
+      "speedup_vs_same_trial_reference": 1.6022053608680564,
+      "correctness": 1.0,
+      "mean_kernel_ns": 260929.12003580728
+    },
+    {
+      "candidate": "round-4",
+      "split": "train",
+      "profile": "high-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.30238006727755756,
+      "speedup_vs_same_trial_reference": 1.3530753886745275,
+      "correctness": 1.0,
+      "mean_kernel_ns": 610614.76953125
+    },
+    {
+      "candidate": "round-4",
+      "split": "train",
+      "profile": "malformed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.6703319623054379,
+      "speedup_vs_same_trial_reference": 1.9548861614516586,
+      "correctness": 1.0,
+      "mean_kernel_ns": 251226.38640759038
+    },
+    {
+      "candidate": "round-4",
+      "split": "train",
+      "profile": "low-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.5923885658663663,
+      "speedup_vs_same_trial_reference": 1.8083025107495658,
+      "correctness": 1.0,
+      "mean_kernel_ns": 252082.54720052084
+    },
+    {
+      "candidate": "round-4",
+      "split": "train",
+      "profile": "mixed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.6831436330345282,
+      "speedup_vs_same_trial_reference": 1.980092643056897,
+      "correctness": 1.0,
+      "mean_kernel_ns": 263142.97327856923
+    },
+    {
+      "candidate": "round-4",
+      "split": "validation",
+      "profile": "unicode",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.6348805273586443,
+      "speedup_vs_same_trial_reference": 1.88679670740607,
+      "correctness": 1.0,
+      "mean_kernel_ns": 297819.85785590275
+    },
+    {
+      "candidate": "round-4",
+      "split": "validation",
+      "profile": "malformed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.664030154388805,
+      "speedup_vs_same_trial_reference": 1.942605579937522,
+      "correctness": 1.0,
+      "mean_kernel_ns": 242086.08865017362
+    },
+    {
+      "candidate": "round-4",
+      "split": "validation",
+      "profile": "low-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.6755550500430239,
+      "speedup_vs_same_trial_reference": 1.9651234151538222,
+      "correctness": 1.0,
+      "mean_kernel_ns": 236479.79036458334
+    },
+    {
+      "candidate": "round-4",
+      "split": "validation",
+      "profile": "high-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.33676382828855417,
+      "speedup_vs_same_trial_reference": 1.4004082878580535,
+      "correctness": 1.0,
+      "mean_kernel_ns": 592640.209092882
+    },
+    {
+      "candidate": "round-4",
+      "split": "validation",
+      "profile": "zipf-like",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.47655014578617233,
+      "speedup_vs_same_trial_reference": 1.6105087869072292,
+      "correctness": 1.0,
+      "mean_kernel_ns": 251813.26394633373
+    },
+    {
+      "candidate": "round-4",
+      "split": "validation",
+      "profile": "mixed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.7177674222769053,
+      "speedup_vs_same_trial_reference": 2.0498516450778586,
+      "correctness": 1.0,
+      "mean_kernel_ns": 255543.60546875
+    },
+    {
+      "candidate": "unchanged-after",
+      "split": "train",
+      "profile": "unicode",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": 0.01477235245245765,
+      "speedup_vs_same_trial_reference": 0.9853362234480331,
+      "correctness": 1.0,
+      "mean_kernel_ns": 720668.8404134115
+    },
+    {
+      "candidate": "unchanged-after",
+      "split": "train",
+      "profile": "zipf-like",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": 0.012770365171801168,
+      "speedup_vs_same_trial_reference": 0.9873108299435794,
+      "correctness": 1.0,
+      "mean_kernel_ns": 500813.80126953125
+    },
+    {
+      "candidate": "unchanged-after",
+      "split": "train",
+      "profile": "high-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.0055461910597220405,
+      "speedup_vs_same_trial_reference": 1.0055615996505163,
+      "correctness": 1.0,
+      "mean_kernel_ns": 1066725.7534993489
+    },
+    {
+      "candidate": "unchanged-after",
+      "split": "train",
+      "profile": "malformed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.0018292630856109832,
+      "speedup_vs_same_trial_reference": 1.001830937207977,
+      "correctness": 1.0,
+      "mean_kernel_ns": 618348.4749779794
+    },
+    {
+      "candidate": "unchanged-after",
+      "split": "train",
+      "profile": "low-cardinality",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.006019933772507752,
+      "speedup_vs_same_trial_reference": 1.0060380899886088,
+      "correctness": 1.0,
+      "mean_kernel_ns": 547171.7080078125
+    },
+    {
+      "candidate": "unchanged-after",
+      "split": "train",
+      "profile": "mixed",
+      "trials": 24,
+      "cases": 8,
+      "mean_log_ratio": -0.01766535246313728,
+      "speedup_vs_same_trial_reference": 1.0178223076627746,
+      "correctness": 1.0,
+      "mean_kernel_ns": 683721.6654651118
+    },
+    {
+      "candidate": "baseline",
+      "split": "test",
+      "profile": "unicode",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.012967282741266758,
+      "speedup_vs_same_trial_reference": 1.0130517225422917,
+      "correctness": 1.0,
+      "mean_kernel_ns": 736402.3141659007
+    },
+    {
+      "candidate": "baseline",
+      "split": "test",
+      "profile": "malformed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.016694846154803607,
+      "speedup_vs_same_trial_reference": 1.016834983871904,
+      "correctness": 1.0,
+      "mean_kernel_ns": 614982.4790836908
+    },
+    {
+      "candidate": "baseline",
+      "split": "test",
+      "profile": "low-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.009291464901940464,
+      "speedup_vs_same_trial_reference": 1.0093347645638144,
+      "correctness": 1.0,
+      "mean_kernel_ns": 555120.6119919321
+    },
+    {
+      "candidate": "baseline",
+      "split": "test",
+      "profile": "high-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": 0.005608682062311741,
+      "speedup_vs_same_trial_reference": 0.9944070172304327,
+      "correctness": 1.0,
+      "mean_kernel_ns": 1087069.7698886846
+    },
+    {
+      "candidate": "baseline",
+      "split": "test",
+      "profile": "zipf-like",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": 0.02566977305491808,
+      "speedup_vs_same_trial_reference": 0.9746568944402657,
+      "correctness": 1.0,
+      "mean_kernel_ns": 516051.3453776042
+    },
+    {
+      "candidate": "baseline",
+      "split": "test",
+      "profile": "mixed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": 0.0001910081003706936,
+      "speedup_vs_same_trial_reference": 0.9998090101405152,
+      "correctness": 1.0,
+      "mean_kernel_ns": 708929.3871144812
+    },
+    {
+      "candidate": "round-2",
+      "split": "test",
+      "profile": "unicode",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.34893689214846435,
+      "speedup_vs_same_trial_reference": 1.4175597283702586,
+      "correctness": 1.0,
+      "mean_kernel_ns": 416862.48903441586
+    },
+    {
+      "candidate": "round-2",
+      "split": "test",
+      "profile": "malformed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.5943607888219612,
+      "speedup_vs_same_trial_reference": 1.8118724056291005,
+      "correctness": 1.0,
+      "mean_kernel_ns": 279329.8506689134
+    },
+    {
+      "candidate": "round-2",
+      "split": "test",
+      "profile": "low-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.6011297778769861,
+      "speedup_vs_same_trial_reference": 1.8241785532129273,
+      "correctness": 1.0,
+      "mean_kernel_ns": 263306.43573197507
+    },
+    {
+      "candidate": "round-2",
+      "split": "test",
+      "profile": "high-cardinality",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.3781089075671165,
+      "speedup_vs_same_trial_reference": 1.459521887198408,
+      "correctness": 1.0,
+      "mean_kernel_ns": 607667.3865208843
+    },
+    {
+      "candidate": "round-2",
+      "split": "test",
+      "profile": "zipf-like",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.3964321314524754,
+      "speedup_vs_same_trial_reference": 1.486511547171587,
+      "correctness": 1.0,
+      "mean_kernel_ns": 290342.5546875
+    },
+    {
+      "candidate": "round-2",
+      "split": "test",
+      "profile": "mixed",
+      "trials": 18,
+      "cases": 6,
+      "mean_log_ratio": -0.624569606358686,
+      "speedup_vs_same_trial_reference": 1.8674420492626247,
+      "correctness": 1.0,
+      "mean_kernel_ns": 290860.3491370507
+    }
+  ],
+  "size_summaries": [
+    {
+      "candidate": "baseline",
+      "split": "train",
+      "input_rows": 512,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": 0.007675853276389419,
+      "speedup_vs_same_trial_reference": 0.9923535308545454,
+      "correctness": 1.0,
+      "mean_kernel_ns": 63753.18986002604
+    },
+    {
+      "candidate": "baseline",
+      "split": "train",
+      "input_rows": 8192,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": 0.0013550958117853284,
+      "speedup_vs_same_trial_reference": 0.9986458219159611,
+      "correctness": 1.0,
+      "mean_kernel_ns": 1318037.1409824346
+    },
+    {
+      "candidate": "baseline",
+      "split": "validation",
+      "input_rows": 512,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": 0.0007873373101635149,
+      "speedup_vs_same_trial_reference": 0.9992129725585274,
+      "correctness": 1.0,
+      "mean_kernel_ns": 63537.72923900463
+    },
+    {
+      "candidate": "baseline",
+      "split": "validation",
+      "input_rows": 8192,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.001977398866642474,
+      "speedup_vs_same_trial_reference": 1.0019793552090586,
+      "correctness": 1.0,
+      "mean_kernel_ns": 1320148.8773488563
+    },
+    {
+      "candidate": "unchanged-before",
+      "split": "train",
+      "input_rows": 512,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.006515435593433165,
+      "speedup_vs_same_trial_reference": 1.006536707216789,
+      "correctness": 1.0,
+      "mean_kernel_ns": 63645.84526909722
+    },
+    {
+      "candidate": "unchanged-before",
+      "split": "train",
+      "input_rows": 8192,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": 0.002357649352233083,
+      "speedup_vs_same_trial_reference": 0.9976451277201179,
+      "correctness": 1.0,
+      "mean_kernel_ns": 1318300.1425142973
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "train",
+      "input_rows": 512,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.004907176439905114,
+      "speedup_vs_same_trial_reference": 1.0049192363488422,
+      "correctness": 1.0,
+      "mean_kernel_ns": 57780.06271701389
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "train",
+      "input_rows": 8192,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.31158859351199364,
+      "speedup_vs_same_trial_reference": 1.3655927637237542,
+      "correctness": 1.0,
+      "mean_kernel_ns": 888227.7835733251
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "validation",
+      "input_rows": 512,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.014405881041606707,
+      "speedup_vs_same_trial_reference": 1.0145101458195964,
+      "correctness": 1.0,
+      "mean_kernel_ns": 57719.333116319445
+    },
+    {
+      "candidate": "round-1-clean",
+      "split": "validation",
+      "input_rows": 8192,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.29725326898530297,
+      "speedup_vs_same_trial_reference": 1.34615619589082,
+      "correctness": 1.0,
+      "mean_kernel_ns": 890968.1584286492
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "train",
+      "input_rows": 512,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.08545353401010883,
+      "speedup_vs_same_trial_reference": 1.089210948903255,
+      "correctness": 0.6666666666666666,
+      "mean_kernel_ns": 53649.59201388889
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "train",
+      "input_rows": 8192,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.38131967215757573,
+      "speedup_vs_same_trial_reference": 1.464215599563261,
+      "correctness": 0.6666666666666666,
+      "mean_kernel_ns": 833470.3726000817
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "validation",
+      "input_rows": 512,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.12575609779715108,
+      "speedup_vs_same_trial_reference": 1.1340055480990359,
+      "correctness": 0.7222222222222222,
+      "mean_kernel_ns": 52547.03522858796
+    },
+    {
+      "candidate": "negative-sign-shortcut",
+      "split": "validation",
+      "input_rows": 8192,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.33871300310319824,
+      "speedup_vs_same_trial_reference": 1.4031405904255747,
+      "correctness": 0.6666666666666666,
+      "mean_kernel_ns": 878959.2475490196
+    },
+    {
+      "candidate": "round-2",
+      "split": "train",
+      "input_rows": 512,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.32327979413155944,
+      "speedup_vs_same_trial_reference": 1.3816518749159932,
+      "correctness": 1.0,
+      "mean_kernel_ns": 43837.973334418406
+    },
+    {
+      "candidate": "round-2",
+      "split": "train",
+      "input_rows": 8192,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.6091975167631912,
+      "speedup_vs_same_trial_reference": 1.838955075877037,
+      "correctness": 1.0,
+      "mean_kernel_ns": 677785.9120200163
+    },
+    {
+      "candidate": "round-2",
+      "split": "validation",
+      "input_rows": 512,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.3302012767922745,
+      "speedup_vs_same_trial_reference": 1.3912481262444159,
+      "correctness": 1.0,
+      "mean_kernel_ns": 43071.84447337963
+    },
+    {
+      "candidate": "round-2",
+      "split": "validation",
+      "input_rows": 8192,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.6289039544508134,
+      "speedup_vs_same_trial_reference": 1.8755537599355776,
+      "correctness": 1.0,
+      "mean_kernel_ns": 653999.6542075163
+    },
+    {
+      "candidate": "round-3",
+      "split": "train",
+      "input_rows": 512,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.4259962673833708,
+      "speedup_vs_same_trial_reference": 1.531115060057047,
+      "correctness": 1.0,
+      "mean_kernel_ns": 38255.886067708336
+    },
+    {
+      "candidate": "round-3",
+      "split": "train",
+      "input_rows": 8192,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.7314731258658724,
+      "speedup_vs_same_trial_reference": 2.0781397152631014,
+      "correctness": 1.0,
+      "mean_kernel_ns": 592275.3893229166
+    },
+    {
+      "candidate": "round-3",
+      "split": "validation",
+      "input_rows": 512,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.4242818309761647,
+      "speedup_vs_same_trial_reference": 1.5284923095663467,
+      "correctness": 1.0,
+      "mean_kernel_ns": 38531.26146556713
+    },
+    {
+      "candidate": "round-3",
+      "split": "validation",
+      "input_rows": 8192,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.7315664215516735,
+      "speedup_vs_same_trial_reference": 2.0783336057774613,
+      "correctness": 1.0,
+      "mean_kernel_ns": 600119.0489174837
+    },
+    {
+      "candidate": "round-4",
+      "split": "train",
+      "input_rows": 512,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.39924090005959667,
+      "speedup_vs_same_trial_reference": 1.490692683312562,
+      "correctness": 1.0,
+      "mean_kernel_ns": 39803.25482855903
+    },
+    {
+      "candidate": "round-4",
+      "split": "train",
+      "input_rows": 8192,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.7215808133075993,
+      "speedup_vs_same_trial_reference": 2.0576834543402365,
+      "correctness": 1.0,
+      "mean_kernel_ns": 603286.8555453431
+    },
+    {
+      "candidate": "round-4",
+      "split": "validation",
+      "input_rows": 512,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.43021970757859557,
+      "speedup_vs_same_trial_reference": 1.5375953077819773,
+      "correctness": 1.0,
+      "mean_kernel_ns": 39223.53020109954
+    },
+    {
+      "candidate": "round-4",
+      "split": "validation",
+      "input_rows": 8192,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.7382960018021061,
+      "speedup_vs_same_trial_reference": 2.0923670853166523,
+      "correctness": 1.0,
+      "mean_kernel_ns": 586237.4082584423
+    },
+    {
+      "candidate": "unchanged-after",
+      "split": "train",
+      "input_rows": 512,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": -0.0014938244120518078,
+      "speedup_vs_same_trial_reference": 1.0014949407235274,
+      "correctness": 1.0,
+      "mean_kernel_ns": 63410.96652560764
+    },
+    {
+      "candidate": "unchanged-after",
+      "split": "train",
+      "input_rows": 8192,
+      "trials": 72,
+      "cases": 24,
+      "mean_log_ratio": 0.00032115015981206096,
+      "speedup_vs_same_trial_reference": 0.9996789014033806,
+      "correctness": 1.0,
+      "mean_kernel_ns": 1315739.1146854574
+    },
+    {
+      "candidate": "baseline",
+      "split": "test",
+      "input_rows": 512,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": 0.003551996479422038,
+      "speedup_vs_same_trial_reference": 0.9964543043976342,
+      "correctness": 1.0,
+      "mean_kernel_ns": 66310.89029947917
+    },
+    {
+      "candidate": "baseline",
+      "split": "test",
+      "input_rows": 8192,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.006046706672892143,
+      "speedup_vs_same_trial_reference": 1.0060650249067364,
+      "correctness": 1.0,
+      "mean_kernel_ns": 1339874.4122412854
+    },
+    {
+      "candidate": "round-2",
+      "split": "test",
+      "input_rows": 512,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.34335463876471856,
+      "speedup_vs_same_trial_reference": 1.4096685964205655,
+      "correctness": 1.0,
+      "mean_kernel_ns": 43492.13375289352
+    },
+    {
+      "candidate": "round-2",
+      "split": "test",
+      "input_rows": 8192,
+      "trials": 54,
+      "cases": 18,
+      "mean_log_ratio": -0.6378247293105114,
+      "speedup_vs_same_trial_reference": 1.8923600036699464,
+      "correctness": 1.0,
+      "mean_kernel_ns": 672630.8881740196
+    }
+  ],
+  "final_case_heterogeneity": {
+    "cases": 36,
+    "normalized_slower_cases": 0,
+    "raw_slower_cases": 0,
+    "min_normalized_speedup": 1.176505703093857,
+    "max_normalized_speedup": 2.4634895400202765,
+    "min_raw_speedup": 1.1731304923899062,
+    "max_raw_speedup": 2.6150355716472893,
+    "note": "Descriptive case means over3 repetitions, no per-case inference or input/output rows"
+  },
+  "workflow_timing": {
+    "commands_recorded": 50,
+    "sum_recorded_command_wall_s": 1451.6228654384613,
+    "run_and_finalize_wall_s": 1429.3088703155518,
+    "summed_adapter_subprocess_s": 659.6480586239704,
+    "note": "CLI duration includes copying/grading/integrity/storage overhead; adapter time includes paired benchmark and wrapper, not just candidate kernel. Initial baseline train command preceded detailed command logging; it remains represented in trial timestamps and full experiment window.",
+    "from_frozen_start_to_final_s": 2370.764981
+  }
+}

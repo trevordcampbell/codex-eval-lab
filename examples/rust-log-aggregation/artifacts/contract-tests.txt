@@ -1,0 +1,8 @@
+test_adversarial_mutations (__main__.Contract.test_adversarial_mutations) ... ok
+test_hand_derived (__main__.Contract.test_hand_derived) ... ok
+test_property_and_metamorphic (__main__.Contract.test_property_and_metamorphic) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.073s
+
+OK

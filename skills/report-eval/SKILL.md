@@ -41,3 +41,18 @@ abstentions, undefined rates, independent group counts and calibration version.
 Separate component and composite results. Keep historical evidence distinguishable
 from current drift checks; no reapproval is implied by a prior pass. Never include
 private calibration or final-test records in optimizer-facing reports or messages.
+
+## Automated objective workflows
+
+Read `references/AUTOMATION.md` for native automation runs. Include the bound plan,
+`automation-result.json` and oracle receipt identity where configured. Distinguish
+`executable_checks_passed` from `expert_calibrated` and unverified evidence. Surface
+source/author provenance, finite positive/negative control coverage and remaining
+measurement trust assumptions; model-authored controls are not human labels. An
+execution authorization, validation selection and final comparison are three
+separate facts. A read-only UI is optional and never implies missing readiness.
+
+Explain whether the workflow completed, normally stopped to preserve final budget,
+or hit a blocker. Include preflight calls and conservative unknown-cost charges.
+Never conceal failed or interrupted attempts, relabel old holdouts as fresh, or
+represent a scripted offline demo as a live Codex-discovered improvement.

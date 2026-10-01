@@ -1,0 +1,80 @@
+{"id": "train-billing-00", "input": {"text": "Ticket train-0: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "train-billing-00", "split": "train"}
+{"id": "train-billing-01", "input": {"text": "Ticket train-1: PLEASE CHECK MY INVOICE"}, "expected": "billing", "tags": ["billing"], "group": "train-billing-01", "split": "train"}
+{"id": "train-billing-02", "input": {"text": "Ticket train-2: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "train-billing-02", "split": "train"}
+{"id": "train-billing-03", "input": {"text": "Ticket train-3: PLEASE CHECK MY INVOICE"}, "expected": "billing", "tags": ["billing"], "group": "train-billing-03", "split": "train"}
+{"id": "train-billing-04", "input": {"text": "Ticket train-4: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "train-billing-04", "split": "train"}
+{"id": "train-billing-05", "input": {"text": "Ticket train-5: PLEASE CHECK MY INVOICE"}, "expected": "billing", "tags": ["billing"], "group": "train-billing-05", "split": "train"}
+{"id": "train-billing-06", "input": {"text": "Ticket train-6: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "train-billing-06", "split": "train"}
+{"id": "train-billing-07", "input": {"text": "Ticket train-7: PLEASE CHECK MY INVOICE"}, "expected": "billing", "tags": ["billing"], "group": "train-billing-07", "split": "train"}
+{"id": "train-billing-08", "input": {"text": "Ticket train-8: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "train-billing-08", "split": "train"}
+{"id": "train-billing-09", "input": {"text": "Ticket train-9: PLEASE CHECK MY INVOICE"}, "expected": "billing", "tags": ["billing"], "group": "train-billing-09", "split": "train"}
+{"id": "train-technical-00", "input": {"text": "Ticket train-0: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "train-technical-00", "split": "train"}
+{"id": "train-technical-01", "input": {"text": "Ticket train-1: THE APP REPORTS A CRASH"}, "expected": "technical", "tags": ["technical"], "group": "train-technical-01", "split": "train"}
+{"id": "train-technical-02", "input": {"text": "Ticket train-2: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "train-technical-02", "split": "train"}
+{"id": "train-technical-03", "input": {"text": "Ticket train-3: THE APP REPORTS A CRASH"}, "expected": "technical", "tags": ["technical"], "group": "train-technical-03", "split": "train"}
+{"id": "train-technical-04", "input": {"text": "Ticket train-4: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "train-technical-04", "split": "train"}
+{"id": "train-technical-05", "input": {"text": "Ticket train-5: THE APP REPORTS A CRASH"}, "expected": "technical", "tags": ["technical"], "group": "train-technical-05", "split": "train"}
+{"id": "train-technical-06", "input": {"text": "Ticket train-6: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "train-technical-06", "split": "train"}
+{"id": "train-technical-07", "input": {"text": "Ticket train-7: THE APP REPORTS A CRASH"}, "expected": "technical", "tags": ["technical"], "group": "train-technical-07", "split": "train"}
+{"id": "train-technical-08", "input": {"text": "Ticket train-8: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "train-technical-08", "split": "train"}
+{"id": "train-technical-09", "input": {"text": "Ticket train-9: THE APP REPORTS A CRASH"}, "expected": "technical", "tags": ["technical"], "group": "train-technical-09", "split": "train"}
+{"id": "train-shipping-00", "input": {"text": "Ticket train-0: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "train-shipping-00", "split": "train"}
+{"id": "train-shipping-01", "input": {"text": "Ticket train-1: WHERE IS THE TRACKING UPDATE"}, "expected": "shipping", "tags": ["shipping"], "group": "train-shipping-01", "split": "train"}
+{"id": "train-shipping-02", "input": {"text": "Ticket train-2: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "train-shipping-02", "split": "train"}
+{"id": "train-shipping-03", "input": {"text": "Ticket train-3: WHERE IS THE TRACKING UPDATE"}, "expected": "shipping", "tags": ["shipping"], "group": "train-shipping-03", "split": "train"}
+{"id": "train-shipping-04", "input": {"text": "Ticket train-4: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "train-shipping-04", "split": "train"}
+{"id": "train-shipping-05", "input": {"text": "Ticket train-5: WHERE IS THE TRACKING UPDATE"}, "expected": "shipping", "tags": ["shipping"], "group": "train-shipping-05", "split": "train"}
+{"id": "train-shipping-06", "input": {"text": "Ticket train-6: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "train-shipping-06", "split": "train"}
+{"id": "train-shipping-07", "input": {"text": "Ticket train-7: WHERE IS THE TRACKING UPDATE"}, "expected": "shipping", "tags": ["shipping"], "group": "train-shipping-07", "split": "train"}
+{"id": "train-shipping-08", "input": {"text": "Ticket train-8: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "train-shipping-08", "split": "train"}
+{"id": "train-shipping-09", "input": {"text": "Ticket train-9: WHERE IS THE TRACKING UPDATE"}, "expected": "shipping", "tags": ["shipping"], "group": "train-shipping-09", "split": "train"}
+{"id": "train-other-00", "input": {"text": "Ticket train-0: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "train-other-00", "split": "train"}
+{"id": "train-other-01", "input": {"text": "Ticket train-1: HELLO AND THANKS FOR THE HELP"}, "expected": "other", "tags": ["other"], "group": "train-other-01", "split": "train"}
+{"id": "train-other-02", "input": {"text": "Ticket train-2: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "train-other-02", "split": "train"}
+{"id": "train-other-03", "input": {"text": "Ticket train-3: HELLO AND THANKS FOR THE HELP"}, "expected": "other", "tags": ["other"], "group": "train-other-03", "split": "train"}
+{"id": "train-other-04", "input": {"text": "Ticket train-4: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "train-other-04", "split": "train"}
+{"id": "train-other-05", "input": {"text": "Ticket train-5: HELLO AND THANKS FOR THE HELP"}, "expected": "other", "tags": ["other"], "group": "train-other-05", "split": "train"}
+{"id": "train-other-06", "input": {"text": "Ticket train-6: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "train-other-06", "split": "train"}
+{"id": "train-other-07", "input": {"text": "Ticket train-7: HELLO AND THANKS FOR THE HELP"}, "expected": "other", "tags": ["other"], "group": "train-other-07", "split": "train"}
+{"id": "train-other-08", "input": {"text": "Ticket train-8: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "train-other-08", "split": "train"}
+{"id": "train-other-09", "input": {"text": "Ticket train-9: HELLO AND THANKS FOR THE HELP"}, "expected": "other", "tags": ["other"], "group": "train-other-09", "split": "train"}
+{"id": "validation-billing-00", "input": {"text": "Ticket validation-0: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "validation-billing-00", "split": "validation"}
+{"id": "validation-billing-01", "input": {"text": "Ticket validation-1: PLEASE CHECK MY INVOICE"}, "expected": "billing", "tags": ["billing"], "group": "validation-billing-01", "split": "validation"}
+{"id": "validation-billing-02", "input": {"text": "Ticket validation-2: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "validation-billing-02", "split": "validation"}
+{"id": "validation-billing-03", "input": {"text": "Ticket validation-3: PLEASE CHECK MY INVOICE"}, "expected": "billing", "tags": ["billing"], "group": "validation-billing-03", "split": "validation"}
+{"id": "validation-billing-04", "input": {"text": "Ticket validation-4: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "validation-billing-04", "split": "validation"}
+{"id": "validation-technical-00", "input": {"text": "Ticket validation-0: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "validation-technical-00", "split": "validation"}
+{"id": "validation-technical-01", "input": {"text": "Ticket validation-1: THE APP REPORTS A CRASH"}, "expected": "technical", "tags": ["technical"], "group": "validation-technical-01", "split": "validation"}
+{"id": "validation-technical-02", "input": {"text": "Ticket validation-2: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "validation-technical-02", "split": "validation"}
+{"id": "validation-technical-03", "input": {"text": "Ticket validation-3: THE APP REPORTS A CRASH"}, "expected": "technical", "tags": ["technical"], "group": "validation-technical-03", "split": "validation"}
+{"id": "validation-technical-04", "input": {"text": "Ticket validation-4: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "validation-technical-04", "split": "validation"}
+{"id": "validation-shipping-00", "input": {"text": "Ticket validation-0: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "validation-shipping-00", "split": "validation"}
+{"id": "validation-shipping-01", "input": {"text": "Ticket validation-1: WHERE IS THE TRACKING UPDATE"}, "expected": "shipping", "tags": ["shipping"], "group": "validation-shipping-01", "split": "validation"}
+{"id": "validation-shipping-02", "input": {"text": "Ticket validation-2: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "validation-shipping-02", "split": "validation"}
+{"id": "validation-shipping-03", "input": {"text": "Ticket validation-3: WHERE IS THE TRACKING UPDATE"}, "expected": "shipping", "tags": ["shipping"], "group": "validation-shipping-03", "split": "validation"}
+{"id": "validation-shipping-04", "input": {"text": "Ticket validation-4: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "validation-shipping-04", "split": "validation"}
+{"id": "validation-other-00", "input": {"text": "Ticket validation-0: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "validation-other-00", "split": "validation"}
+{"id": "validation-other-01", "input": {"text": "Ticket validation-1: HELLO AND THANKS FOR THE HELP"}, "expected": "other", "tags": ["other"], "group": "validation-other-01", "split": "validation"}
+{"id": "validation-other-02", "input": {"text": "Ticket validation-2: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "validation-other-02", "split": "validation"}
+{"id": "validation-other-03", "input": {"text": "Ticket validation-3: HELLO AND THANKS FOR THE HELP"}, "expected": "other", "tags": ["other"], "group": "validation-other-03", "split": "validation"}
+{"id": "validation-other-04", "input": {"text": "Ticket validation-4: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "validation-other-04", "split": "validation"}
+{"id": "test-billing-00", "input": {"text": "Ticket test-0: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "test-billing-00", "split": "test"}
+{"id": "test-billing-01", "input": {"text": "Ticket test-1: PLEASE CHECK MY INVOICE"}, "expected": "billing", "tags": ["billing"], "group": "test-billing-01", "split": "test"}
+{"id": "test-billing-02", "input": {"text": "Ticket test-2: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "test-billing-02", "split": "test"}
+{"id": "test-billing-03", "input": {"text": "Ticket test-3: PLEASE CHECK MY INVOICE"}, "expected": "billing", "tags": ["billing"], "group": "test-billing-03", "split": "test"}
+{"id": "test-billing-04", "input": {"text": "Ticket test-4: please check my invoice"}, "expected": "billing", "tags": ["billing"], "group": "test-billing-04", "split": "test"}
+{"id": "test-technical-00", "input": {"text": "Ticket test-0: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "test-technical-00", "split": "test"}
+{"id": "test-technical-01", "input": {"text": "Ticket test-1: THE APP REPORTS A CRASH"}, "expected": "technical", "tags": ["technical"], "group": "test-technical-01", "split": "test"}
+{"id": "test-technical-02", "input": {"text": "Ticket test-2: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "test-technical-02", "split": "test"}
+{"id": "test-technical-03", "input": {"text": "Ticket test-3: THE APP REPORTS A CRASH"}, "expected": "technical", "tags": ["technical"], "group": "test-technical-03", "split": "test"}
+{"id": "test-technical-04", "input": {"text": "Ticket test-4: the app reports a crash"}, "expected": "technical", "tags": ["technical"], "group": "test-technical-04", "split": "test"}
+{"id": "test-shipping-00", "input": {"text": "Ticket test-0: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "test-shipping-00", "split": "test"}
+{"id": "test-shipping-01", "input": {"text": "Ticket test-1: WHERE IS THE TRACKING UPDATE"}, "expected": "shipping", "tags": ["shipping"], "group": "test-shipping-01", "split": "test"}
+{"id": "test-shipping-02", "input": {"text": "Ticket test-2: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "test-shipping-02", "split": "test"}
+{"id": "test-shipping-03", "input": {"text": "Ticket test-3: WHERE IS THE TRACKING UPDATE"}, "expected": "shipping", "tags": ["shipping"], "group": "test-shipping-03", "split": "test"}
+{"id": "test-shipping-04", "input": {"text": "Ticket test-4: where is the tracking update"}, "expected": "shipping", "tags": ["shipping"], "group": "test-shipping-04", "split": "test"}
+{"id": "test-other-00", "input": {"text": "Ticket test-0: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "test-other-00", "split": "test"}
+{"id": "test-other-01", "input": {"text": "Ticket test-1: HELLO AND THANKS FOR THE HELP"}, "expected": "other", "tags": ["other"], "group": "test-other-01", "split": "test"}
+{"id": "test-other-02", "input": {"text": "Ticket test-2: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "test-other-02", "split": "test"}
+{"id": "test-other-03", "input": {"text": "Ticket test-3: HELLO AND THANKS FOR THE HELP"}, "expected": "other", "tags": ["other"], "group": "test-other-03", "split": "test"}
+{"id": "test-other-04", "input": {"text": "Ticket test-4: hello and thanks for the help"}, "expected": "other", "tags": ["other"], "group": "test-other-04", "split": "test"}

@@ -10,7 +10,7 @@ from typing import Any
 
 from .util import LabError, canonical, contained, digest, finite, integer, relative_name, safe_name, strict_json, unknown_keys
 
-TOP = {"schema_version", "name", "cases", "repetitions", "seed", "source_paths", "harness_paths", "execution", "metrics", "objective", "guardrails", "budget", "search", "optimizer", "evidence", "measurement"}
+TOP = {"schema_version", "name", "cases", "repetitions", "seed", "source_paths", "harness_paths", "execution", "metrics", "objective", "guardrails", "budget", "search", "optimizer", "evidence", "measurement", "oracle"}
 
 
 def strings(value: Any, name: str, *, nonempty: bool = True) -> list[str]:
@@ -159,6 +159,14 @@ def validate_config(cfg: dict[str, Any]) -> dict[str, Any]:
             raise LabError("evidence must be a table")
         unknown_keys(evidence, {"bundle"}, "evidence")
         evidence["bundle"] = relative_name(evidence.get("bundle", ""))
+    if "oracle" in cfg:
+        if "evidence" in cfg:
+            raise LabError("Use the expert-calibration path for mixed semantic/deterministic criteria; oracle and evidence cannot be combined")
+        oracle = cfg["oracle"]
+        if not isinstance(oracle, dict):
+            raise LabError("oracle must be a table")
+        unknown_keys(oracle, {"contract"}, "oracle")
+        oracle["contract"] = relative_name(oracle.get("contract", ""))
     if "measurement" in cfg:
         measurement = cfg["measurement"]
         if not isinstance(measurement, dict):
@@ -275,18 +283,27 @@ def audit(suite: Path) -> dict[str, Any]:
         contained(suite, path)
     from .evidence import public_evidence_summary, validate_evidence
     evidence_gate = validate_evidence(suite, cfg)
-    if evidence_gate["status"] == "not_configured":
+    if evidence_gate["status"] == "not_configured" and not cfg.get("oracle"):
         warnings.append("Evidence gate not configured; structural checks do not establish evaluation readiness or grader trust.")
-    elif not evidence_gate["ready"]:
+    elif evidence_gate["configured"] and not evidence_gate["ready"]:
         warnings.append("Evidence gate is not ready; initialization and optimization are blocked until the recorded evidence passes.")
     if evidence_gate.get("source_kind") == "synthetic":
         warnings.append("Synthetic calibration evidence exercises the workflow; it does not establish production performance.")
+    oracle_gate = {"configured": False, "ready": False, "status": "not_configured"}
+    if cfg.get("oracle"):
+        from .oracle import load_contract, binding, all_requests, LIMITS
+        contract = load_contract(suite, cfg)
+        oracle_gate = {"configured": True, "ready": False, "status": "execution_required",
+                       "binding": binding(suite, cfg, contract), "preflight_calls": len(all_requests(suite, cfg, contract)),
+                       "author_kind": contract["author"]["kind"], "source_kind": contract["source"]["kind"],
+                       "human_reviewed": False, "limitations": LIMITS}
+        warnings.append("Oracle schema checked only; authorized start must execute the bound reference and mutation controls.")
     full_trials = len(cases) * cfg["repetitions"]
     return {"suite": cfg["name"], "cases": len(cases), "groups": len({c["group"] for c in cases}),
             "splits": {s: len(v) for s, v in splits.items()}, "repetitions": cfg["repetitions"],
             "full_pass_trials": full_trials,
             "full_pass_reserved_eval_usd": full_trials * cfg["budget"]["trial_reserve_usd"],
             "optimizer_cost": "separate; tokens/calls recorded, dollar cost may be unknown",
-            "evidence_gate": public_evidence_summary(evidence_gate),
+            "evidence_gate": public_evidence_summary(evidence_gate), "oracle_gate": oracle_gate,
             "warnings": warnings,
-            "human_checks": ["Representative cases and realistic difficulty", "Human-reviewed labels and rubric calibration", "No training contamination or production side effects", "Meaningful minimum effect and sufficient measurement resolution", "Source, dependencies, fixture and model identity reproducible"]}
+            "human_checks": ["Representative cases and realistic difficulty", ("Specification validity and declared anchor/reference independence; no human labeling requirement for exact controls" if cfg.get("oracle") else "Human-reviewed labels and rubric calibration"), "No training contamination or production side effects", "Meaningful minimum effect and sufficient measurement resolution", "Source, dependencies, fixture and model identity reproducible"]}

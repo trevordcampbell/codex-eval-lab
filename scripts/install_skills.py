@@ -34,14 +34,14 @@ def install(destination: Path, source: Path = ROOT / "skills") -> dict:
                     if p.is_symlink(): raise ValueError("Skill sources must not contain symlinks")
                 shutil.copytree(source/name,stage/name)
                 runtime={"python_executable":sys.executable,"module":"codex_eval_lab",
-                         "source_checkout":str(ROOT),"version":"0.3.0",
+                         "source_checkout":str(ROOT),"version":"0.4.0",
                          "note":"Machine-local entrypoint. Invoke [python_executable, '-m', module, ...] if eval-lab is not on PATH. Verify doctor first; do not auto-authorize paid work."}
                 (stage/name/"references"/"installation.json").write_text(json.dumps(runtime,indent=2)+"\n")
                 skill_file=stage/name/"SKILL.md"
                 skill_file.write_text(skill_file.read_text()+"\n## Machine-local runtime\n\nRead `references/installation.json` as path data for the installed interpreter.\nUse that interpreter with `-m codex_eval_lab` when `eval-lab` is not on PATH.\nVerify `doctor` before executing a workflow; this metadata grants no approvals.\n")
                 files={str(p.relative_to(stage/name)):hashlib.sha256(p.read_bytes()).hexdigest()
                        for p in (stage/name).rglob("*") if p.is_file()}
-                (stage/name/".eval-lab-install.json").write_text(json.dumps({"version":"0.3.0","files":files},indent=2)+"\n")
+                (stage/name/".eval-lab-install.json").write_text(json.dumps({"version":"0.4.0","files":files},indent=2)+"\n")
             for name in SKILLS:
                 if (destination/name).exists(): raise ValueError("Destination changed during installation")
                 (stage/name).rename(destination/name)

@@ -1,0 +1,74 @@
+{
+  "demonstration": "Executed synthetic scripted fixture, not a live Codex/model benchmark",
+  "best": "round-0001",
+  "evidence_basis": "executable_oracle_validated",
+  "controls": 176,
+  "final": {
+    "accepted": true,
+    "baseline": "baseline",
+    "candidate": "round-0001",
+    "cases": 20,
+    "caveats": [
+      "Intervals are exploratory during adaptive validation selection; final-test confirmation remains necessary.",
+      "Repeats do not create independent new tasks. Related groups, not individual repeated trials, are resampled.",
+      "No statistical method repairs unrepresentative cases, contaminated answers, or a miscalibrated grader."
+    ],
+    "decision": "keep",
+    "final_selection": {
+      "baseline_source_hash": "0a9ea0f4190b63d38ac0591a03f06c00c7e718413225902d735c270ef6afc4b5",
+      "label": "round-0001",
+      "measurement_design": "variant_blocked",
+      "sealed_at": "2026-10-01T06:40:18.073006+00:00",
+      "source_hash": "dedd3bbe9b4fbd140d1988c1874d3beb254d6f0a728c878d7262d03b628c6b31"
+    },
+    "groups": 20,
+    "interpretation": "Independent held-out comparison for the preselected winner; not a guarantee about unsampled tasks. Do not tune further on this test set.",
+    "metrics": {
+      "accuracy": {
+        "baseline": 0.7,
+        "candidate": 1.0,
+        "direction": "maximize",
+        "favorable_delta": {
+          "cases": 20,
+          "confidence": 0.975,
+          "groups": 20,
+          "high": 0.55,
+          "low": 0.1,
+          "mean": 0.3,
+          "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+        },
+        "passes": true,
+        "raw_delta": 0.3,
+        "threshold": 0.01
+      },
+      "cost_usd": {
+        "baseline": 0.0,
+        "candidate": 0.0,
+        "direction": "minimize",
+        "favorable_delta": {
+          "cases": 20,
+          "confidence": 0.975,
+          "groups": 20,
+          "high": 0.0,
+          "low": 0.0,
+          "mean": 0.0,
+          "method": "paired percentile bootstrap over related-case groups, after averaging repetitions per case"
+        },
+        "passes": true,
+        "raw_delta": 0.0,
+        "threshold": -0.0
+      }
+    },
+    "repetitions": 2,
+    "split": "test"
+  },
+  "budget": {
+    "trials": 736,
+    "eval_charged_usd": 0.0,
+    "pending_reserved_usd": 0,
+    "optimizer_calls": 3,
+    "optimizer_dollars": null,
+    "note": "Eval charges include conservative reservations for unknown costs. Optimizer dollars are separate and may be unknown."
+  },
+  "report": "Generated report.html in the requested new output state directory"
+}

@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "claim_scope": "Finite synthetic routing-contract checks; not production representativeness or live Codex performance.",
+  "source": {
+    "kind": "synthetic",
+    "reference": "examples/automation, model-authored fixture"
+  },
+  "author": {
+    "kind": "model",
+    "reference": "Codex authored the specification, anchors and reference; no human labels"
+  },
+  "reference_command": [
+    "{python}",
+    "-S",
+    "{suite}/reference.py"
+  ],
+  "reference_rationale": "Separate literal-substring implementation, checked against explicit source-derived boundary anchors. Independence is a declared design intention, not proven.",
+  "specifications": [
+    "specification.txt"
+  ],
+  "criteria": [
+    {
+      "id": "route",
+      "metric": "accuracy"
+    }
+  ],
+  "measurement_metrics": [],
+  "max_wall_time_s": 30,
+  "trust_assumptions": [
+    "The synthetic specification defines the intended toy behavior; it is not a validated policy for real customers.",
+    "All fixture programs are trusted local code with no external effects.",
+    "Groups represent separate constructed inputs; they do not estimate real traffic."
+  ],
+  "anchors": [
+    {
+      "id": "control-0",
+      "group": "control-0",
+      "role": "development",
+      "basis": "specification_derived",
+      "source_ref": "specification.txt",
+      "derivation": "No listed substring occurs in the empty string.",
+      "input": {
+        "text": ""
+      },
+      "expected": "other",
+      "output": "other",
+      "mutations": [
+        {
+          "id": "wrong-label",
+          "output": "technical",
+          "fails": [
+            "route"
+          ]
+        },
+        {
+          "id": "wrong-shape",
+          "output": {
+            "route": "other"
+          },
+          "fails": [
+            "route"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "control-1",
+      "group": "control-1",
+      "role": "development",
+      "basis": "specification_derived",
+      "source_ref": "specification.txt",
+      "derivation": "Casefold yields invoice and the first rule applies.",
+      "input": {
+        "text": "INVOICE"
+      },
+      "expected": "billing",
+      "output": "billing",
+      "mutations": [
+        {
+          "id": "wrong-label",
+          "output": "technical",
+          "fails": [
+            "route"
+          ]
+        },
+        {
+          "id": "wrong-shape",
+          "output": {
+            "route": "billing"
+          },
+          "fails": [
+            "route"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "control-2",
+      "group": "control-2",
+      "role": "development",
+      "basis": "specification_derived",
+      "source_ref": "specification.txt",
+      "derivation": "All rules match; invoice has explicit highest priority.",
+      "input": {
+        "text": "tracking crash invoice"
+      },
+      "expected": "billing",
+      "output": "billing",
+      "mutations": [
+        {
+          "id": "wrong-label",
+          "output": "technical",
+          "fails": [
+            "route"
+          ]
+        },
+        {
+          "id": "wrong-shape",
+          "output": {
+            "route": "billing"
+          },
+          "fails": [
+            "route"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "control-3",
+      "group": "control-3",
+      "role": "development",
+      "basis": "specification_derived",
+      "source_ref": "specification.txt",
+      "derivation": "The contract specifies substring matching, so tracking matches inside a word.",
+      "input": {
+        "text": "untrackingable"
+      },
+      "expected": "shipping",
+      "output": "shipping",
+      "mutations": [
+        {
+          "id": "wrong-label",
+          "output": "technical",
+          "fails": [
+            "route"
+          ]
+        },
+        {
+          "id": "wrong-shape",
+          "output": {
+            "route": "shipping"
+          },
+          "fails": [
+            "route"
+          ]
+        }
+      ]
+    }
+  ]
+}
