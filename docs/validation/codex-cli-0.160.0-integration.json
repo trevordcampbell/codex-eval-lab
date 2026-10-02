@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "date_utc": "2026-10-02",
+  "kind": "bounded_codex_cli_integration_smoke",
+  "status": "blocked_before_model_events",
+  "source": {
+    "commit": "9a599187d152a7eace4d6101dc49d775cf7b2210",
+    "copied_runtime": "source/src/codex_eval_lab",
+    "source_archive_sha256": "19aaacca30f9020c6ce0c0fb7f59ee6e8f2dd1cb3788e81f727baa28a0d3a088",
+    "runtime_and_fixture_hashes": "logs/frozen-input-sha256.json",
+    "measured_runtime_mutated": false
+  },
+  "cli": {
+    "version": "codex-cli 0.160.0",
+    "npm_package": "@openai/codex@0.160.0",
+    "platform_package": "@openai/codex@0.160.0-linux-x64",
+    "registry": "https://registry.npmjs.org",
+    "lifecycle_scripts": "disabled via --ignore-scripts",
+    "isolated_prefix": "toolchain",
+    "package_lock_sha256": "24920d4d05d97c6f08b3729030d5189ffb3d265e273051f43e95dc0b26c8a445",
+    "version_exit": 0,
+    "help_exit": 0,
+    "required_adapter_flags_verified": [
+      "--output-schema",
+      "--output-last-message",
+      "--json",
+      "--sandbox",
+      "--skip-git-repo-check"
+    ],
+    "optional_flags_verified": [
+      "--ignore-user-config",
+      "--ephemeral"
+    ]
+  },
+  "auth": {
+    "check": "codex -c sqlite_home=<scratch> -c log_dir=<scratch> login status",
+    "exit": 0,
+    "status": "Logged in using ChatGPT",
+    "api_key_environment_variables_unset_for_process": [
+      "CODEX_API_KEY",
+      "OPENAI_API_KEY"
+    ],
+    "new_login_performed": false,
+    "auth_files_read_or_copied_by_test_code": false,
+    "persistent_auth_or_settings_changes": false,
+    "scope": "CLI status confirms stored/active auth mode, not successful request authorization"
+  },
+  "launcher": {
+    "path": "bin/codex",
+    "sha256": "a9b25e0d2bf0a4ae9330662f2d5d02af5e098704383e4af05b0eae7869750551",
+    "modifications": [
+      "Adds --ephemeral only to exec dispatch, not exec --help",
+      "Adds documented sqlite_home and log_dir scratch overrides only to exec dispatch",
+      "Unsets API-key environment variables in child process; no persistent changes"
+    ],
+    "adapter_adds_ignore_user_config": true,
+    "managed_rules_preserved": true,
+    "ignore_rules_used": false,
+    "model_or_effort_override": false,
+    "invocations": [
+      {
+        "executable": "<integration-root>/toolchain/node_modules/.bin/codex",
+        "argv": [
+          "exec",
+          "--help"
+        ]
+      },
+      {
+        "executable": "<integration-root>/toolchain/node_modules/.bin/codex",
+        "argv": [
+          "exec",
+          "--ephemeral",
+          "-c",
+          "sqlite_home=\"<integration-root>/sqlite\"",
+          "-c",
+          "log_dir=\"<integration-root>/cli-logs\"",
+          "--sandbox",
+          "read-only",
+          "--json",
+          "--skip-git-repo-check",
+          "--output-schema",
+          "<integration-root>/state/optimizer-runs/call-0001/proposal-schema.json",
+          "--output-last-message",
+          "<integration-root>/state/optimizer-runs/call-0001/proposal.json",
+          "--ignore-user-config",
+          "-"
+        ]
+      }
+    ],
+    "verification_boundary": "Actual automate and codex backend were invoked under this launcher; no successful model turn or unmodified-default launch is claimed."
+  },
+  "fixture": {
+    "name": "codex-01600-routing-integration-smoke",
+    "fresh_synthetic_cases": 6,
+    "partitions": {
+      "train": 2,
+      "validation": 2,
+      "test": 2
+    },
+    "repetitions": 1,
+    "editable": [
+      "app.py"
+    ],
+    "independent_programs": [
+      "grader.py exact string comparison",
+      "reference.py separate literal-substring implementation"
+    ],
+    "provenance": "Derivative of published synthetic automation fixture, with newly constructed local inputs. No scientific study data or hidden cases used. Contract/reference independence remains a declared assumption; this is not a benchmark.",
+    "plan": "plan.json",
+    "plan_file_sha256": "3cd0f6fb369cd3ffdc8c4e0326fba136578611d7aab1571e90b2c6fccc61a21d",
+    "minimum_projected_trials": 40
+  },
+  "limits": {
+    "max_optimizer_calls": 1,
+    "max_rounds": 1,
+    "author_timeout_s": 120,
+    "experiment_wall_time_s": 180,
+    "outer_timeout_s": 190,
+    "max_trials": 100,
+    "max_eval_cost_usd": 0,
+    "optimizer_spend_limit_usd": null,
+    "paid_provider_key_used": false
+  },
+  "result": {
+    "started_utc": "2026-10-02T16:48:12Z",
+    "finished_utc": "2026-10-02T16:48:19Z",
+    "automate_exit": 2,
+    "codex_dispatch_exit": 1,
+    "author_elapsed_s": 5.16209602500021,
+    "startup_error": "failed to initialize in-process app-server client: Read-only file system (os error 30)",
+    "startup_warning": "could not create PATH aliases: Read-only file system (os error 30)",
+    "stdout_bytes": 0,
+    "model_events_observed": 0,
+    "completed_turns_observed": 0,
+    "proposal_produced": false,
+    "requested_model": "No explicit override; CLI/account default requested",
+    "served_model": null,
+    "usage": null,
+    "optimizer_cost_usd": null,
+    "trial_ledger": [
+      {
+        "label": "baseline",
+        "split": "train",
+        "status": "ok",
+        "count": 2,
+        "cost_usd": 0.0
+      },
+      {
+        "label": "baseline",
+        "split": "validation",
+        "status": "ok",
+        "count": 2,
+        "cost_usd": 0.0
+      },
+      {
+        "label": "oracle-preflight",
+        "split": "oracle",
+        "status": "ok",
+        "count": 28,
+        "cost_usd": 0.0
+      }
+    ],
+    "optimizer_ledger": [
+      {
+        "id": 1,
+        "status": "failed"
+      }
+    ],
+    "total_trials": 32,
+    "eval_cost_usd": 0.0,
+    "oracle_control_outcome": "28/28 preflight calls recorded ok",
+    "final_test_opened": false,
+    "retry_performed": false,
+    "all_test_subprocesses_exited": true,
+    "exit_check": "Process listing after completion found no codex-cli-01600-integration or eval-lab-optimizer process"
+  },
+  "historical_boundary": {
+    "previous_cli": "0.159.3",
+    "prior_record": "Earlier read-only/ephemeral startup failed app-server SQLite initialization despite documented scratch state/log paths. This record is preserved and not relabeled.",
+    "current_error_precision": "0.160.0 reports generic in-process app-server initialization failure. Scratch SQLite files were created; the precise failing path/subsystem is not established by available error text.",
+    "scientific_study_author_opportunities": 67,
+    "included_in_scientific_study": false,
+    "included_in_scientific_costs": false
+  },
+  "evidence": {
+    "sanitized_record": "integration-result.sanitized.json",
+    "version": "logs/version.txt",
+    "help": "logs/exec-help.txt",
+    "login_status_exit": "logs/login-status.exit",
+    "launcher_commands": "logs/launcher-invocations.jsonl",
+    "automation_exit": "logs/automate.exit",
+    "failure_summary": "state/optimizer-runs/call-0001/failure.json",
+    "raw_private_scratch_only": [
+      "state/optimizer-runs/call-0001/failed-stdout.bin",
+      "state/optimizer-runs/call-0001/failed-stderr.bin",
+      "state",
+      "sqlite"
+    ],
+    "raw_private_data_published_or_copied_to_repo": false
+  },
+  "official_docs": [
+    "https://learn.chatgpt.com/docs/codex/cli",
+    "https://learn.chatgpt.com/docs/developer-commands?surface=cli",
+    "https://learn.chatgpt.com/docs/non-interactive-mode",
+    "https://learn.chatgpt.com/docs/config-file/config-reference"
+  ],
+  "limitations": [
+    "Authenticated model completion and end-to-end automate success remain unverified.",
+    "No model quality, hillclimbing gain, default-launch compatibility, provider billing, or robust sandbox claim follows from this check.",
+    "Existing auth reported by login status did not prevent app-server startup failure. No credential changes, path-permission changes, policy bypass, or automatic retry were attempted.",
+    "No raw model events, private reasoning, auth files, or tokens are included in this sanitized report."
+  ]
+}

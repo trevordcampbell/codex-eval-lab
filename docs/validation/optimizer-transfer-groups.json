@@ -1,0 +1,650 @@
+[
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "eda782b42d2cfdf2",
+    "mean_log2_gain": "-0.41679854244373504",
+    "cpu_efficiency_ratio_new_over_comparator": "0.7490850619502671"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "6b5ae097a9de2749",
+    "mean_log2_gain": "-0.20821260236390904",
+    "cpu_efficiency_ratio_new_over_comparator": "0.865608995885051"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "2b2f050461dcff81",
+    "mean_log2_gain": "-0.5071493266261551",
+    "cpu_efficiency_ratio_new_over_comparator": "0.7036113563679867"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "36bbf164022d41a1",
+    "mean_log2_gain": "-0.585033839609931",
+    "cpu_efficiency_ratio_new_over_comparator": "0.6666337019152873"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "ac8cab3d8dc7f375",
+    "mean_log2_gain": "0.15453576684809445",
+    "cpu_efficiency_ratio_new_over_comparator": "1.1130633969421184"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "5f71622ff33bff1b",
+    "mean_log2_gain": "0.09876588752545912",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0708570364064145"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "eda782b42d2cfdf2",
+    "mean_log2_gain": "0.04756735813082469",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0335207529249246"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "6b5ae097a9de2749",
+    "mean_log2_gain": "0.08915865757887542",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0637496502580563"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "2b2f050461dcff81",
+    "mean_log2_gain": "-0.14836183549612847",
+    "cpu_efficiency_ratio_new_over_comparator": "0.9022744039210255"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "36bbf164022d41a1",
+    "mean_log2_gain": "-0.13128074766086262",
+    "cpu_efficiency_ratio_new_over_comparator": "0.9130205594249917"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "ac8cab3d8dc7f375",
+    "mean_log2_gain": "1.2711798433786756",
+    "cpu_efficiency_ratio_new_over_comparator": "2.41358869366173"
+  },
+  {
+    "cohort": "dependency_invalidation-context-1-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "5f71622ff33bff1b",
+    "mean_log2_gain": "1.0420217897162165",
+    "cpu_efficiency_ratio_new_over_comparator": "2.0591112663797104"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "eda782b42d2cfdf2",
+    "mean_log2_gain": "-0.3787682964356027",
+    "cpu_efficiency_ratio_new_over_comparator": "0.7690939257947021"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "6b5ae097a9de2749",
+    "mean_log2_gain": "-0.8078008271723154",
+    "cpu_efficiency_ratio_new_over_comparator": "0.5712519827923348"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "2b2f050461dcff81",
+    "mean_log2_gain": "0.7812760421185121",
+    "cpu_efficiency_ratio_new_over_comparator": "1.7186503212355566"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "36bbf164022d41a1",
+    "mean_log2_gain": "0.6276000196463942",
+    "cpu_efficiency_ratio_new_over_comparator": "1.544992698019029"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "ac8cab3d8dc7f375",
+    "mean_log2_gain": "-1.5703879605894318",
+    "cpu_efficiency_ratio_new_over_comparator": "0.3367178339720517"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-direct",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "5f71622ff33bff1b",
+    "mean_log2_gain": "-1.3794468773931845",
+    "cpu_efficiency_ratio_new_over_comparator": "0.3843661312734347"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "eda782b42d2cfdf2",
+    "mean_log2_gain": "-0.26235798975745017",
+    "cpu_efficiency_ratio_new_over_comparator": "0.8337241381885905"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "6b5ae097a9de2749",
+    "mean_log2_gain": "-0.1357280347912475",
+    "cpu_efficiency_ratio_new_over_comparator": "0.9102103934156932"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "2b2f050461dcff81",
+    "mean_log2_gain": "0.15515676075261897",
+    "cpu_efficiency_ratio_new_over_comparator": "1.113542607272735"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "36bbf164022d41a1",
+    "mean_log2_gain": "0.1453760108074742",
+    "cpu_efficiency_ratio_new_over_comparator": "1.1060188783779097"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "ac8cab3d8dc7f375",
+    "mean_log2_gain": "-1.26160553712034",
+    "cpu_efficiency_ratio_new_over_comparator": "0.41707954456013546"
+  },
+  {
+    "cohort": "dependency_invalidation-context-2-new-vs-old",
+    "task": "dependency_invalidation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "5f71622ff33bff1b",
+    "mean_log2_gain": "-1.0461135609586532",
+    "cpu_efficiency_ratio_new_over_comparator": "0.4842709739856177"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "c447b643cbbec7ab",
+    "mean_log2_gain": "-0.11226314637114831",
+    "cpu_efficiency_ratio_new_over_comparator": "0.9251356686738403"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "b7dd201420a5f27e",
+    "mean_log2_gain": "-0.1734765254144277",
+    "cpu_efficiency_ratio_new_over_comparator": "0.8867033766591885"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "f7cc145f62df6d9a",
+    "mean_log2_gain": "0.09396313463634254",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0672980648929031"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "918a4aa84971d1e2",
+    "mean_log2_gain": "0.1917412365427833",
+    "cpu_efficiency_ratio_new_over_comparator": "1.1421413726734573"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "d0bbfa73d011ec70",
+    "mean_log2_gain": "-0.017279456022638584",
+    "cpu_efficiency_ratio_new_over_comparator": "0.9880942350042018"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "0136af3c8d765193",
+    "mean_log2_gain": "-0.05622696255177484",
+    "cpu_efficiency_ratio_new_over_comparator": "0.9617761376286408"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "c447b643cbbec7ab",
+    "mean_log2_gain": "0.4484010928661437",
+    "cpu_efficiency_ratio_new_over_comparator": "1.3645271430593953"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "b7dd201420a5f27e",
+    "mean_log2_gain": "0.4264046954026006",
+    "cpu_efficiency_ratio_new_over_comparator": "1.3438803494026226"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "f7cc145f62df6d9a",
+    "mean_log2_gain": "0.03795273678552036",
+    "cpu_efficiency_ratio_new_over_comparator": "1.026655911547846"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "918a4aa84971d1e2",
+    "mean_log2_gain": "0.0679091172328492",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0481964421619252"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "d0bbfa73d011ec70",
+    "mean_log2_gain": "0.00442028534441663",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0030686068882926"
+  },
+  {
+    "cohort": "interval_aggregation-context-1-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "0136af3c8d765193",
+    "mean_log2_gain": "0.04051148501903756",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0284783929953791"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "c447b643cbbec7ab",
+    "mean_log2_gain": "0.12989045523770892",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0942106139907077"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "b7dd201420a5f27e",
+    "mean_log2_gain": "0.09500783394819479",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0680712077432517"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "f7cc145f62df6d9a",
+    "mean_log2_gain": "0.03984068860970358",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0280003021790092"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "918a4aa84971d1e2",
+    "mean_log2_gain": "0.03023821224187384",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0211807252110603"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "d0bbfa73d011ec70",
+    "mean_log2_gain": "0.08626895569708726",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0616211041547203"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-direct",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "0136af3c8d765193",
+    "mean_log2_gain": "0.04726645704728294",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0333052152841047"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "c447b643cbbec7ab",
+    "mean_log2_gain": "0.7791871182957479",
+    "cpu_efficiency_ratio_new_over_comparator": "1.7161636337373665"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "b7dd201420a5f27e",
+    "mean_log2_gain": "0.7938454827873611",
+    "cpu_efficiency_ratio_new_over_comparator": "1.7336894334507469"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "f7cc145f62df6d9a",
+    "mean_log2_gain": "0.09744401078565312",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0698763075152482"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "918a4aa84971d1e2",
+    "mean_log2_gain": "0.09788553032667857",
+    "cpu_efficiency_ratio_new_over_comparator": "1.07020378045445"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "d0bbfa73d011ec70",
+    "mean_log2_gain": "0.18934602639814613",
+    "cpu_efficiency_ratio_new_over_comparator": "1.1402467249084496"
+  },
+  {
+    "cohort": "interval_aggregation-context-2-new-vs-old",
+    "task": "interval_aggregation",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "0136af3c8d765193",
+    "mean_log2_gain": "0.05285640844985884",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0373166872165618"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "67a3be3dc0288d39",
+    "mean_log2_gain": "-0.2316574973127239",
+    "cpu_efficiency_ratio_new_over_comparator": "0.8516558709186195"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "cf8abb274e7028ff",
+    "mean_log2_gain": "-0.0930840116085867",
+    "cpu_efficiency_ratio_new_over_comparator": "0.9375165010225945"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "64aadb3a466d8a03",
+    "mean_log2_gain": "-0.35460158594697",
+    "cpu_efficiency_ratio_new_over_comparator": "0.7820855937359834"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "bb6c77e3bda54ca8",
+    "mean_log2_gain": "-0.34998008256888546",
+    "cpu_efficiency_ratio_new_over_comparator": "0.7845949297130053"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "76c41d0d9480fb34",
+    "mean_log2_gain": "0.04933588084651297",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0347884676109325"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "primary_new_vs_direct",
+    "group": "af88924f888d6fb9",
+    "mean_log2_gain": "0.08163791839009282",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0582187741911329"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "67a3be3dc0288d39",
+    "mean_log2_gain": "-0.039045109029859804",
+    "cpu_efficiency_ratio_new_over_comparator": "0.9732989413528585"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "cf8abb274e7028ff",
+    "mean_log2_gain": "-0.007593176167823179",
+    "cpu_efficiency_ratio_new_over_comparator": "0.9947506376577117"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "64aadb3a466d8a03",
+    "mean_log2_gain": "0.01779690489136998",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0124122751807467"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "bb6c77e3bda54ca8",
+    "mean_log2_gain": "0.03255714775740737",
+    "cpu_efficiency_ratio_new_over_comparator": "1.022823453830009"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "76c41d0d9480fb34",
+    "mean_log2_gain": "0.6144186510020309",
+    "cpu_efficiency_ratio_new_over_comparator": "1.5309409641706317"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-1-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "1",
+    "contrast": "secondary_new_vs_old",
+    "group": "af88924f888d6fb9",
+    "mean_log2_gain": "0.5786893831543913",
+    "cpu_efficiency_ratio_new_over_comparator": "1.493491868929337"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "67a3be3dc0288d39",
+    "mean_log2_gain": "-0.6158535075809084",
+    "cpu_efficiency_ratio_new_over_comparator": "0.6525437302977063"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "cf8abb274e7028ff",
+    "mean_log2_gain": "-0.35997416016260564",
+    "cpu_efficiency_ratio_new_over_comparator": "0.7791785352545623"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "64aadb3a466d8a03",
+    "mean_log2_gain": "-0.7049301813236666",
+    "cpu_efficiency_ratio_new_over_comparator": "0.6134721766605681"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "bb6c77e3bda54ca8",
+    "mean_log2_gain": "-0.6675084824834736",
+    "cpu_efficiency_ratio_new_over_comparator": "0.6295930487794512"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "76c41d0d9480fb34",
+    "mean_log2_gain": "-1.52263455935751",
+    "cpu_efficiency_ratio_new_over_comparator": "0.3480497492389994"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-direct",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "primary_new_vs_direct",
+    "group": "af88924f888d6fb9",
+    "mean_log2_gain": "-1.4187577670853513",
+    "cpu_efficiency_ratio_new_over_comparator": "0.3740342358120322"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "67a3be3dc0288d39",
+    "mean_log2_gain": "0.010813698932689242",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0075236463910664"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "cf8abb274e7028ff",
+    "mean_log2_gain": "0.20069981303795204",
+    "cpu_efficiency_ratio_new_over_comparator": "1.149255693216979"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "64aadb3a466d8a03",
+    "mean_log2_gain": "0.07176646082754745",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0510027621226106"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "bb6c77e3bda54ca8",
+    "mean_log2_gain": "0.0864998948987048",
+    "cpu_efficiency_ratio_new_over_comparator": "1.0617910566028002"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "76c41d0d9480fb34",
+    "mean_log2_gain": "0.5844599157080486",
+    "cpu_efficiency_ratio_new_over_comparator": "1.4994775429310219"
+  },
+  {
+    "cohort": "prefix_suffix_routing-context-2-new-vs-old",
+    "task": "prefix_suffix_routing",
+    "context": "2",
+    "contrast": "secondary_new_vs_old",
+    "group": "af88924f888d6fb9",
+    "mean_log2_gain": "0.5981761108652983",
+    "cpu_efficiency_ratio_new_over_comparator": "1.513801572584191"
+  }
+]

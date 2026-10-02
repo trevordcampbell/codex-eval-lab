@@ -56,8 +56,9 @@ must be validated on a Docker-equipped machine before relying on it.
    access; public benchmark solutions can contaminate results too.
 4. Return the structured proposal, not arbitrary shell instructions. The controller
    validates and imports it using `import-proposal`, then evaluates privately.
-5. Only human-approved aggregate results leave the evaluator. Do not feed private
-   reports, test transcripts or held-out case lists into the next proposal.
+5. Only aggregate results covered by the authorized workflow scope leave the
+   evaluator. Do not feed private reports, test transcripts or held-out case lists
+   into the next proposal. Scope authorization does not certify label correctness.
 
 The export/import protocol is implemented. Automatic remote deployment, secret
 brokering, hardened multi-tenant evaluation services and policy enforcement across
@@ -135,9 +136,41 @@ apply its usual spend, private-data, credential and security action policies.
 A plan's explicit scope can cover repeated iterations and final-test opening so
 objective workflows need no ceremonial per-step human confirmation.
 
+Native `prepare-turn` captures a proposal opportunity before the external host
+calls an author; it is not itself a model dispatch. `submit-turn` validates the
+public handoff and captures the bounded response into controller-owned receipts.
+Exact prompt/source/feedback/response bytes are bound and later rechecked. These
+receipts support an inspectable cooperative audit, not an authenticated model or
+user identity, trusted elapsed-time attestation, or proof that a model could not
+read sibling directories. The CLI cannot enforce the external author's process
+timeout: the host must do that and record the actual outcome. Failed, malformed,
+partial or pending attempts remain counted and cannot justify invisible retries.
+Never give the author controller state, raw oracle receipts or held-out files;
+use a separate OS/account/host trust domain when read isolation is required.
+
 Oracle preflight executes trusted local reference/grader code in disposable source
 copies, with no extra credential environment. This is still same-account code,
 not a network/side-effect sandbox. Source provenance and implementation independence
 are declared assumptions, not cryptographic or epistemic proof. Raw receipts are
 bound to the evaluator and rechecked; a same-account actor capable of rewriting
 all records can fabricate them. Model-authored anchors remain model-authored.
+
+
+The additive `start-native` path preserves existing exact-plan authority checks and
+protected final capacity; it still executes configured trusted oracle preflight.
+`evaluate-turn` has no optimizer-dispatch path. Its call/source/manifest/dispatch/
+response/decision binding and current unresolved-work checks also apply to duplicate
+completion requests. It does not open the final test, grant new authority, attest
+external elapsed time or authenticate the author. Pending/indeterminate authors
+continue to block final sealing. Generic `loop` remains capable of dispatching the
+configured backend and is not a safe substitute for native completion retries.
+
+
+Finalization also rejects an applied-but-unevaluated active round and any pending
+or indeterminate trial in either ledger before creating a seal, returning a saved
+final result or continuing a sealed final. This later lifecycle tightening prevents
+an interrupted author/evaluation phase from silently opening the holdout. Recovery
+retains the seal and charges; it never turns an invalid final trial into permission
+to reveal more rows. Clean completed-final retrieval and complete-boundary resumes
+remain available. This safety change is separate from the frozen study runtime and
+does not alter final superiority/noninferiority thresholds.

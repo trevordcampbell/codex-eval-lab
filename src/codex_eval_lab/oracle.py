@@ -17,6 +17,7 @@ from typing import Any
 from .artifacts import collect, copy_files, hashes
 from .evidence import evaluator_fingerprint, validate_criterion_results
 from .process import invoke, minimal_env, substitute
+from . import oracle_controls
 from .util import LabError, canonical, contained, digest, finite, file_hash, read_json, relative_name, safe_name, strict_json, unknown_keys, utc_now, write_json
 
 LIMITS = [
@@ -54,7 +55,7 @@ def _load_contract(suite: Path, cfg: dict) -> dict:
     c = read_json(path)
     if not isinstance(c, dict):
         raise LabError("Oracle contract must be an object")
-    unknown_keys(c, {"schema_version", "claim_scope", "source", "author", "reference_command", "reference_rationale", "specifications", "criteria", "measurement_metrics", "anchors", "trust_assumptions", "max_wall_time_s"}, "oracle contract")
+    unknown_keys(c, {"schema_version", "claim_scope", "source", "author", "reference_command", "reference_rationale", "specifications", "criteria", "measurement_metrics", "anchors", "trust_assumptions", "max_wall_time_s", "generated_controls"}, "oracle contract")
     if type(c.get("schema_version")) is not int or c["schema_version"] != 1:
         raise LabError("Oracle schema_version must be 1")
     _text(c.get("claim_scope"), "claim_scope")
@@ -127,6 +128,7 @@ def _load_contract(suite: Path, cfg: dict) -> dict:
         metrics.add(metric)
     if set(gates) - metrics - {"latency_s", "cost_usd"}:
         raise LabError("Every selection metric needs oracle coverage or an explicit measurement trust basis")
+    oracle_controls.validate_policy(c)
     anchors = c.get("anchors")
     if not isinstance(anchors, list) or not 2 <= len(anchors) <= 128:
         raise LabError("Oracle requires 2–128 independently derived development anchors")
@@ -156,12 +158,17 @@ def _load_contract(suite: Path, cfg: dict) -> dict:
         if not isinstance(mutations, list) or not 1 <= len(mutations) <= 16:
             raise LabError("Each oracle anchor needs 1–16 known-wrong output mutations")
         mids = set()
+        outputs = []
         for mutation in mutations:
             if not isinstance(mutation, dict) or set(mutation) != {"id", "output", "fails"}:
                 raise LabError("Oracle mutations require id, output and fails")
             safe_name(mutation["id"])
-            if mutation["id"] in mids or mutation["id"] in {"reference", "positive"} or mutation["output"] == anchor["output"]:
+            equivalent = oracle_controls.equivalent if c.get("generated_controls") else lambda a, b: a == b
+            if mutation["id"] in mids or mutation["id"] in {"reference", "positive"} or equivalent(mutation["output"], anchor["output"]):
                 raise LabError("Oracle mutations must be distinct from correct outputs and uniquely named")
+            if c.get("generated_controls") and any(equivalent(mutation["output"], other) for other in outputs):
+                raise LabError("Generated exact-JSON controls require distinct declared mutation outputs")
+            outputs.append(mutation["output"])
             mids.add(mutation["id"])
             if not isinstance(mutation["fails"], list) or not mutation["fails"] or any(i not in ids for i in mutation["fails"]):
                 raise LabError("Oracle mutations must identify criteria that must fail")
@@ -169,12 +176,19 @@ def _load_contract(suite: Path, cfg: dict) -> dict:
                 negatives[id_].add(anchor["group"])
     if len(groups) < 2 or any(len(positives[i]) < 2 or len(negatives[i]) < 2 for i in ids):
         raise LabError("Every oracle criterion needs positive and negative controls in at least two declared groups")
-    if sum(2 + len(a["mutations"]) for a in anchors) > 1000:
-        raise LabError("Oracle preflight exceeds 1000 calls")
+    # Count incrementally instead of materializing a possibly over-budget matrix.
+    anchor_calls = 0
+    for anchor in anchors:
+        anchor_calls += 2 + len(anchor["mutations"])
+        if c.get("generated_controls"):
+            generated, _ = oracle_controls.generate(anchor, c["generated_controls"])
+            anchor_calls += len(generated)
+        if anchor_calls > 1000:
+            raise LabError("Oracle preflight exceeds 1000 calls")
     # Reusable development anchors cannot be relabeled as untouched private cases.
     from .config import load_cases, make_splits
     cases = load_cases(suite, cfg)
-    if sum(2 + len(a["mutations"]) for a in anchors) + 2 * len(cases) > 1000:
+    if anchor_calls + 2 * len(cases) > 1000:
         raise LabError("Combined anchor and all-case oracle preflight exceeds 1000 calls")
     if any(case["assets"] for case in cases):
         raise LabError("Executable-oracle consistency currently supports JSON-only cases without file assets; use an independently validated task-specific path for artifact outcomes")
@@ -202,6 +216,13 @@ def requests(contract: dict, cases: list[dict] | None = None, *, seed: int = 0) 
         rows.append({"id": anchor["id"] + ":positive", "kind": "grader", "request": grade, "fails": []})
         for mutation in anchor["mutations"]:
             rows.append({"id": anchor["id"] + ":" + mutation["id"], "kind": "grader", "request": {**grade, "output": mutation["output"]}, "fails": mutation["fails"]})
+        if contract.get("generated_controls"):
+            generated, _ = oracle_controls.generate(anchor, contract["generated_controls"])
+            for index, control in enumerate(generated):
+                rows.append({"id": anchor["id"] + f":generated:{index:03d}", "kind": "grader",
+                             "request": {**grade, "output": control["output"]}, "fails": control["fails"],
+                             "generated_family": control["family"], "preserve_output_order": True,
+                             "output_encoding_sha256": control["output_encoding_sha256"]})
     for case in cases or []:
         # This is private controller validation of the instrument, not candidate
         # evaluation or proposer feedback. No expected value reaches the reference.
@@ -236,7 +257,8 @@ def check_response(row: dict, value: Any, contract: dict, cfg: dict) -> None:
     if value["usage"]["cost_usd"] != 0:
         raise LabError("Oracle preflight only supports explicitly free local reference and grader checks; reported cost was nonzero")
     if row["kind"] in {"reference", "case_reference"}:
-        if row["kind"] == "reference" and canonical(value["output"]) != canonical(row["expected_output"]):
+        same = oracle_controls.equivalent if contract.get("generated_controls") else lambda a, b: canonical(a) == canonical(b)
+        if row["kind"] == "reference" and not same(value["output"], row["expected_output"]):
             raise LabError("Independent reference disagrees with a source-derived anchor")
         return
     from .engine import validate_grader_metrics
@@ -255,12 +277,18 @@ def toolchain(suite: Path, contract: dict, cfg: dict) -> dict:
         launcher = command[0].replace("{python}", sys.executable)
         if launcher.startswith("{suite}/"):
             name = relative_name(launcher[len("{suite}/"):])
-            executables["{suite}/" + name] = file_hash(contained(suite, name))
-            continue
-        path = shutil.which(launcher)
-        if not path:
-            raise LabError("Oracle launcher is unavailable")
-        executables[str(Path(path).resolve())] = file_hash(Path(path))
+            key, path = "{suite}/" + name, contained(suite, name)
+        else:
+            resolved = shutil.which(launcher)
+            if not resolved:
+                raise LabError("Oracle launcher is unavailable")
+            path = Path(resolved)
+            key = str(path.resolve())
+        # Two roles commonly use the same interpreter. Resolve and validate each
+        # role, but read that executable once within this verification boundary.
+        # This dictionary is local: every later toolchain call hashes fresh bytes.
+        if key not in executables:
+            executables[key] = file_hash(path)
     return {"python": platform.python_version(), "platform": platform.platform(), "executables_sha256": executables}
 
 
@@ -293,6 +321,7 @@ def validate_receipt(suite: Path, cfg: dict, receipt: dict) -> dict:
             "binding": receipt["binding"], "receipt_sha256": digest(receipt), "controls": len(rows), "anchor_control_calls": len(requests(c)),
             "case_consistency_cases": (len(rows) - len(requests(c))) // 2, "case_consistency_status": "all_frozen_cases_passed",
             "private_case_receipts": True,
+            "control_coverage": oracle_controls.coverage_summary(c),
             "criteria_contract": [{**x, "kind": "deterministic"} for x in c["criteria"]],
             "measurement_metrics": c.get("measurement_metrics", []), "trust_assumptions": c["trust_assumptions"], "limitations": LIMITS}
 
@@ -332,10 +361,18 @@ def preflight(suite: Path, cfg: dict, output: Path, store, *, expires_at: float)
                 timeout = min(cfg["execution"]["grader_timeout_s"], deadline - time.monotonic())
                 if timeout <= 0:
                     raise LabError("Oracle preflight wall-time limit reached")
+                execution_request = {**request, "artifacts_dir": str(artifacts)}
+                # Default transport sorts keys. Preserve generated control order
+                # explicitly or the positive metamorphic probe would be erased.
+                encoding = {}
+                if row.get("preserve_output_order"):
+                    if digest(oracle_controls.encoded(request["output"])) != row["output_encoding_sha256"]:
+                        raise LabError("Generated oracle output encoding does not match its bound request")
+                    encoding["input_text"] = oracle_controls.encoded(execution_request) + "\n"
                 call = invoke(substitute(command, app=root / "unavailable-app", suite=work, artifacts=artifacts),
-                              {**request, "artifacts_dir": str(artifacts)}, cwd=work,
+                              execution_request, cwd=work,
                               env=minimal_env([], home=root), timeout_s=timeout,
-                              max_output_bytes=min(cfg["execution"]["max_output_bytes"], 100_000))
+                              max_output_bytes=min(cfg["execution"]["max_output_bytes"], 100_000), **encoding)
                 result.update(response=call.value, stdout=call.stdout, stderr=call.stderr, elapsed_s=call.elapsed_s)
                 if any(artifacts.iterdir()):
                     raise LabError("Executable-oracle JSON-only preflight does not support reference/grader output artifacts")

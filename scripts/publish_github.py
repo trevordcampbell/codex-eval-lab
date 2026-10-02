@@ -70,7 +70,7 @@ def publish(root:Path,repo:str,dry_run=False):
         run(["git","config","user.name",profile["login"]],work)
         run(["git","config","user.email",f"{profile['id']}+{profile['login']}@users.noreply.github.com"],work)
         run(["git","add","--all"],work)
-        run(["git","commit","-m","Initial Codex Eval Lab 0.1.0 alpha release"],work)
+        run(["git","commit","-m","Initial Codex Eval Lab 0.5.0 source publication"],work)
         run(["gh","repo","create",repo,"--private","--source",str(work),"--remote","origin","--push",
              "--description","Provider-neutral eval design and guarded hillclimbing for Codex"],work)
         metadata=json.loads(run(["gh","repo","view",repo,"--json","url,isPrivate"],work).stdout)

@@ -27,6 +27,14 @@ application defect. Preserve model-authored origins. `executable_checks_passed`
 means finite controls passed, not domain truth, broad correctness or independence.
 Spot-check shared assumptions and document those that code cannot establish.
 
+For a new single-criterion full-output exact-JSON task, read
+`references/EVAL_DESIGN.md` and enable its bounded generated controls.
+Check plausible wrong outputs and valid alternatives, including boolean/number
+confusion, missing/extra fields, ordered arrays, object-key order and numeric
+spellings. Inspect capped or inapplicable family coverage. These derived probes
+test the grader, not independent truth or application metamorphic correctness;
+do not infer exact-JSON semantics for a semantic or mixed grader.
+
 For semantic or mixed criteria, read `references/EVIDENCE.md`. Preserve the existing
 human/expert-label path, per-criterion outcomes and calibration validation. Never
 upgrade model labels into human ones. Check support in both classes, conservative

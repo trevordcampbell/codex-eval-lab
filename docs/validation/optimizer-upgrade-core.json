@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "basis": "unreleased source based on main8b8578a",
+  "runtime_sha256": {
+    "__init__.py": "423d4d8a3820ac0042180658e21ea44c686510c16bfe0bbccf3e6da3065071cc",
+    "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "artifacts.py": "d871725ad740e2d35eb3aee0fcc43aade5cd3b3dcc83728617a8fa29689ce923",
+    "automation.py": "18ed2bddcf77883ba5fe6d53771b98cd5964c34bfca6c6f3f3bcadf747708089",
+    "calibration.py": "58fbc39c4760d7e19dad312776aa41ff5c614c7547748979eda409cb9323d6d1",
+    "cli.py": "9d8802d734b1bc2193d06375dfd039809643b43384c9623033909713c42d9963",
+    "config.py": "50c0ecff8610535e0936162472af42a7054a095cec7f564f8a48eaedce62d877",
+    "engine.py": "ac866ad2e35a913d99e77d163704455b658f1796e995018bde2fe5389fed8d21",
+    "evidence.py": "060686d28af3885f56bd63898a4f369c8c6130f1b039cb0c96c244651137b337",
+    "native.py": "6075fcb8423e18b73f49f3fc5d1977cccee36f8b6f3bbffd7a6342acec55c697",
+    "optimizer.py": "1961c079503a9c976a5aa7b0e22f530ea3a0187a911aace83bea4063623cd37a",
+    "oracle.py": "11ba3c3dfcf03c3243f3502f6b2928fb811a8492ccee678bfcc7cb46ab941bac",
+    "oracle_controls.py": "a6126e2fe53569655b79ea1cf3bdbc006d3cd85769efa8b0d0be2766ea23295e",
+    "paired.py": "2706b7e07afea227c3fffac686ab7fdd878fd8c047497ca308ce4cfa4f16387b",
+    "plugin_server.py": "da30e6868afced4be4446419190ff13abc6ac19cad0fdca6268821878c3de983",
+    "process.py": "0dcb5aaf225646f6f3ecc924d5ebad69d5f261ff3e59962de385f8f986de3afb",
+    "proposal_feedback.py": "dfa0da6d36e7d8d1d8bd1cc048be6df27f395649e01c12d4841a46b5c393bbc5",
+    "proposal_receipts.py": "568fe7ef4245b833c3486b0bad3e43182c3a145799cfcb70c5bf7e817c257d9f",
+    "report.py": "fb048b2c9aaa55b0b782bc3c9712d064a2ee7ef6d219ff6fc6535c30cf28f2d0",
+    "review.py": "03e8cebc0d31e8abaae808422e0c7fe1eca8d726dd8813870f55c8d187e330c3",
+    "review_cli.py": "8e87ac60c4a0a552ebe58d2df9a729a9e64b4ad0800c9be0e49bf31e626b4be1",
+    "review_ui.py": "93b4fd6748cb8ef7226911d02496ea459c6d8118d23d7d2c1c740ed55df81e71",
+    "search_policy.py": "1a56a1cfb657b4ae5dadaa402f459fd7c6ad56366b5ecd010a710ba57fb193d3",
+    "stats.py": "15f648c693d9183d62db665c02680a13f0e2629b075ca651f38ca872954234b2",
+    "store.py": "deb469458c51065532ab31836b5e0b594f33fa06f06b41ade3dbfe466de397fc",
+    "util.py": "0ea7d626958925c4e05e555812311ecba2f2e9d6f6daaa34254be69d7a456611"
+  },
+  "validation": {
+    "v3_full_tests": 509,
+    "v3_skipped": 3,
+    "v4_targeted_independent_tests": 65,
+    "v4_bounded_response_and_feedback_tests": 20,
+    "sdk": "mcp2.2.0 in isolated Python3.12.14 venv",
+    "live_study": "not yet started",
+    "independent_review": "No unresolved concrete high or medium integrity finding in reviewed core scope",
+    "v4_full_tests": 510,
+    "v4_full_skipped": 3
+  },
+  "limits": [
+    "Same-account cooperative evidence, not hostile-code isolation",
+    "Native served model and token usage may be unavailable",
+    "Old pilot source bundle recovered exactly; full original state/transcripts not recovered after workspace reset",
+    "Version string remains0.4.0 until separately packaged; exact source hashes distinguish this unreleased runtime"
+  ]
+}

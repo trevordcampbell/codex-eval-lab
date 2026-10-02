@@ -1,0 +1,5 @@
+Using Python 3.14.8 environment at: .venv-eval-release-3148
+Checked 45 packages in 2ms
+Using Python 3.14.8 environment at: .venv-eval-release-3148
+Checked 31 packages in 0.37ms
+All installed packages are compatible

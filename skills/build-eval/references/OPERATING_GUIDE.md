@@ -80,10 +80,13 @@ Approve a bounded plan. Record the primary objective and non-negotiable guardrai
 editable paths, maximum rounds, patience, eval trial/cost limits and separate Codex
 usage limits. The core freezes the evaluator and each candidate, runs development
 and validation, gives a fresh optimizer development-only evidence, applies one
-coherent scoped proposal, then keeps it only when the measurement gates pass.
-Guardrails are checked against the incumbent **and original baseline** to avoid
-cumulative tolerated drift. Rejected candidates remain inspectable; the user's
-working tree is never reset or overwritten. The report updates after each round.
+coherent scoped proposal, then applies the frozen selection policy. Under the
+conservative default, confidence gates are checked against the incumbent **and
+original baseline** to avoid cumulative tolerated drift. The opt-in
+[archive policy](SEARCH_POLICY.md) uses complete observed primary improvements
+and original-baseline empirical guardrails for exploratory selection, while
+retaining those confidence decisions and the unchanged sealed final gates. Rejected
+candidates remain inspectable; the user's working tree is never reset or overwritten. The report updates after each round.
 
 Use `status` to inspect durable state. Re-running `run` resumes completed matrices
 without repeating completed trials. A stopped loop resumes an already-generated
@@ -285,3 +288,15 @@ trial/dollar capacity; preflight calls count toward the same evaluation budget.
 Do not retrofit frozen historical experiments. A new evaluator/runtime requires a
 new experiment and baseline. Exact controls need no human-label attestation;
 semantic criteria retain their existing expert calibration requirements.
+
+
+For external native authors, the additive protected route is `automation-plan` →
+`start-native` → `prepare-turn` → host author → `submit-turn` → `evaluate-turn
+STATE --call-id CALL_ID`. `start-native` runs configured oracle preflight and
+reports actual usage, but stops before author dispatch/search/finalization.
+`evaluate-turn` evaluates only the bound active native call and safely returns a
+verified prior receipt on repetition. It never creates an optimizer opportunity.
+A different active round, unresolved reservation, altered receipt/source or an
+indeterminate trial blocks it. Generic `loop` remains an automatic-dispatch command.
+See [the native guide](SEARCH_POLICY.md#native-authors-with-immutable-evidence) for
+receipts, resume boundaries, protected capacity and explicit final authorization.

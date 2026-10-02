@@ -1,0 +1,1659 @@
+{
+  "baseline_commit": "60c5883b215806f21e52f48f773c9b30bd81027f",
+  "candidate_commit": "9a599187d152a7eace4d6101dc49d775cf7b2210",
+  "preregistered_plan": "PATCH_PLAN_V2.json",
+  "plan_sha256": "3ad2e184f9e529d69e7005c54f8782afd53892092ef61ff6c4b15d0bcbcf675c",
+  "primary": {
+    "cell": "cases12",
+    "phase": "completed_baseline_revisit",
+    "metric": "self_cpu_s",
+    "summary": "median of three paired unchanged/changed ratios",
+    "practical_threshold_ratio": 1.1,
+    "interpretation": "At least1.10x unchanged/changed process-CPU ratio (9.09% reduction in candidate CPU) required for a practically useful local result; no significance/universal claim",
+    "changed_minus_unchanged_s": [
+      -0.28434800000000027,
+      -0.2676860000000001,
+      -0.26200899999999994
+    ],
+    "median_delta_s": -0.2676860000000001,
+    "median_ratio": 1.6489483432405967,
+    "unchanged_over_changed": [
+      1.6927460319393863,
+      1.6489483432405967,
+      1.635681878836402
+    ],
+    "passes_threshold": true,
+    "median_ratio_implied_cpu_reduction_fraction": 0.3935528641032202
+  },
+  "all_runs_complete": true,
+  "goldens_match": true,
+  "run_count": 30,
+  "candidate_invariants": {
+    "passed": 57,
+    "total": 57,
+    "file": "changed-invariants-v1/result.json"
+  },
+  "candidate_diagnostic_golden_matches_baseline": true,
+  "all_execution_processes_exited": true,
+  "python": "3.12.14",
+  "all_cells_phases_metrics": {
+    "small": {
+      "fresh_initialize": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.88843545599957,
+            0.8193853570046485,
+            0.8340925770025933
+          ],
+          "changed_seconds": [
+            0.861009975997149,
+            0.7979970960004721,
+            0.7809430869965581
+          ],
+          "unchanged_median_seconds": 0.8340925770025933,
+          "changed_median_seconds": 0.7979970960004721,
+          "changed_minus_unchanged_s": [
+            -0.027425480002420954,
+            -0.021388261004176456,
+            -0.053149490006035194
+          ],
+          "median_delta_s": -0.027425480002420954,
+          "median_ratio": 1.0318526855285957,
+          "unchanged_over_changed": [
+            1.0318526855285957,
+            1.0268024296220795,
+            1.0680580837336606
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.236487,
+            0.20657700000000004,
+            0.21327099999999996
+          ],
+          "changed_seconds": [
+            0.18670999999999993,
+            0.176488,
+            0.170517
+          ],
+          "unchanged_median_seconds": 0.21327099999999996,
+          "changed_median_seconds": 0.176488,
+          "changed_minus_unchanged_s": [
+            -0.04977700000000007,
+            -0.030089000000000032,
+            -0.04275399999999996
+          ],
+          "median_delta_s": -0.04275399999999996,
+          "median_ratio": 1.250731598608936,
+          "unchanged_over_changed": [
+            1.2666006105725462,
+            1.170487511898826,
+            1.250731598608936
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.522691,
+            0.44979099999999994,
+            0.46777799999999997
+          ],
+          "changed_seconds": [
+            0.537606,
+            0.4619869999999999,
+            0.43379
+          ],
+          "unchanged_median_seconds": 0.46777799999999997,
+          "changed_median_seconds": 0.4619869999999999,
+          "changed_minus_unchanged_s": [
+            0.014915000000000012,
+            0.012195999999999985,
+            -0.03398799999999996
+          ],
+          "median_delta_s": 0.012195999999999985,
+          "median_ratio": 0.9736009887724114,
+          "unchanged_over_changed": [
+            0.9722566340405426,
+            0.9736009887724114,
+            1.0783512759630236
+          ]
+        }
+      },
+      "fresh_baseline": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.5618108429989661,
+            0.5072544280046714,
+            0.4690232159991865
+          ],
+          "changed_seconds": [
+            0.3751202479979838,
+            0.3476095849982812,
+            0.34140505800314713
+          ],
+          "unchanged_median_seconds": 0.5072544280046714,
+          "changed_median_seconds": 0.3476095849982812,
+          "changed_minus_unchanged_s": [
+            -0.18669059500098228,
+            -0.15964484300639015,
+            -0.12761815799603937
+          ],
+          "median_delta_s": -0.15964484300639015,
+          "median_ratio": 1.459264789856642,
+          "unchanged_over_changed": [
+            1.4976819992984909,
+            1.459264789856642,
+            1.3738027747522796
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.3771559999999999,
+            0.333835,
+            0.30345500000000003
+          ],
+          "changed_seconds": [
+            0.20995499999999995,
+            0.184994,
+            0.17899299999999996
+          ],
+          "unchanged_median_seconds": 0.333835,
+          "changed_median_seconds": 0.184994,
+          "changed_minus_unchanged_s": [
+            -0.16720099999999993,
+            -0.148841,
+            -0.12446200000000007
+          ],
+          "median_delta_s": -0.148841,
+          "median_ratio": 1.7963658879283655,
+          "unchanged_over_changed": [
+            1.7963658879283655,
+            1.804572040174276,
+            1.6953456280413206
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.14484299999999994,
+            0.12367600000000001,
+            0.120118
+          ],
+          "changed_seconds": [
+            0.12351699999999999,
+            0.12061800000000011,
+            0.12497299999999989
+          ],
+          "unchanged_median_seconds": 0.12367600000000001,
+          "changed_median_seconds": 0.12351699999999999,
+          "changed_minus_unchanged_s": [
+            -0.021325999999999956,
+            -0.003057999999999894,
+            0.004854999999999887
+          ],
+          "median_delta_s": -0.003057999999999894,
+          "median_ratio": 1.0253527665854176,
+          "unchanged_over_changed": [
+            1.1726563954759261,
+            1.0253527665854176,
+            0.9611516087474903
+          ]
+        }
+      },
+      "completed_baseline_revisit": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.34009548400354106,
+            0.29126712099969154,
+            0.2916510590002872
+          ],
+          "changed_seconds": [
+            0.16607205600303132,
+            0.16519275199971162,
+            0.1643721199943684
+          ],
+          "unchanged_median_seconds": 0.2916510590002872,
+          "changed_median_seconds": 0.16519275199971162,
+          "changed_minus_unchanged_s": [
+            -0.17402342800050974,
+            -0.12607436899997992,
+            -0.1272789390059188
+          ],
+          "median_delta_s": -0.1272789390059188,
+          "median_ratio": 1.7743341085476025,
+          "unchanged_over_changed": [
+            2.0478790483411204,
+            1.7631955244634463,
+            1.7743341085476025
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.34006499999999995,
+            0.29123599999999994,
+            0.2914610000000001
+          ],
+          "changed_seconds": [
+            0.16576999999999997,
+            0.16516100000000006,
+            0.16435100000000002
+          ],
+          "unchanged_median_seconds": 0.2914610000000001,
+          "changed_median_seconds": 0.16516100000000006,
+          "changed_minus_unchanged_s": [
+            -0.17429499999999998,
+            -0.12607499999999988,
+            -0.12711000000000006
+          ],
+          "median_delta_s": -0.12711000000000006,
+          "median_ratio": 1.7734056987788334,
+          "unchanged_over_changed": [
+            2.051426675514267,
+            1.76334606838176,
+            1.7734056987788334
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "changed_seconds": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unchanged_median_seconds": 0.0,
+          "changed_median_seconds": 0.0,
+          "changed_minus_unchanged_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "median_delta_s": 0.0,
+          "median_ratio": null,
+          "unchanged_over_changed": [
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "paired_selection": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.8998903669998981,
+            0.8709624240000267,
+            0.8561797560032574
+          ],
+          "changed_seconds": [
+            0.6533388200041372,
+            0.6643803580009262,
+            0.6285763179985224
+          ],
+          "unchanged_median_seconds": 0.8709624240000267,
+          "changed_median_seconds": 0.6533388200041372,
+          "changed_minus_unchanged_s": [
+            -0.24655154699576087,
+            -0.20658206599910045,
+            -0.22760343800473493
+          ],
+          "median_delta_s": -0.22760343800473493,
+          "median_ratio": 1.3620935620505987,
+          "unchanged_over_changed": [
+            1.3773716476761622,
+            1.3109394543521595,
+            1.3620935620505987
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.5541579999999999,
+            0.5455109999999999,
+            0.5190280000000002
+          ],
+          "changed_seconds": [
+            0.3180789999999999,
+            0.31868399999999986,
+            0.303898
+          ],
+          "unchanged_median_seconds": 0.5455109999999999,
+          "changed_median_seconds": 0.3180789999999999,
+          "changed_minus_unchanged_s": [
+            -0.23607900000000004,
+            -0.226827,
+            -0.21513000000000015
+          ],
+          "median_delta_s": -0.226827,
+          "median_ratio": 1.7117614941446704,
+          "unchanged_over_changed": [
+            1.7422024088355412,
+            1.7117614941446704,
+            1.7079019934320072
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.28796199999999994,
+            0.25428399999999995,
+            0.25603
+          ],
+          "changed_seconds": [
+            0.2567029999999999,
+            0.26503299999999996,
+            0.2514590000000001
+          ],
+          "unchanged_median_seconds": 0.25603,
+          "changed_median_seconds": 0.2567029999999999,
+          "changed_minus_unchanged_s": [
+            -0.03125900000000004,
+            0.010749000000000009,
+            -0.004570999999999881
+          ],
+          "median_delta_s": -0.004570999999999881,
+          "median_ratio": 1.0181779136956717,
+          "unchanged_over_changed": [
+            1.1217710739648545,
+            0.9594427863699991,
+            1.0181779136956717
+          ]
+        }
+      }
+    },
+    "cases12": {
+      "fresh_initialize": {
+        "wall_s": {
+          "unchanged_seconds": [
+            1.9924997179987258,
+            2.096005530002003,
+            1.9915506940014893
+          ],
+          "changed_seconds": [
+            1.9828675919998204,
+            2.001282530000026,
+            2.0517628009984037
+          ],
+          "unchanged_median_seconds": 1.9924997179987258,
+          "changed_median_seconds": 2.001282530000026,
+          "changed_minus_unchanged_s": [
+            -0.009632125998905394,
+            -0.0947230000019772,
+            0.06021210699691437
+          ],
+          "median_delta_s": -0.009632125998905394,
+          "median_ratio": 1.0048576748330387,
+          "unchanged_over_changed": [
+            1.0048576748330387,
+            1.0473311481922425,
+            0.9706534756514668
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.40751099999999996,
+            0.43283599999999994,
+            0.394986
+          ],
+          "changed_seconds": [
+            0.383436,
+            0.391605,
+            0.39105599999999996
+          ],
+          "unchanged_median_seconds": 0.40751099999999996,
+          "changed_median_seconds": 0.39105599999999996,
+          "changed_minus_unchanged_s": [
+            -0.024074999999999958,
+            -0.04123099999999996,
+            -0.003930000000000045
+          ],
+          "median_delta_s": -0.024074999999999958,
+          "median_ratio": 1.0627875316871653,
+          "unchanged_over_changed": [
+            1.0627875316871653,
+            1.1052872154339193,
+            1.010049711550264
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            1.158788,
+            1.204284,
+            1.117525
+          ],
+          "changed_seconds": [
+            1.174918,
+            1.235596,
+            1.2419639999999998
+          ],
+          "unchanged_median_seconds": 1.158788,
+          "changed_median_seconds": 1.235596,
+          "changed_minus_unchanged_s": [
+            0.016129999999999978,
+            0.031312000000000006,
+            0.12443899999999974
+          ],
+          "median_delta_s": 0.031312000000000006,
+          "median_ratio": 0.9746583834845693,
+          "unchanged_over_changed": [
+            0.9862713823432785,
+            0.9746583834845693,
+            0.8998046642253723
+          ]
+        }
+      },
+      "fresh_baseline": {
+        "wall_s": {
+          "unchanged_seconds": [
+            1.2487704450031742,
+            1.3025034540041815,
+            1.2130664360010996
+          ],
+          "changed_seconds": [
+            1.0107619039990823,
+            1.034033014002489,
+            0.973090109997429
+          ],
+          "unchanged_median_seconds": 1.2487704450031742,
+          "changed_median_seconds": 1.0107619039990823,
+          "changed_minus_unchanged_s": [
+            -0.23800854100409197,
+            -0.2684704400016926,
+            -0.2399763260036707
+          ],
+          "median_delta_s": -0.2399763260036707,
+          "median_ratio": 1.2466126451581188,
+          "unchanged_over_changed": [
+            1.235474388243572,
+            1.2596343021607301,
+            1.2466126451581188
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.757395,
+            0.8121520000000001,
+            0.7255119999999999
+          ],
+          "changed_seconds": [
+            0.522707,
+            0.505732,
+            0.484155
+          ],
+          "unchanged_median_seconds": 0.757395,
+          "changed_median_seconds": 0.505732,
+          "changed_minus_unchanged_s": [
+            -0.234688,
+            -0.30642000000000014,
+            -0.24135699999999993
+          ],
+          "median_delta_s": -0.24135699999999993,
+          "median_ratio": 1.4985118402164594,
+          "unchanged_over_changed": [
+            1.4489857606651528,
+            1.6058940308305587,
+            1.4985118402164594
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.37446599999999997,
+            0.380833,
+            0.3472529999999998
+          ],
+          "changed_seconds": [
+            0.3607119999999999,
+            0.402015,
+            0.3433820000000001
+          ],
+          "unchanged_median_seconds": 0.37446599999999997,
+          "changed_median_seconds": 0.3607119999999999,
+          "changed_minus_unchanged_s": [
+            -0.013754000000000044,
+            0.021182000000000034,
+            -0.0038709999999997358
+          ],
+          "median_delta_s": -0.0038709999999997358,
+          "median_ratio": 1.0112731593385784,
+          "unchanged_over_changed": [
+            1.0381301426068443,
+            0.9473104237404076,
+            1.0112731593385784
+          ]
+        }
+      },
+      "completed_baseline_revisit": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.6948419379987172,
+            0.6805019270032062,
+            0.674218349995499
+          ],
+          "changed_seconds": [
+            0.4104994379958953,
+            0.4125191729981452,
+            0.4122379929976887
+          ],
+          "unchanged_median_seconds": 0.6805019270032062,
+          "changed_median_seconds": 0.4122379929976887,
+          "changed_minus_unchanged_s": [
+            -0.2843425000028219,
+            -0.267982754005061,
+            -0.2619803569978103
+          ],
+          "median_delta_s": -0.267982754005061,
+          "median_ratio": 1.649624966658861,
+          "unchanged_over_changed": [
+            1.692674517146757,
+            1.649624966658861,
+            1.63550755012355
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.6948130000000003,
+            0.680178,
+            0.6741790000000001
+          ],
+          "changed_seconds": [
+            0.4104650000000001,
+            0.41249199999999986,
+            0.41217000000000015
+          ],
+          "unchanged_median_seconds": 0.680178,
+          "changed_median_seconds": 0.41217000000000015,
+          "changed_minus_unchanged_s": [
+            -0.28434800000000027,
+            -0.2676860000000001,
+            -0.26200899999999994
+          ],
+          "median_delta_s": -0.2676860000000001,
+          "median_ratio": 1.6489483432405967,
+          "unchanged_over_changed": [
+            1.6927460319393863,
+            1.6489483432405967,
+            1.635681878836402
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "changed_seconds": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unchanged_median_seconds": 0.0,
+          "changed_median_seconds": 0.0,
+          "changed_minus_unchanged_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "median_delta_s": 0.0,
+          "median_ratio": null,
+          "unchanged_over_changed": [
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "paired_selection": {
+        "wall_s": {
+          "unchanged_seconds": [
+            2.4882297269941773,
+            2.3669025569979567,
+            2.4269659939964185
+          ],
+          "changed_seconds": [
+            1.8332530970001244,
+            1.8426117899944074,
+            1.863773853998282
+          ],
+          "unchanged_median_seconds": 2.4269659939964185,
+          "changed_median_seconds": 1.8426117899944074,
+          "changed_minus_unchanged_s": [
+            -0.6549766299940529,
+            -0.5242907670035493,
+            -0.5631921399981366
+          ],
+          "median_delta_s": -0.5631921399981366,
+          "median_ratio": 1.302178367182232,
+          "unchanged_over_changed": [
+            1.3572756162615165,
+            1.2845367482453482,
+            1.302178367182232
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            1.4711530000000002,
+            1.386739,
+            1.4401829999999998
+          ],
+          "changed_seconds": [
+            0.8463569999999998,
+            0.8576610000000002,
+            0.8886279999999998
+          ],
+          "unchanged_median_seconds": 1.4401829999999998,
+          "changed_median_seconds": 0.8576610000000002,
+          "changed_minus_unchanged_s": [
+            -0.6247960000000004,
+            -0.5290779999999997,
+            -0.551555
+          ],
+          "median_delta_s": -0.551555,
+          "median_ratio": 1.6206815450334675,
+          "unchanged_over_changed": [
+            1.7382180332885537,
+            1.6168847598293494,
+            1.6206815450334675
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.7628720000000002,
+            0.7222690000000003,
+            0.7394159999999999
+          ],
+          "changed_seconds": [
+            0.7351450000000002,
+            0.7246599999999999,
+            0.6935660000000001
+          ],
+          "unchanged_median_seconds": 0.7394159999999999,
+          "changed_median_seconds": 0.7246599999999999,
+          "changed_minus_unchanged_s": [
+            -0.027727000000000057,
+            0.002390999999999588,
+            -0.045849999999999724
+          ],
+          "median_delta_s": -0.027727000000000057,
+          "median_ratio": 1.037716368879609,
+          "unchanged_over_changed": [
+            1.037716368879609,
+            0.9967005216239345,
+            1.0661076234994213
+          ]
+        }
+      }
+    },
+    "cases24": {
+      "fresh_initialize": {
+        "wall_s": {
+          "unchanged_seconds": [
+            3.922620298995753,
+            3.9393861280041165,
+            3.9237870550059597
+          ],
+          "changed_seconds": [
+            3.9680758329996024,
+            3.9475004609994357,
+            3.87988623399724
+          ],
+          "unchanged_median_seconds": 3.9237870550059597,
+          "changed_median_seconds": 3.9475004609994357,
+          "changed_minus_unchanged_s": [
+            0.04545553400384961,
+            0.008114332995319273,
+            -0.043900821008719504
+          ],
+          "median_delta_s": 0.008114332995319273,
+          "median_ratio": 0.9979444377333233,
+          "unchanged_over_changed": [
+            0.9885446912012545,
+            0.9979444377333233,
+            1.0113149763578224
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.833984,
+            0.8279,
+            0.8344179999999999
+          ],
+          "changed_seconds": [
+            0.8259909999999999,
+            0.8306439999999999,
+            0.780189
+          ],
+          "unchanged_median_seconds": 0.833984,
+          "changed_median_seconds": 0.8259909999999999,
+          "changed_minus_unchanged_s": [
+            -0.007993000000000028,
+            0.0027439999999999687,
+            -0.05422899999999986
+          ],
+          "median_delta_s": -0.007993000000000028,
+          "median_ratio": 1.0096768608858935,
+          "unchanged_over_changed": [
+            1.0096768608858935,
+            0.9966965390708896,
+            1.0695075167683725
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            2.2351419999999997,
+            2.353284,
+            2.234178
+          ],
+          "changed_seconds": [
+            2.369852,
+            2.379244,
+            2.236627
+          ],
+          "unchanged_median_seconds": 2.2351419999999997,
+          "changed_median_seconds": 2.369852,
+          "changed_minus_unchanged_s": [
+            0.1347100000000001,
+            0.025959999999999983,
+            0.0024489999999999235
+          ],
+          "median_delta_s": 0.025959999999999983,
+          "median_ratio": 0.989088971118557,
+          "unchanged_over_changed": [
+            0.9431567878500429,
+            0.989088971118557,
+            0.9989050476454053
+          ]
+        }
+      },
+      "fresh_baseline": {
+        "wall_s": {
+          "unchanged_seconds": [
+            2.5430320909945294,
+            2.559913126002357,
+            2.542520204995526
+          ],
+          "changed_seconds": [
+            1.9512672460041358,
+            2.019614223994722,
+            2.00053224000294
+          ],
+          "unchanged_median_seconds": 2.5430320909945294,
+          "changed_median_seconds": 2.00053224000294,
+          "changed_minus_unchanged_s": [
+            -0.5917648449903936,
+            -0.5402989020076348,
+            -0.5419879649925861
+          ],
+          "median_delta_s": -0.5419879649925861,
+          "median_ratio": 1.2709218847639214,
+          "unchanged_over_changed": [
+            1.3032720639380524,
+            1.267525795564533,
+            1.2709218847639214
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            1.5373359999999998,
+            1.540458,
+            1.505465
+          ],
+          "changed_seconds": [
+            0.966298,
+            1.0425919999999997,
+            1.0153819999999998
+          ],
+          "unchanged_median_seconds": 1.5373359999999998,
+          "changed_median_seconds": 1.0153819999999998,
+          "changed_minus_unchanged_s": [
+            -0.5710379999999998,
+            -0.49786600000000036,
+            -0.49008300000000027
+          ],
+          "median_delta_s": -0.49786600000000036,
+          "median_ratio": 1.4826587432119147,
+          "unchanged_over_changed": [
+            1.5909543432771256,
+            1.4775271630705016,
+            1.4826587432119147
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.7800199999999999,
+            0.794759,
+            0.7804060000000002
+          ],
+          "changed_seconds": [
+            0.7290749999999999,
+            0.745393,
+            0.7143079999999999
+          ],
+          "unchanged_median_seconds": 0.7804060000000002,
+          "changed_median_seconds": 0.7290749999999999,
+          "changed_minus_unchanged_s": [
+            -0.05094500000000002,
+            -0.04936600000000002,
+            -0.06609800000000021
+          ],
+          "median_delta_s": -0.05094500000000002,
+          "median_ratio": 1.0698762130096355,
+          "unchanged_over_changed": [
+            1.0698762130096355,
+            1.066228150787571,
+            1.092534312929437
+          ]
+        }
+      },
+      "completed_baseline_revisit": {
+        "wall_s": {
+          "unchanged_seconds": [
+            1.4135085750021972,
+            1.3722081119994982,
+            1.3686655380006414
+          ],
+          "changed_seconds": [
+            0.8622779760044068,
+            0.8852533519966528,
+            0.8529550550010754
+          ],
+          "unchanged_median_seconds": 1.3722081119994982,
+          "changed_median_seconds": 0.8622779760044068,
+          "changed_minus_unchanged_s": [
+            -0.5512305989977904,
+            -0.48695476000284543,
+            -0.515710482999566
+          ],
+          "median_delta_s": -0.515710482999566,
+          "median_ratio": 1.6046162455757014,
+          "unchanged_over_changed": [
+            1.6392725018352703,
+            1.5500738956870808,
+            1.6046162455757014
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            1.4134510000000002,
+            1.3718950000000003,
+            1.366422
+          ],
+          "changed_seconds": [
+            0.862206,
+            0.8851800000000001,
+            0.8529389999999997
+          ],
+          "unchanged_median_seconds": 1.3718950000000003,
+          "changed_median_seconds": 0.862206,
+          "changed_minus_unchanged_s": [
+            -0.5512450000000002,
+            -0.48671500000000023,
+            -0.5134830000000004
+          ],
+          "median_delta_s": -0.5134830000000004,
+          "median_ratio": 1.6020160879031216,
+          "unchanged_over_changed": [
+            1.6393425701050564,
+            1.5498486183601077,
+            1.6020160879031216
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "changed_seconds": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unchanged_median_seconds": 0.0,
+          "changed_median_seconds": 0.0,
+          "changed_minus_unchanged_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "median_delta_s": 0.0,
+          "median_ratio": null,
+          "unchanged_over_changed": [
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "paired_selection": {
+        "wall_s": {
+          "unchanged_seconds": [
+            4.947135550995881,
+            4.944263266996131,
+            4.921267166995676
+          ],
+          "changed_seconds": [
+            3.9201503559961566,
+            3.920574256000691,
+            3.8823541609963286
+          ],
+          "unchanged_median_seconds": 4.944263266996131,
+          "changed_median_seconds": 3.9201503559961566,
+          "changed_minus_unchanged_s": [
+            -1.0269851949997246,
+            -1.0236890109954402,
+            -1.0389130059993477
+          ],
+          "median_delta_s": -1.0269851949997246,
+          "median_ratio": 1.2619759707504268,
+          "unchanged_over_changed": [
+            1.2619759707504268,
+            1.2611069053031245,
+            1.2675987204971355
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            2.987451,
+            2.9934190000000003,
+            2.943598
+          ],
+          "changed_seconds": [
+            1.9498189999999997,
+            1.9704400000000004,
+            1.9006759999999998
+          ],
+          "unchanged_median_seconds": 2.987451,
+          "changed_median_seconds": 1.9498189999999997,
+          "changed_minus_unchanged_s": [
+            -1.0376320000000003,
+            -1.0229789999999999,
+            -1.0429220000000003
+          ],
+          "median_delta_s": -1.0376320000000003,
+          "median_ratio": 1.5321683705000313,
+          "unchanged_over_changed": [
+            1.5321683705000313,
+            1.5191627250766324,
+            1.5487110901595014
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            1.4184120000000005,
+            1.4454679999999995,
+            1.4416339999999996
+          ],
+          "changed_seconds": [
+            1.4328599999999998,
+            1.4178190000000006,
+            1.4508500000000004
+          ],
+          "unchanged_median_seconds": 1.4416339999999996,
+          "changed_median_seconds": 1.4328599999999998,
+          "changed_minus_unchanged_s": [
+            0.01444799999999935,
+            -0.027648999999998924,
+            0.009216000000000779
+          ],
+          "median_delta_s": 0.009216000000000779,
+          "median_ratio": 0.9936478615983728,
+          "unchanged_over_changed": [
+            0.9899166701561916,
+            1.0195010787695742,
+            0.9936478615983728
+          ]
+        }
+      }
+    },
+    "payload16k": {
+      "fresh_initialize": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.9213931359990966,
+            0.8794301759990049,
+            0.8408590909966733
+          ],
+          "changed_seconds": [
+            0.821254898000916,
+            0.8650387529996806,
+            0.8114462649973575
+          ],
+          "unchanged_median_seconds": 0.8794301759990049,
+          "changed_median_seconds": 0.821254898000916,
+          "changed_minus_unchanged_s": [
+            -0.10013823799818056,
+            -0.014391422999324277,
+            -0.029412825999315828
+          ],
+          "median_delta_s": -0.029412825999315828,
+          "median_ratio": 1.0362474106642312,
+          "unchanged_over_changed": [
+            1.1219332003278584,
+            1.0166367378911285,
+            1.0362474106642312
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.262986,
+            0.24580999999999997,
+            0.227334
+          ],
+          "changed_seconds": [
+            0.20976899999999996,
+            0.23250500000000002,
+            0.18975500000000003
+          ],
+          "unchanged_median_seconds": 0.24580999999999997,
+          "changed_median_seconds": 0.20976899999999996,
+          "changed_minus_unchanged_s": [
+            -0.05321700000000004,
+            -0.013304999999999956,
+            -0.037578999999999974
+          ],
+          "median_delta_s": -0.037578999999999974,
+          "median_ratio": 1.1980395773497403,
+          "unchanged_over_changed": [
+            1.2536933483975232,
+            1.0572245758155736,
+            1.1980395773497403
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.49881,
+            0.480273,
+            0.44728399999999996
+          ],
+          "changed_seconds": [
+            0.451949,
+            0.484591,
+            0.45520099999999997
+          ],
+          "unchanged_median_seconds": 0.480273,
+          "changed_median_seconds": 0.45520099999999997,
+          "changed_minus_unchanged_s": [
+            -0.046860999999999986,
+            0.0043179999999999885,
+            0.007917000000000007
+          ],
+          "median_delta_s": 0.0043179999999999885,
+          "median_ratio": 0.9910893929107226,
+          "unchanged_over_changed": [
+            1.103686477899055,
+            0.9910893929107226,
+            0.9826076831992899
+          ]
+        }
+      },
+      "fresh_baseline": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.5363337859962485,
+            0.506720736004354,
+            0.502672556998732
+          ],
+          "changed_seconds": [
+            0.37650280100206146,
+            0.38507919399853563,
+            0.38523724800325
+          ],
+          "unchanged_median_seconds": 0.506720736004354,
+          "changed_median_seconds": 0.38507919399853563,
+          "changed_minus_unchanged_s": [
+            -0.15983098499418702,
+            -0.12164154200581834,
+            -0.11743530899548205
+          ],
+          "median_delta_s": -0.12164154200581834,
+          "median_ratio": 1.3158870795971411,
+          "unchanged_over_changed": [
+            1.4245147302192631,
+            1.3158870795971411,
+            1.3048389261530893
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.3734529999999999,
+            0.3443339999999999,
+            0.34034799999999993
+          ],
+          "changed_seconds": [
+            0.214154,
+            0.22200400000000003,
+            0.22270500000000004
+          ],
+          "unchanged_median_seconds": 0.3443339999999999,
+          "changed_median_seconds": 0.22200400000000003,
+          "changed_minus_unchanged_s": [
+            -0.1592989999999999,
+            -0.12232999999999988,
+            -0.11764299999999989
+          ],
+          "median_delta_s": -0.12232999999999988,
+          "median_ratio": 1.5510261076376997,
+          "unchanged_over_changed": [
+            1.743852554703624,
+            1.5510261076376997,
+            1.5282458858130705
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.12827599999999995,
+            0.12004199999999993,
+            0.12255299999999997
+          ],
+          "changed_seconds": [
+            0.116446,
+            0.12788199999999994,
+            0.12318099999999998
+          ],
+          "unchanged_median_seconds": 0.12255299999999997,
+          "changed_median_seconds": 0.12318099999999998,
+          "changed_minus_unchanged_s": [
+            -0.011829999999999952,
+            0.007840000000000014,
+            0.0006280000000000174
+          ],
+          "median_delta_s": 0.0006280000000000174,
+          "median_ratio": 0.9949018111559411,
+          "unchanged_over_changed": [
+            1.1015921543032818,
+            0.9386934830546909,
+            0.9949018111559411
+          ]
+        }
+      },
+      "completed_baseline_revisit": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.34898933099611895,
+            0.3255366209996282,
+            0.33335098400129937
+          ],
+          "changed_seconds": [
+            0.19895908200123813,
+            0.19504617799975676,
+            0.20021349499438656
+          ],
+          "unchanged_median_seconds": 0.33335098400129937,
+          "changed_median_seconds": 0.19895908200123813,
+          "changed_minus_unchanged_s": [
+            -0.15003024899488082,
+            -0.13049044299987145,
+            -0.1331374890069128
+          ],
+          "median_delta_s": -0.1331374890069128,
+          "median_ratio": 1.6690233273888309,
+          "unchanged_over_changed": [
+            1.7540759008626063,
+            1.6690233273888309,
+            1.6649775980917052
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.346801,
+            0.3255079999999999,
+            0.33304999999999996
+          ],
+          "changed_seconds": [
+            0.19894699999999998,
+            0.19500299999999993,
+            0.20015500000000008
+          ],
+          "unchanged_median_seconds": 0.33304999999999996,
+          "changed_median_seconds": 0.19894699999999998,
+          "changed_minus_unchanged_s": [
+            -0.14785400000000004,
+            -0.13050499999999998,
+            -0.13289499999999987
+          ],
+          "median_delta_s": -0.13289499999999987,
+          "median_ratio": 1.6692461141623465,
+          "unchanged_over_changed": [
+            1.743182857746033,
+            1.6692461141623465,
+            1.6639604306662328
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "changed_seconds": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unchanged_median_seconds": 0.0,
+          "changed_median_seconds": 0.0,
+          "changed_minus_unchanged_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "median_delta_s": 0.0,
+          "median_ratio": null,
+          "unchanged_over_changed": [
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "paired_selection": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.9343098800018197,
+            0.931936252003652,
+            0.9183352940017357
+          ],
+          "changed_seconds": [
+            0.6929271830013022,
+            0.6950703639959102,
+            0.7046057840052526
+          ],
+          "unchanged_median_seconds": 0.931936252003652,
+          "changed_median_seconds": 0.6950703639959102,
+          "changed_minus_unchanged_s": [
+            -0.2413826970005175,
+            -0.2368658880077419,
+            -0.2137295099964831
+          ],
+          "median_delta_s": -0.2368658880077419,
+          "median_ratio": 1.3407797257331138,
+          "unchanged_over_changed": [
+            1.3483521832048893,
+            1.3407797257331138,
+            1.30333204019638
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.587529,
+            0.5868250000000002,
+            0.593361
+          ],
+          "changed_seconds": [
+            0.36834199999999995,
+            0.37012,
+            0.37903600000000015
+          ],
+          "unchanged_median_seconds": 0.587529,
+          "changed_median_seconds": 0.37012,
+          "changed_minus_unchanged_s": [
+            -0.21918700000000002,
+            -0.21670500000000015,
+            -0.21432499999999988
+          ],
+          "median_delta_s": -0.21670500000000015,
+          "median_ratio": 1.5854992975251274,
+          "unchanged_over_changed": [
+            1.5950638265524975,
+            1.5854992975251274,
+            1.5654476091980702
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.27376200000000006,
+            0.265135,
+            0.23614100000000005
+          ],
+          "changed_seconds": [
+            0.235058,
+            0.23184400000000005,
+            0.24270899999999995
+          ],
+          "unchanged_median_seconds": 0.265135,
+          "changed_median_seconds": 0.235058,
+          "changed_minus_unchanged_s": [
+            -0.03870400000000007,
+            -0.03329099999999996,
+            0.006567999999999907
+          ],
+          "median_delta_s": -0.03329099999999996,
+          "median_ratio": 1.1435922430599883,
+          "unchanged_over_changed": [
+            1.1646572335338514,
+            1.1435922430599883,
+            0.9729387867775817
+          ]
+        }
+      }
+    },
+    "history12": {
+      "fresh_initialize": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.8401366460020654,
+            0.8421885110001313,
+            0.8289780330014764
+          ],
+          "changed_seconds": [
+            0.8068809940014035,
+            0.7954972820007242,
+            0.8884582300015609
+          ],
+          "unchanged_median_seconds": 0.8401366460020654,
+          "changed_median_seconds": 0.8068809940014035,
+          "changed_minus_unchanged_s": [
+            -0.03325565200066194,
+            -0.04669122899940703,
+            0.059480197000084445
+          ],
+          "median_delta_s": -0.03325565200066194,
+          "median_ratio": 1.041215064238586,
+          "unchanged_over_changed": [
+            1.041215064238586,
+            1.0586943916162426,
+            0.9330523428209113
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.22899099999999994,
+            0.220273,
+            0.207057
+          ],
+          "changed_seconds": [
+            0.19398599999999996,
+            0.17499199999999998,
+            0.24326099999999998
+          ],
+          "unchanged_median_seconds": 0.220273,
+          "changed_median_seconds": 0.19398599999999996,
+          "changed_minus_unchanged_s": [
+            -0.03500499999999998,
+            -0.045281000000000016,
+            0.036203999999999986
+          ],
+          "median_delta_s": -0.03500499999999998,
+          "median_ratio": 1.1804511665790314,
+          "unchanged_over_changed": [
+            1.1804511665790314,
+            1.2587604004754505,
+            0.8511721977628967
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.43684199999999995,
+            0.47923499999999997,
+            0.44643599999999994
+          ],
+          "changed_seconds": [
+            0.47589799999999993,
+            0.44532299999999997,
+            0.485905
+          ],
+          "unchanged_median_seconds": 0.44643599999999994,
+          "changed_median_seconds": 0.47589799999999993,
+          "changed_minus_unchanged_s": [
+            0.03905599999999998,
+            -0.033912,
+            0.03946900000000003
+          ],
+          "median_delta_s": 0.03905599999999998,
+          "median_ratio": 0.9187721879791316,
+          "unchanged_over_changed": [
+            0.9179319938306107,
+            1.0761514675864485,
+            0.9187721879791316
+          ]
+        }
+      },
+      "fresh_baseline": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.6096587650026777,
+            0.6282491320016561,
+            0.6046882110022125
+          ],
+          "changed_seconds": [
+            0.5129274760038243,
+            0.48737706899555633,
+            0.5317065220006043
+          ],
+          "unchanged_median_seconds": 0.6096587650026777,
+          "changed_median_seconds": 0.5129274760038243,
+          "changed_minus_unchanged_s": [
+            -0.09673128899885342,
+            -0.14087206300609978,
+            -0.07298168900160817
+          ],
+          "median_delta_s": -0.09673128899885342,
+          "median_ratio": 1.1885866784764172,
+          "unchanged_over_changed": [
+            1.1885866784764172,
+            1.2890412207870703,
+            1.137259345112049
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.4470240000000001,
+            0.45575500000000013,
+            0.4420970000000001
+          ],
+          "changed_seconds": [
+            0.35048,
+            0.32489200000000007,
+            0.36928899999999987
+          ],
+          "unchanged_median_seconds": 0.4470240000000001,
+          "changed_median_seconds": 0.35048,
+          "changed_minus_unchanged_s": [
+            -0.09654400000000007,
+            -0.13086300000000006,
+            -0.0728080000000002
+          ],
+          "median_delta_s": -0.09654400000000007,
+          "median_ratio": 1.275462223236704,
+          "unchanged_over_changed": [
+            1.275462223236704,
+            1.4027892345764132,
+            1.19715723999361
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.11860199999999999,
+            0.12969599999999992,
+            0.11792999999999998
+          ],
+          "changed_seconds": [
+            0.11724999999999997,
+            0.11630499999999999,
+            0.11588599999999993
+          ],
+          "unchanged_median_seconds": 0.11860199999999999,
+          "changed_median_seconds": 0.11630499999999999,
+          "changed_minus_unchanged_s": [
+            -0.0013520000000000199,
+            -0.01339099999999993,
+            -0.0020440000000000458
+          ],
+          "median_delta_s": -0.0020440000000000458,
+          "median_ratio": 1.017638023574893,
+          "unchanged_over_changed": [
+            1.0115309168443498,
+            1.1151369244658436,
+            1.017638023574893
+          ]
+        }
+      },
+      "completed_baseline_revisit": {
+        "wall_s": {
+          "unchanged_seconds": [
+            0.42382461899978807,
+            0.4698173329961719,
+            0.43893942199792946
+          ],
+          "changed_seconds": [
+            0.33042460399883566,
+            0.30510470800072653,
+            0.32967580699914834
+          ],
+          "unchanged_median_seconds": 0.43893942199792946,
+          "changed_median_seconds": 0.32967580699914834,
+          "changed_minus_unchanged_s": [
+            -0.09340001500095241,
+            -0.16471262499544537,
+            -0.10926361499878112
+          ],
+          "median_delta_s": -0.10926361499878112,
+          "median_ratio": 1.3314274589735466,
+          "unchanged_over_changed": [
+            1.2826666473095978,
+            1.5398560581865985,
+            1.3314274589735466
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.42378099999999974,
+            0.46976499999999977,
+            0.43890000000000007
+          ],
+          "changed_seconds": [
+            0.33040400000000025,
+            0.30508,
+            0.32965900000000015
+          ],
+          "unchanged_median_seconds": 0.43890000000000007,
+          "changed_median_seconds": 0.32965900000000015,
+          "changed_minus_unchanged_s": [
+            -0.09337699999999949,
+            -0.16468499999999975,
+            -0.10924099999999992
+          ],
+          "median_delta_s": -0.10924099999999992,
+          "median_ratio": 1.331375754946778,
+          "unchanged_over_changed": [
+            1.2826146172564479,
+            1.5398092303658049,
+            1.331375754946778
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "changed_seconds": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "unchanged_median_seconds": 0.0,
+          "changed_median_seconds": 0.0,
+          "changed_minus_unchanged_s": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "median_delta_s": 0.0,
+          "median_ratio": null,
+          "unchanged_over_changed": [
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "paired_selection": {
+        "wall_s": {
+          "unchanged_seconds": [
+            1.0907204120012466,
+            1.1649392869949224,
+            1.131021369001246
+          ],
+          "changed_seconds": [
+            0.9171694739998202,
+            0.8759976610017475,
+            0.9015337809978519
+          ],
+          "unchanged_median_seconds": 1.131021369001246,
+          "changed_median_seconds": 0.9015337809978519,
+          "changed_minus_unchanged_s": [
+            -0.1735509380014264,
+            -0.28894162599317497,
+            -0.2294875880033942
+          ],
+          "median_delta_s": -0.2294875880033942,
+          "median_ratio": 1.2545524004096535,
+          "unchanged_over_changed": [
+            1.189224503127609,
+            1.329842919515054,
+            1.2545524004096535
+          ]
+        },
+        "self_cpu_s": {
+          "unchanged_seconds": [
+            0.7645949999999999,
+            0.8278329999999998,
+            0.8052470000000003
+          ],
+          "changed_seconds": [
+            0.5920989999999999,
+            0.550589,
+            0.5766299999999998
+          ],
+          "unchanged_median_seconds": 0.8052470000000003,
+          "changed_median_seconds": 0.5766299999999998,
+          "changed_minus_unchanged_s": [
+            -0.17249599999999998,
+            -0.2772439999999998,
+            -0.22861700000000051
+          ],
+          "median_delta_s": -0.22861700000000051,
+          "median_ratio": 1.396470873870594,
+          "unchanged_over_changed": [
+            1.291329659398175,
+            1.5035407536292948,
+            1.396470873870594
+          ]
+        },
+        "child_cpu_s": {
+          "unchanged_seconds": [
+            0.23508799999999996,
+            0.26686600000000005,
+            0.2412979999999999
+          ],
+          "changed_seconds": [
+            0.23860599999999998,
+            0.22726899999999994,
+            0.239753
+          ],
+          "unchanged_median_seconds": 0.2412979999999999,
+          "changed_median_seconds": 0.23860599999999998,
+          "changed_minus_unchanged_s": [
+            0.003518000000000021,
+            -0.039597000000000104,
+            -0.0015449999999999076
+          ],
+          "median_delta_s": -0.0015449999999999076,
+          "median_ratio": 1.006444132085938,
+          "unchanged_over_changed": [
+            0.9852560287670887,
+            1.1742296573663813,
+            1.006444132085938
+          ]
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Three paired runs per workload; local synthetic exploratory performance, not statistical certainty or a universal production gain.",
+    "Only same-toolchain-call executable hashing was deduplicated; fresh checks remain on every later call.",
+    "No neutral study controller or measured scientific runtime changed.",
+    "Instrumented diagnostic times excluded from performance estimates.",
+    "Initialization, raw trials, completed revisits and selection remain separately reported.",
+    "History12 includes one completed four-trial historical source matrix and twelve retained proposal receipts."
+  ]
+}

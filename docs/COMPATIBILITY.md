@@ -1,17 +1,30 @@
 # Compatibility and integration status
 
-Documentation and stable toolchain checked October 1, 2026. This file separates documented APIs from
-integrations actually exercised during development.
+Unreleased upgrade reviewed October 2, 2026. Historical toolchain checks below
+retain their original scope. Separately recorded post-score release checks below
+use newly acquired dependencies; they do not relabel the benchmark environment.
+This file separates implemented contracts from integrations actually exercised.
 
 ## Core
 
-The 0.3.0 source revision adds an opt-in measurement protocol and separate paired
-cohort storage. It deliberately refuses older frozen runtime fingerprints; there
-is no in-place experiment migration. The current local check targets Python
-3.14.8 with the same pinned optional SDKs. Earlier-version checks below remain
-historical and do not substitute for testing the 0.3.0 revision. Consult the exact
-revision's GitHub Actions results for hosted CI; these local checks do not establish
-its status.
+The unreleased source targeting 0.5.0 adds opt-in archive search, counted native
+author handoffs and generated exact-JSON controls. Existing configuration files may
+omit both opt-ins and retain conservative selection/original oracle control sets.
+The proposal JSON and application/grader contracts remain unchanged. New runtime
+bytes still invalidate a frozen experiment's runtime fingerprint: source-format
+compatibility does not mean in-place state compatibility. Preserve each original
+runtime and create a new experiment after upgrading. See [migration](UPGRADE_0.5.0.md).
+
+The frozen comparative implementation ran 510 tests: 507 passed and 3 optional
+checks were skipped in Python 3.12.14/MCP 2.2.0. Later native hardening ran 560
+tests on Python 3.12.14/MCP 2.2.0 (557 passed, 3 skipped) and on Python
+3.14.8/MCP 2.2.0/OpenAI 3.23.0 (559 passed, 1 disabled installed-CLI check).
+The final integrated runtime/test bytes match the separately tested `ff3f164`
+revision: **577 tests passed, no skips**, on the latter release environment,
+including the Codex 0.160.0 help-only argument check. None of these later revisions
+was inserted into the frozen study. Earlier checks retain their historical scope.
+Consult exact-commit GitHub Actions results for hosted CI; local checks do not
+establish its status.
 
 Requires Python 3.11+ (`tomllib` is used). No third-party runtime dependencies.
 The 0.2 implementation was tested on Linux/Python 3.11.16, 3.14.7, and a
@@ -44,13 +57,30 @@ passes `--ignore-user-config`; absence is recorded in execution metadata. There 
 no deprecated `--full-auto` or unrestricted-access fallback. An explicit model is
 optional; the selected account/CLI default applies otherwise.
 
-Authenticated CLI execution was **not available in the development environment**.
-Tests simulate the CLI's process response and verify flags, strict JSON, event capture,
-failed-turn handling and output consumption. This establishes an integration contract,
-not proof of actual CLI authentication, model quality, prompt-budget fit, API billing
-or sandbox operation. Stable Codex CLI 0.159.3 flag/help parsing was checked in isolated configuration,
-without making a model request. Incomplete/error JSONL streams are rejected even
-when a proposal file exists. Run the [live Codex smoke workflow](OPERATING_GUIDE.md#live-codex-smoke-workflow) on your own machine.
+Tests simulate the CLI process response and verify flags, strict JSON, event
+capture, failed-turn handling and output consumption. Stable Codex 0.159.3 and
+0.160.0 help/argument checks made no model request. A separate October 2 check
+confirmed existing ChatGPT authentication on 0.160.0, then made one bounded
+`automate` attempt. Its author process failed during in-process app-server
+initialization with a read-only-filesystem error, before any model events,
+proposal or usage. The counted failure and unopened final test were preserved.
+The precise failing subsystem is unknown. See the
+[sanitized integration record](validation/codex-cli-0.160.0-integration.json).
+Live one-command completion, model quality, inference cost and successful runtime
+sandbox operation remain unverified. Incomplete/error JSONL streams are rejected
+even when a proposal file exists. Run the
+[live Codex smoke workflow](OPERATING_GUIDE.md#live-codex-smoke-workflow) in an
+appropriately provisioned environment.
+
+The native `start-native` / `prepare-turn` / `submit-turn` / `evaluate-turn`
+alternative uses protected plan initialization and a counted local file handoff.
+The active-only evaluation command has no optimizer-dispatch fallback, and final
+admission blocks active rounds and unresolved trial/author work. An authorized
+host must actually dispatch the author and preserve admission,
+elapsed-time and available usage evidence. This bridge can operate without the
+standalone CLI; it neither calls that CLI nor verifies a live `automate` integration.
+Its public workspace must remain available and unchanged through submission;
+authoritative controller receipts survive cleanup after successful submission.
 
 Saved authentication remains local to your Codex installation. The adapter does not
 copy `auth.json`. Treat HOME, CODEX_HOME and any custom agent plugins/settings as part
@@ -67,8 +97,11 @@ provisioned there. Installing skills on one computer does not install them every
 
 ## Optional provider grader
 
-The optional judge extra targets OpenAI SDK 3.22.1. The structured grader example
-has fake-client and real-SDK offline-transport tests for request shape,
+The optional judge extra retains its declared `openai>=3.22.1,<4` range; the
+current release lock pins **OpenAI 3.23.0**. Its structured grader tests passed with
+real-SDK offline transports on the separate Python 3.14.8 release environment,
+including both installed-SDK checks. The prior 3.22.1 lock is preserved verbatim
+under `requirements/history/`. Tests cover request shape,
 approval/rate prerequisites, usage calculation, served-model checks and invalid
 verdicts. It requires the operator to install/pin the official SDK and select a
 supported exact model identifier. Live provider compatibility was not tested.
@@ -105,7 +138,8 @@ path. It requires local GitHub CLI authentication and new-repository permissions
 Its manifest checks and refusal behavior are unit tested; the script itself has
 not been live-tested. The public repository was published through a separate
 authenticated GitHub workflow, with full file-integrity verification and successful
-[hosted CI](https://github.com/trevordcampbell/codex-eval-lab/actions/runs/36675694829).
+[historical hosted CI](https://github.com/trevordcampbell/codex-eval-lab/actions/runs/36675694829).
+That run does not establish CI for this unreleased source or later packaging commit.
 
 ## Official references
 

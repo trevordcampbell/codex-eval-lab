@@ -182,7 +182,7 @@ validation details. Final failure consumes the holdout and does not permit retun
 
 ## Migration and verification
 
-Existing frozen 0.3 experiments keep their original runtime; do not install these
+Existing frozen experiments, including 0.3, 0.4 and unreleased studies, keep their original runtime; do not install these
 files into an active state/runtime. There is no in-place migration or retroactive
 evidence approval. Use a new suite, new plan, new state and baseline. Changing a
 specification, fixture, reference, grader, judge, metric or measurement design
@@ -223,3 +223,46 @@ agreement with this executable contract, not independently established domain tr
 Exact input/group separation catches direct reuse only, not all semantic leakage.
 Free-local oracle preflight rejects nonempty `grader_env` rather than quietly testing
 a different environment from actual trials.
+
+
+## Exploratory search and native handoffs
+
+New suites may freeze an opt-in archive/portfolio policy described in
+[SEARCH_POLICY](SEARCH_POLICY.md). Search selection and release evidence remain
+separate; final confirmation thresholds are unchanged. `prepare-turn` / `submit-turn`
+provide a counted native-author handoff with controller-owned source, prompt,
+feedback and response receipts. The host still supplies authorization and enforces
+actual author scope. This path requires external host dispatch; it does not cause
+`automate` to call a native host, install a working standalone Codex backend or
+prove one-command live CLI integration. See the complete handoff contract in
+[SEARCH_POLICY](SEARCH_POLICY.md#native-authors-with-immutable-evidence).
+[Eval design controls](EVAL_DESIGN.md) add opt-in exact-JSON adversarial coverage;
+coverage is finite consistency evidence, never independent domain truth.
+
+
+### Protected initialization for external native authors
+
+For a new native-host workflow, create `automation-plan`, then use `start-native`
+with the same suite/app/state/plan and existing authorization arguments as `automate`.
+It freezes the same plan, runs configured oracle preflight, records its actual
+ledger usage and holds the same final trial/dollar capacity. It does not call the
+configured optimizer, run baseline search or open candidate final comparisons.
+Plain `start` retains its original behavior without that protected reserve; no
+existing experiment can acquire a plan retrospectively.
+
+After each authorized `prepare-turn` and successful `submit-turn`, use
+`evaluate-turn STATE --call-id CALL_ID`. This additive command accepts only the
+bound applied native round; it has no dispatch fallback or optimizer approval flag.
+Completion saves an exact, private evaluation receipt. Repeating the command
+returns that receipt only after current integrity/unresolved-work checks; it cannot
+buy a new proposal or repeat completed trials. Generic `loop`, `automate` and
+`resume-automation` still use their configured backend and unchanged selection gates.
+Continue to finalization only under the recorded actual authority. Unresolved
+native authors, active evaluation rounds and pending/indeterminate trials block
+finalization, including saved-final retrieval and incomplete-final continuation.
+Existing seals remain intact; clean completed results and complete-boundary resumes
+are unchanged. See [the full native example](SEARCH_POLICY.md#native-authors-with-immutable-evidence).
+
+These commands are separately staged product hardening. Their implementation and
+regressions are not part of the frozen comparative benchmark or the earlier core
+validation record. Follow [the validation record](https://github.com/trevordcampbell/codex-eval-lab/blob/main/docs/VALIDATION.md) for their current test status.

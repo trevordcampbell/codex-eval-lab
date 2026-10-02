@@ -13,7 +13,13 @@ to construct evaluation forms, label answers a program can check, or approve eve
 iteration. Codex asks when a domain decision or required permission is genuinely
 missing. A visual evidence viewer is available when useful; it is optional.
 
-0.4.0 · Python 3.11+ · standard-library core · [MIT](LICENSE)
+Unreleased source · target 0.5.0 · Python 3.11+ · standard-library core · [MIT](LICENSE)
+
+Package metadata reports 0.5.0 as an unreleased source version. The measured
+implementation reported 0.4.0; identify it by commit and runtime hashes. The
+[upgrade and packaging checklist](docs/UPGRADE_0.5.0.md) distinguishes this source
+revision from a later version-only packaging change. No 0.5.0 release is published
+by these instructions.
 
 ## Start with a goal
 
@@ -95,6 +101,23 @@ must pass the gates against both the incumbent and original baseline, preventing
 small tolerated regressions from accumulating. Related groups, rather than
 repetitions of the same case, are the uncertainty resampling unit.
 
+New suites can opt into an [exploratory archive policy](docs/SEARCH_POLICY.md):
+retain promising candidates and diverse development behaviors as future parents,
+while treating observed gains as search guidance. Final confirmation keeps the
+original threshold and guardrails. Best found, validation champion and release
+outcome are reported separately. Conservative selection remains the default until
+fresh comparisons establish which policy helps a given task.
+
+Native Codex can initialize a protected plan with `start-native`, then use
+`prepare-turn`, `submit-turn` and active-only `evaluate-turn --call-id` to reserve
+proposal opportunities and capture bound prompt/source/feedback/response and
+selection receipts. Evaluation never falls through to a new optimizer call.
+These later native workflow hardening commands are separate from the frozen
+comparative benchmark and its measured runtime. This makes external orchestration
+inspectable when a standalone CLI backend is unavailable.
+[Exact-JSON adversarial controls](docs/EVAL_DESIGN.md) also strengthen new objective
+evaluations with explicit type, shape, value and positive-invariance checks.
+
 The final test is separate. The runner seals exact source identities before opening
 it, using permission already included in the plan. A failed final comparison is
 retained and consumes that holdout; it is not permission to tune on its failures.
@@ -108,6 +131,12 @@ failures and unknown outcomes stay in the ledger. Automation protects trial and
 evaluation-dollar capacity for the final comparison. Optimizer usage is separate;
 unknown charges stay unknown. These are scheduling limits based on honest cost
 bounds, not provider-side hard caps.
+
+The following automatic CLI path requires a working configured command or Codex
+CLI proposal backend. The native `start-native` / `prepare-turn` / `submit-turn` /
+`evaluate-turn` bridge is a separate
+host-orchestrated path; using it does not verify one-command live `automate`
+execution. See the [native handoff example](docs/SEARCH_POLICY.md#native-authors-with-immutable-evidence).
 
 Native commands are available when you want to inspect the plan directly:
 
@@ -143,6 +172,24 @@ Its public final cases are now reproduction data, not a fresh holdout. The sourc
 replay helper has been syntax/help checked; this revision has not rerun the complete
 historical benchmark. Native model-session cost was unmeasured.
 
+### A fresh workflow comparison
+
+A [three-family synthetic Python pilot](docs/validation/optimizer-transfer-pilot.md)
+used 18 fresh native author contexts and a strong iterative Direct comparator.
+The new archive workflow improved geometric kernel CPU efficiency by 11.3% over
+the historical workflow, but used 21.3% more CPU than Direct and lost five of six
+matched context comparisons. All final outputs were exactly correct. The policy
+author retained the original policy; no successful meta mutation or live component
+ablation was achieved. Archive search remains opt-in, with unchanged release gates.
+
+Separate verification experiments removed a [duplicate executable read](docs/validation/verification-efficiency.md)
+inside each oracle check, then added an [exact completed-matrix revisit path](docs/validation/completed-revisit-efficiency.md).
+Fresh entry/exit bytes and exact ledger identity remain checked; actual adapter
+execution boundaries are unchanged. A direct original-to-final comparison measured
+**87.47% less process CPU** for the prespecified synthetic 12-case completed-result
+revisit (three matched pairs). This phase-specific Python 3.12.14 result is separate
+from model quality, whole-workflow speed and newer-interpreter compatibility.
+
 ### A repeatable automation check
 
 ```sh
@@ -176,6 +223,7 @@ isolation. Use a separately provisioned trust domain for genuinely hidden holdou
 
 ## References and limits
 
+- [Upgrade guide](docs/UPGRADE_0.5.0.md): unreleased changes, compatibility and packaging checklist
 - [Automation](docs/AUTOMATION.md): workflow, evidence categories, budgets and migration
 - [Operating guide](docs/OPERATING_GUIDE.md) and [protocol](docs/PROTOCOL.md): commands,
   adapters and configuration

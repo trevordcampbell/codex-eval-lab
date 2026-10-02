@@ -7,12 +7,15 @@ it is absent from every current Claude implementation.
 | Capability | Current implementation | Boundary |
 |---|---|---|
 | Automated evaluation design | Codex authors contracts, cases, objective controls and adapters; runner replays source-bound preflight | No universal automatic gold labels; meaningful semantic/domain ambiguity requires expertise |
-| Native end-to-end orchestration | Content-bound plan, automatic search/seal/finalize/report, durable resume, protected final budget | Host action policy grants authority; CLI flags and model review do not |
+| Configured-backend orchestration | Content-bound plan, automatic search/seal/finalize/report, durable resume, protected final budget | Live standalone CLI execution remains separately unverified; host policy grants authority |
+| Native external-author bridge | Counted prepare/submit file handoff and controller-owned source/prompt/feedback/response receipts | Host dispatch is required; reservation is not execution or proof that one-command `automate` works |
+| Exploratory archive (opt-in) | Bounded development-behavior archive, fixed refine/repair/rewrite routing, round-robin or heuristic UCB allocation | Not a learned general optimizer or proven improvement; confidence-based final gates remain unchanged |
+| Exact-JSON controls (opt-in) | Type/shape/value negatives and positive numeric/object-order invariances with retained coverage | Narrow asserted output contract and finite controls; not independent labels or semantic calibration |
 | Executable-oracle consistency | Source-derived anchors, separate reference, known-wrong mutations and reference→grader checks for every frozen case | JSON-only, trusted local code; finite agreement is not domain truth or representativeness |
 | Realistic case sourcing | Operating procedures prioritize production evidence and user examples | No built-in connectors silently retrieve private logs |
 | Multiple grading approaches | Arbitrary JSON grader subprocess; deterministic fixtures; optional structured OpenAI rubric adapter; categorical calibration tool | Rubric, pairwise, visual and domain judges require adapters and calibration |
 | Quality/cost/latency objectives | Any finite declared numeric metric; direction, minimum effect, guardrails | No arbitrary multiobjective Pareto search or nonlinear aggregation built in |
-| Iterative diagnosis and edits | Fresh Codex or custom-command proposals with development traces | Live Codex not exercised here; bounded-context prompting not automatic trace retrieval |
+| Iterative diagnosis and edits | Fresh configured-backend or native external proposals with bounded development feedback | Exact receipts do not authenticate authors; bounded excerpts are not automatic trace retrieval |
 | Resume and experiment records | Transactional SQLite reservations/results, pending-attempt recovery, active-round resume | Indeterminate attempts invalidate comparisons rather than magically recover unknown outputs |
 | Immutable measurement | Snapshot config/cases/harness/assets, source and runtime-file fingerprints | Same-user malicious code can still tamper with the entire process; no OS boundary |
 | Train/validation/test separation | Grouped splits; training-only feedback; final test sealed before execution | Group validity, original designer exposure and real read isolation remain deployment responsibilities |
@@ -48,8 +51,8 @@ are hardcoded in the core.
    read isolation, quotas and pinned workers; trusted provider egress broker.
 3. More provider-native and existing-eval-framework adapters, tested against their
    actual APIs; calibrated pairwise and multimodal graders.
-4. Large trace retrieval/selection with bounded optimizer context; joint tracing
-   for nested tools/subagents and measured sampling policies.
+4. On-demand trace retrieval beyond the implemented deterministic bounded excerpts;
+   joint tracing for nested tools/subagents and measured sampling policies.
 5. Hierarchical build-variance resampling, precision/recall cohort tooling,
    sequential confidence procedures and an explicit multiple-search ledger.
 6. Parallel candidate workers with atomic reservations, resource isolation and

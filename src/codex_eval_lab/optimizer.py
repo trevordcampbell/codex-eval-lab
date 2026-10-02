@@ -9,10 +9,11 @@ import tempfile
 import time
 from typing import Any
 
-from . import paired
+from . import paired, search_policy, proposal_receipts
+from .proposal_feedback import bounded_feedback
 from .artifacts import apply_proposal, hashes
 from .engine import check_source, compare_internal, feedback, manifest_for, run_internal
-from .process import invoke, minimal_env, substitute
+from .process import ProcessFailure, invoke, minimal_env, substitute
 from .store import Store
 from .util import LabError, canonical, digest, experiment_lock, read_json, utc_now, write_json
 
@@ -55,7 +56,11 @@ def generate_proposal(state: Path, store: Store, manifest: dict[str, Any], label
         return min(limit, remaining)
     options = cfg_override or cfg["optimizer"]
     source = check_source(state, store, label)
-    evidence = feedback(state, label)
+    evidence = bounded_feedback(feedback(state, label), cfg["search"].get("max_feedback_bytes", 65_536))
+    context = search_policy.author_context(store.get("proposal_context"))
+    prompt = PROMPT + canonical(evidence)
+    if context is not None:
+        prompt += "\nSEARCH INSTRUCTION (exploratory, no release claim):\n" + canonical(context)
     out_dir = state / "optimizer-runs" / f"call-{call_id:04d}"
     out_dir.mkdir(parents=True, exist_ok=False)
     # Fresh app-only working directory and stateless prompt for every call.
@@ -64,8 +69,25 @@ def generate_proposal(state: Path, store: Store, manifest: dict[str, Any], label
         shutil.copytree(source, work)
         before = hashes(work)
         request = {"schema_version": 1, "feedback": evidence, "source_files": sorted(before),
-                   "response_contract": PROPOSAL_SCHEMA}
+                   "response_contract": PROPOSAL_SCHEMA, "search_context": context}
         write_json(out_dir / "request.json", request)
+        receipt = proposal_receipts.prepare_dispatch(out_dir / "evidence", source=work, source_label=label,
+                    source_hash=store.variant(label)["source_hash"], feedback=evidence, prompt=prompt,
+                    response_contract=PROPOSAL_SCHEMA,
+                    invocation_context={"optimizer": options, "search_context": context, "call_id": call_id})
+        store.put(f"proposal_receipt:{call_id}", receipt)
+        proposal_receipts.verify_dispatch(out_dir / "evidence", expected_digest=receipt["dispatch_digest"], source=work, prompt=prompt)
+        def invoke_author(*args, **kwargs):
+            try:
+                return invoke(*args, **kwargs)
+            except ProcessFailure as exc:
+                # Retain failure streams, including invalid UTF-8 bytes. A failed
+                # process is never converted into a valid replacement proposal.
+                (out_dir / "failed-stdout.bin").write_bytes(exc.stdout_bytes if exc.stdout_bytes is not None else exc.stdout.encode("utf-8"))
+                (out_dir / "failed-stderr.bin").write_bytes(exc.stderr_bytes if exc.stderr_bytes is not None else exc.stderr.encode("utf-8"))
+                write_json(out_dir / "failure.json", {"error": str(exc), "elapsed_s": exc.elapsed_s,
+                           "note": "Raw bounded process streams retained; failed author opportunity stays counted."})
+                raise
         if options["backend"] == "codex":
             if not shutil.which("codex"):
                 raise LabError("Codex CLI is not installed. Install/login on your machine; local demos and manual evaluation need no Codex.")
@@ -77,7 +99,7 @@ def generate_proposal(state: Path, store: Store, manifest: dict[str, Any], label
                 if name in os.environ and name not in env_names:
                     env_names.append(name)
             env = minimal_env(env_names)
-            help_text = invoke(["codex", "exec", "--help"], {}, cwd=work, env=env,
+            help_text = invoke_author(["codex", "exec", "--help"], {}, cwd=work, env=env,
                                timeout_s=remaining_timeout(15), parse_json=False).stdout
             required_flags = ("--output-schema", "--output-last-message", "--json", "--sandbox", "--skip-git-repo-check")
             missing = [flag for flag in required_flags if flag not in help_text]
@@ -96,13 +118,16 @@ def generate_proposal(state: Path, store: Store, manifest: dict[str, Any], label
             if options.get("model"):
                 command += ["--model", options["model"]]
             command += ["-"]
-            run = invoke(command, {}, cwd=work, env=env, timeout_s=remaining_timeout(options["timeout_s"]),
+            run = invoke_author(command, {}, cwd=work, env=env, timeout_s=remaining_timeout(options["timeout_s"]),
                          max_output_bytes=20_000_000, parse_json=False,
-                         input_text=PROMPT + canonical(evidence))
+                         input_text=prompt)
             (out_dir / "codex-events.jsonl").write_text(run.stdout, encoding="utf-8")
             (out_dir / "stderr.txt").write_text(run.stderr, encoding="utf-8")
             if not result_path.exists():
                 raise LabError("Codex exited without its structured proposal file")
+            captured = proposal_receipts.capture_response(out_dir / "evidence", result_path.read_bytes(),
+                       expected_digest=receipt["dispatch_digest"], source=work)
+            store.put(f"proposal_receipt:{call_id}", captured)
             proposal = read_json(result_path)
             # CLI event shapes can evolve. Preserve all raw events; normalize only
             # the documented turn.completed usage and failure events.
@@ -145,10 +170,14 @@ def generate_proposal(state: Path, store: Store, manifest: dict[str, Any], label
                        "security": "cooperative local; sandbox is read-only, not a private-data read boundary"})
         else:
             command = substitute(options["command"], app=work, suite=state / "evaluator", artifacts=out_dir)
-            result = invoke(command, request, cwd=work,
+            result = invoke_author(command, request, cwd=work,
                             env=minimal_env(options["environment"], home=Path(tmp)),
-                            timeout_s=remaining_timeout(options["timeout_s"]), max_output_bytes=cfg["search"]["max_edit_bytes"] + 2_000_000)
-            proposal = result.value
+                            timeout_s=remaining_timeout(options["timeout_s"]), max_output_bytes=cfg["search"]["max_edit_bytes"] + 2_000_000, parse_json=False)
+            captured = proposal_receipts.capture_response(out_dir / "evidence", result.stdout_bytes if result.stdout_bytes is not None else result.stdout.encode("utf-8"),
+                       expected_digest=receipt["dispatch_digest"], source=work)
+            store.put(f"proposal_receipt:{call_id}", captured)
+            from .util import strict_json
+            proposal = strict_json(result.stdout)
             write_json(out_dir / "proposal.json", proposal)
             write_json(out_dir / "execution.json", {"command": command, "elapsed_s": result.elapsed_s, "backend": "command",
                        "cost_usd": None, "note": "Custom optimizer billing is external to the evaluation budget."})
@@ -178,6 +207,52 @@ def import_proposal(state: Path, proposal: dict[str, Any], label: str, *, base: 
         return {"label": label, "base": base, "changes": changes, "source_hash": sha}
 
 
+def evaluate_active_round(state: Path, store: Store, manifest: dict[str, Any], active: dict,
+                          history: list[dict], stalled: int) -> tuple[dict, str, int]:
+    """Evaluate/reconcile an existing round only; never reserve or dispatch authors.
+
+    Caller holds the experiment lock, validates admission and clears active_round
+    after successful reconciliation. Selection and measurement match loop exactly.
+    """
+    cfg = manifest["config"]
+    # An interrupted round resumes here WITHOUT generating a second proposal.
+    label = active["label"]
+    existing = next((entry for entry in history if entry["label"] == label), None)
+    if existing is None:
+        run_internal(state, store, manifest, label, "train")
+        if paired.enabled(manifest):
+            decision, initial = paired.evaluate_selection(state, store, manifest, label, active["incumbent"])
+        else:
+            run_internal(state, store, manifest, label, "validation")
+            decision = compare_internal(state, store, manifest, active["incumbent"], label)
+            initial = compare_internal(state, store, manifest, "baseline", label)
+        confidence_accepted = decision["accepted"] and initial["accepted"]
+        exploration = search_policy.exploratory_decision(decision, initial, cfg) if search_policy.enabled(manifest) else None
+        accepted = exploration["selected_for_search"] if exploration else confidence_accepted
+        entry = {**active, "accepted": accepted, "search_selected": accepted,
+                 "confidence_gate_passed": confidence_accepted, "release_qualified": False,
+                 "exploration": exploration, "vs_incumbent": decision, "vs_start": initial,
+                 "evaluation_trials": store.budget()["trials"] - active.get("evaluation_start_trials", store.budget()["trials"]),
+                 "stalled_after": 0 if accepted else stalled + 1}
+        history.append(entry)
+        store.put("search_history", history)
+        write_json(state / "decisions" / f"{label}.json", entry)
+        store.event("round_completed", entry)
+    else:
+        entry = existing
+    # Idempotent state reconciliation also handles interruption after the
+    # decision was committed but before best/active state was updated.
+    best = label if entry["accepted"] else active["incumbent"]
+    stalled = entry["stalled_after"]
+    store.put("best", best)
+    if entry.get("confidence_gate_passed", entry["accepted"]):
+        store.put("validation_champion", label)
+    if search_policy.enabled(manifest):
+        search_policy.update_archive(store, manifest, label, eligible=entry["exploration"]["eligible_parent"])
+    store.put("stalled_rounds", stalled)
+    return entry, best, stalled
+
+
 def loop(state: Path, *, approved: bool, rounds: int | None = None) -> dict[str, Any]:
     if not approved:
         raise LabError("Explicit optimizer approval is required; Codex/custom optimizer usage may cost money separately")
@@ -188,6 +263,9 @@ def loop(state: Path, *, approved: bool, rounds: int | None = None) -> dict[str,
             raise LabError("Optimizer execution is unresolved; inspect the durable attempt before any continuation")
         if store.get("final_selection"):
             raise LabError("Final test sealed this experiment; no further optimization permitted")
+        terminal = store.get("search_terminal_stop")
+        if terminal:
+            return {"best": store.get("best"), "stop_reason": terminal, "history": store.get("search_history", []), "budget": store.budget()}
         maximum = cfg["search"]["max_rounds"]
         if rounds is not None and (rounds < 1 or rounds > maximum):
             raise LabError(f"Requested rounds must be in 1..{maximum}")
@@ -200,6 +278,8 @@ def loop(state: Path, *, approved: bool, rounds: int | None = None) -> dict[str,
         run_internal(state, store, manifest, best, "train")
         if not paired.enabled(manifest):
             run_internal(state, store, manifest, best, "validation")
+        if search_policy.enabled(manifest):
+            search_policy.update_archive(store, manifest, best)
         stalled = store.get("stalled_rounds", 0)
         history = store.get("search_history", [])
         processed = 0
@@ -227,19 +307,26 @@ def loop(state: Path, *, approved: bool, rounds: int | None = None) -> dict[str,
                 store.put("rounds_started", number)
                 label = f"round-{number:04d}"
                 try:
-                    proposal = generate_proposal(state, store, manifest, best, call_id)
+                    context = search_policy.next_context(store, manifest, number) if search_policy.enabled(manifest) else None
+                    store.put("proposal_context", context)
+                    search_policy.record_dispatch(store, label, context, call_id)
+                    parent = context["parent"] if context else best
+                    proposal = generate_proposal(state, store, manifest, parent, call_id)
                     if proposal.get("edits") == []:
                         store.finish_optimizer(call_id, "ok", {"hypothesis": proposal.get("hypothesis"), "location": f"optimizer-runs/call-{call_id:04d}"})
                         stop = "no_more_proposals"
+                        store.put("search_terminal_stop", stop)
                         store.event("search_stopped", {"reason": stop, "hypothesis": proposal.get("hypothesis")})
                         break
                     target = state / "candidates" / label
-                    changes = apply_proposal(check_source(state, store, best), target, proposal, cfg)
+                    changes = apply_proposal(check_source(state, store, parent), target, proposal, cfg)
                     store.add_variant(label, digest(hashes(target)), proposal["hypothesis"])
-                    active = {"round": number, "label": label, "incumbent": best, "hypothesis": proposal["hypothesis"]}
+                    active = {"round": number, "label": label, "incumbent": best, "parent": parent,
+                              "search_context": context, "evaluation_start_trials": store.budget()["trials"],
+                              "hypothesis": proposal["hypothesis"]}
                     store.put("active_round", active)
                     write_json(state / "proposals" / f"{label}.json", proposal)
-                    store.event("proposal_applied", {"label": label, "base": best, "changes": changes})
+                    store.event("proposal_applied", {"label": label, "base": parent, "changes": changes})
                     # Mark the optimizer complete only after its candidate/active
                     # round is durable; interruption cannot silently buy a redo.
                     store.finish_optimizer(call_id, "ok", {"hypothesis": proposal.get("hypothesis"), "location": f"optimizer-runs/call-{call_id:04d}"})
@@ -248,32 +335,7 @@ def loop(state: Path, *, approved: bool, rounds: int | None = None) -> dict[str,
                     stop = "proposal_error_or_noop"
                     store.event("search_stopped", {"reason": stop, "error": str(exc)})
                     return {"best": best, "stop_reason": stop, "error": str(exc), "history": history, "budget": store.budget()}
-            # An interrupted round resumes here WITHOUT generating a second proposal.
-            label = active["label"]
-            existing = next((entry for entry in history if entry["label"] == label), None)
-            if existing is None:
-                run_internal(state, store, manifest, label, "train")
-                if paired.enabled(manifest):
-                    decision, initial = paired.evaluate_selection(state, store, manifest, label, active["incumbent"])
-                else:
-                    run_internal(state, store, manifest, label, "validation")
-                    decision = compare_internal(state, store, manifest, active["incumbent"], label)
-                    initial = compare_internal(state, store, manifest, "baseline", label)
-                accepted = decision["accepted"] and initial["accepted"]
-                entry = {**active, "accepted": accepted, "vs_incumbent": decision, "vs_start": initial,
-                         "stalled_after": 0 if accepted else stalled + 1}
-                history.append(entry)
-                store.put("search_history", history)
-                write_json(state / "decisions" / f"{label}.json", entry)
-                store.event("round_completed", entry)
-            else:
-                entry = existing
-            # Idempotent state reconciliation also handles interruption after the
-            # decision was committed but before best/active state was updated.
-            best = label if entry["accepted"] else active["incumbent"]
-            stalled = entry["stalled_after"]
-            store.put("best", best)
-            store.put("stalled_rounds", stalled)
+            entry, best, stalled = evaluate_active_round(state, store, manifest, active, history, stalled)
             store.put("active_round", None)
             from .report import render_report
             render_report(state, state / "report.html")

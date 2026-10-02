@@ -56,3 +56,10 @@ Explain whether the workflow completed, normally stopped to preserve final budge
 or hit a blocker. Include preflight calls and conservative unknown-cost charges.
 Never conceal failed or interrupted attempts, relabel old holdouts as fresh, or
 represent a scripted offline demo as a live Codex-discovered improvement.
+
+
+For archive search, read `references/SEARCH_POLICY.md`. Report best-found source,
+validation champion and actual final release qualification separately. Include
+meta-search, setup, verification, failures and unknown model cost. A point-estimate
+search improvement is not a release claim. Never promote a secondary metric after
+seeing results or use reconstructed inputs as if they were original captures.

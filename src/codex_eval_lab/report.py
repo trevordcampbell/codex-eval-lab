@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from . import paired
+from . import paired, search_policy
 from .engine import manifest_for
 from .evidence import public_evidence_summary
 from .stats import case_means
@@ -202,8 +202,12 @@ def render_report(state: Path, output: Path, *, include_private: bool = False, f
                             title = f"{cohort} / {role} / {row['case_id']} / repeat {row['rep']}"
                             previews.add(title, row)
             paired_html = "<section><h2>Paired measurement cohorts</h2><p>Each cohort has fresh reference and candidate calls. Scores from different cohorts are not pooled. AB/BA pairing reduces slow drift but does not eliminate environmental confounding.</p>" + "".join(cohort_html) + "</section>"
+        outcome = search_policy.outcome_summary(store)
+        policy_text = ("Exploratory search uses point-estimate improvement with prespecified baseline guardrails. Archive/parent selection is not release evidence. Final confirmation retains the original gate."
+                       if search_policy.enabled(manifest) else
+                       "Conservative search requires the primary improvement threshold and every guardrail against both incumbent and original baseline. Final confirmation remains separate.")
         decisions = store.get("search_history", [])
-        decision_html = "".join(f"<details><summary>Round {d['round']}: {esc(d['label'])} — {'keep' if d['accepted'] else 'do not promote'}</summary><p>{esc(d['hypothesis'])}</p><pre>{pretty(d)}</pre></details>" for d in decisions)
+        decision_html = "".join(f"<details><summary>Round {d['round']}: {esc(d['label'])} — {'selected for search' if d['accepted'] else 'not selected for search'}</summary><p>{esc(d['hypothesis'])}</p><pre>{pretty(d)}</pre></details>" for d in decisions)
         if not decision_html:
             decision_html = "<p class='muted'>No automated selection rounds recorded. Manual selection actions, if any, are listed separately below.</p>"
         manual_html = []
@@ -237,7 +241,7 @@ def render_report(state: Path, output: Path, *, include_private: bool = False, f
 <div class="notice"><strong>{'Final test complete' if final else 'Exploratory until final confirmation'}.</strong> Related cases are grouped; repeated samples are not counted as new independent tasks. Local mode is cooperative, not a secret-isolation boundary.</div>
 <section id="scores"><h2>Candidate scorecard</h2><p class="muted">Primary metric: <code>{esc(metric)}</code> · {esc(cfg['objective']['direction'])}. Only complete runs receive scores.</p><div class="scroll"><table><thead><tr><th>Candidate / hypothesis</th><th>Development</th><th>Validation</th><th>Final test</th></tr></thead><tbody>{''.join(rows_html)}</tbody></table></div></section>
 {paired_html}
-<section id="decisions"><h2>Optimization decisions</h2><p class="muted">Candidates must clear the primary improvement threshold and every guardrail against both the incumbent and original baseline.</p>{decision_html}</section>
+<section id="decisions"><h2>Optimization decisions</h2><p class="muted">{esc(policy_text)}</p><pre>{pretty(outcome)}</pre>{decision_html}</section>
 {manual_section}
 <section id="final"><h2>Independent final comparison</h2>{final_html}</section>
 <section><h2>Accounting and provenance</h2><pre>{pretty({'budget':budget,'source_hashes':{v['label']:v['source_hash'] for v in variants},'created':manifest['created'],'environment':manifest['environment'],'runtime_version':manifest['tool_version']})}</pre></section>

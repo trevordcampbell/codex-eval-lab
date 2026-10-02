@@ -68,11 +68,15 @@ class Store:
         self.db.execute("INSERT INTO events(at,kind,data) VALUES(?,?,?)", (utc_now(), kind, canonical(data)))
         self.db.commit()
 
-    def record_manual_selection(self, candidate: str, decision: dict[str, Any], *, promoted: bool) -> None:
+    def record_manual_selection(self, candidate: str, decision: dict[str, Any], *, promoted: bool, additional_state: dict | None = None) -> None:
         """Commit the promotion and its audit record atomically, including rejected attempts."""
         with self.transaction():
             if promoted:
                 self.db.execute("INSERT OR REPLACE INTO meta VALUES('best',?)", (canonical(candidate),))
+            for key, value in (additional_state or {}).items():
+                if key not in {"search_archive", "validation_champion"}:
+                    raise LabError("Unsupported selection state update")
+                self.db.execute("INSERT OR REPLACE INTO meta VALUES(?,?)", (key, canonical(value)))
             self.db.execute("INSERT INTO events(at,kind,data) VALUES(?,?,?)",
                             (utc_now(), "manual_selection", canonical({**decision, "promoted": promoted})))
 

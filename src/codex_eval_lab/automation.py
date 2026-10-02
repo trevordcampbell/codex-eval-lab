@@ -10,7 +10,7 @@ from typing import Any
 from .artifacts import collect, hashes
 from .config import audit, load_cases, load_config, make_splits
 from .evidence import evidence_files, public_evidence_summary
-from . import oracle, paired
+from . import oracle, paired, search_policy
 from .store import Store
 from .util import LabError, digest, file_hash, read_json, utc_now, write_json
 
@@ -52,7 +52,7 @@ def make_plan(suite: Path, app: Path) -> dict[str, Any]:
             "evaluator_sha256": {k: file_hash(v) for k, v in evaluator.items()},
             "baseline_sha256": {k: file_hash(v) for k, v in sources.items()},
             "objective": cfg["objective"], "guardrails": cfg["guardrails"], "editable": cfg["search"]["editable"],
-            "budget": cfg["budget"], "search": cfg["search"], "optimizer": cfg["optimizer"],
+            "budget": cfg["budget"], "search": cfg["search"], "search_policy": cfg.get("search_policy"), "optimizer": cfg["optimizer"],
             "execution": cfg["execution"], "measurement": cfg.get("measurement", {"design": "variant_blocked"}),
             "stages": ["freeze", "oracle_preflight" if preflight else "expert_evidence_revalidation", "baseline", "bounded_search", "seal", "final_test", "report"],
             "budget_projection": {"oracle_preflight_calls": preflight, "baseline_trials": baseline,
@@ -66,7 +66,12 @@ def make_plan(suite: Path, app: Path) -> dict[str, Any]:
                             *oracle.LIMITS]}
 
 
-def start_automation(suite: Path, app: Path, state: Path, plan: dict, *, approved: bool, authorization_note: str) -> dict:
+def initialize_plan(suite: Path, app: Path, state: Path, plan: dict, *, approved: bool, authorization_note: str) -> dict:
+    """Freeze the existing exact plan and reserve final capacity without searching.
+
+    Initialization executes configured oracle preflight under the recorded scope.
+    It does not dispatch an optimizer or open the final comparison.
+    """
     if approved is not True or not isinstance(authorization_note, str) or not authorization_note.strip():
         raise LabError("Record the actual existing scope authorization; --approve-plan is not authority or a human-label attestation")
     current = make_plan(suite, app)
@@ -75,9 +80,13 @@ def start_automation(suite: Path, app: Path, state: Path, plan: dict, *, approve
     from .engine import initialize
     record = {"plan": plan, "plan_sha256": digest(plan), "authorization_note": authorization_note,
               "authorization_recorded_at": utc_now(), "human_labels_attested": False}
-    initialize(suite, app, state, approvals={"cases": True, "grader": True, "execution": True},
+    return initialize(suite, app, state, approvals={"cases": True, "grader": True, "execution": True},
                note="Bounded automation execution authorization; no assertion of human case review. " + authorization_note,
                automation_plan=record)
+
+
+def start_automation(suite: Path, app: Path, state: Path, plan: dict, *, approved: bool, authorization_note: str) -> dict:
+    initialize_plan(suite, app, state, plan, approved=approved, authorization_note=authorization_note)
     return resume_automation(state.resolve())
 
 
@@ -113,7 +122,7 @@ def summary(state: Path) -> dict:
                 "status": "completed" if final else "blocked" if store.get("automation_blocker") else "in_progress",
                 "readiness": {"evidence_basis": basis, "executable": gate, "expert": public_evidence_summary(expert),
                               "human_reviewed": bool(expert.get("ready")), "local_attestation_not_identity_proof": True},
-                "selection": {"history": store.get("search_history", []), "stop_reason": store.get("automation_stop_reason")},
+                "selection": {"history": store.get("search_history", []), "stop_reason": store.get("automation_stop_reason"), **search_policy.outcome_summary(store)},
                 "final_result": final, "budget": store.budget(), "blocker": store.get("automation_blocker"),
                 "plan_sha256": manifest.get("automation_plan", {}).get("plan_sha256"),
                 "source_hashes": {v["label"]: v["source_hash"] for v in store.variants()},

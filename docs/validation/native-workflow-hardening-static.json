@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "kind": "native_workflow_hardening_static_preparation",
+  "source_base": "247c1f0366eaa65fd64f20164c3048a89803b912",
+  "prepared_at_utc": "2026-10-02T13:14:00Z",
+  "execution_validation": "pending_explicit_safe_measurement_window",
+  "study_relation": "Separate product hardening prepared after scientific runtime freeze; the frozen benchmark did not execute these new APIs.",
+  "checks": {
+    "python_ast_parse": "passed, without project imports",
+    "extracted_evaluator_ast_equivalence": "passed against original 247c1f0 loop body; includes measurement, selection and state reconciliation",
+    "skill_reference_sync": "passed",
+    "git_diff_check": "passed"
+  },
+  "not_run": [
+    "unit tests",
+    "demos",
+    "profiling",
+    "package build",
+    "native model authors",
+    "paid or external services"
+  ],
+  "source_sha256": {
+    "src/codex_eval_lab/automation.py": "d6d3b7e378f546042537a0fb19cff4bad7cfb3aa0d2b26c6127ffe1983b7b7fb",
+    "src/codex_eval_lab/cli.py": "36cb9a185b0612ba99363e96b87439e73347764cb0ec09617bb60b4d9cbd5b18",
+    "src/codex_eval_lab/native.py": "6e6961e93d12c2f17ed8b901016ab5b4187a91fb0466f5edf9f5b20fdc0fca8d",
+    "src/codex_eval_lab/optimizer.py": "946370302df5ea81af70d7427795749e3b7f4554b67873c923c12c0294f3e3ff",
+    "tests/test_native_workflow.py": "c3883f3d53f132920ebf9722a0ae35e758d57ee3b169657793fea1aca5448eb6"
+  },
+  "pending_commands": [
+    "PYTHONPATH=src python -m unittest -v tests.test_native_workflow tests.test_native tests.test_automation tests.test_search_policy tests.test_engine_optimizer tests.test_paired_measurement tests.test_proposal_receipts",
+    "PYTHONPATH=src python -m unittest discover -v",
+    "python scripts/sync_skill_references.py --check",
+    "PYTHONPATH=src python scripts/demo.py --out NEW_DIRECTORY_OUTSIDE_REPOSITORY",
+    "PYTHONPATH=src python scripts/automation_demo.py --out ANOTHER_NEW_DIRECTORY_OUTSIDE_REPOSITORY"
+  ]
+}

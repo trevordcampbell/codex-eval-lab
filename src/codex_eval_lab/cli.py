@@ -10,7 +10,7 @@ import shutil
 import sys
 
 from . import __version__
-from . import review_cli, automation
+from . import review_cli, automation, native, search_policy
 from .config import audit
 from .engine import compare, export_best, feedback, finalize, initialize, manifest_for, register, run, select
 from .optimizer import export_workspace, import_proposal, loop
@@ -26,7 +26,7 @@ def parser() -> argparse.ArgumentParser:
     sub.add_parser("doctor", help="Check local prerequisites without spending tokens or running app code")
     s = sub.add_parser("audit", help="Validate a suite and disclose measurement risks; executes no adapters")
     s.add_argument("suite", type=Path)
-    s = sub.add_parser("start", help="Approve and freeze a new experiment; does not execute adapters")
+    s = sub.add_parser("start", help="Approve and freeze a new experiment; executes configured oracle preflight")
     s.add_argument("suite", type=Path)
     s.add_argument("--app", type=Path, required=True)
     s.add_argument("--state", type=Path, required=True)
@@ -87,15 +87,34 @@ def parser() -> argparse.ArgumentParser:
     s.add_argument("suite", type=Path)
     s.add_argument("--app", type=Path, required=True)
     s.add_argument("--out", type=Path, required=True)
-    s = sub.add_parser("automate", help="Execute a scope-authorized plan through final test and report")
-    s.add_argument("suite", type=Path)
-    s.add_argument("--app", type=Path, required=True)
-    s.add_argument("--state", type=Path, required=True)
-    s.add_argument("--plan", type=Path, required=True)
-    s.add_argument("--approve-plan", action="store_true")
-    s.add_argument("--authorization-note", required=True)
+    for command, help_text in (
+        ("automate", "Execute a scope-authorized plan through final test and report"),
+        ("start-native", "Freeze an authorized plan and protect final capacity; executes oracle preflight, never an author or final comparison"),
+    ):
+        s = sub.add_parser(command, help=help_text)
+        s.add_argument("suite", type=Path)
+        s.add_argument("--app", type=Path, required=True)
+        s.add_argument("--state", type=Path, required=True)
+        s.add_argument("--plan", type=Path, required=True)
+        s.add_argument("--approve-plan", action="store_true")
+        s.add_argument("--authorization-note", required=True)
     s = sub.add_parser("resume-automation", help="Resume the frozen authorized workflow without creating a second proposal or reopening a sealed winner")
     s.add_argument("state", type=Path)
+    s = sub.add_parser("prepare-turn", help="Reserve one native author opportunity and capture immutable source/feedback/prompt")
+    s.add_argument("state", type=Path)
+    s.add_argument("--out", type=Path, required=True)
+    s.add_argument("--approve-optimizer", action="store_true")
+    s.add_argument("--authorization-note", required=True)
+    s.add_argument("--instruction-file", type=Path)
+    s = sub.add_parser("submit-turn", help="Capture one counted native response and apply scoped edits; then evaluate-turn --call-id to evaluate")
+    s.add_argument("state", type=Path)
+    s.add_argument("--call-id", type=int, required=True)
+    s.add_argument("--response", type=Path, required=True)
+    s.add_argument("--elapsed-s", type=float, required=True)
+    s.add_argument("--outcome", choices=("completed", "failed", "timeout"), default="completed")
+    s = sub.add_parser("evaluate-turn", help="Evaluate/resume only the identified applied native turn; never dispatch an optimizer")
+    s.add_argument("state", type=Path)
+    s.add_argument("--call-id", type=int, required=True)
     review_cli.add_parsers(sub)
     return p
 
@@ -120,6 +139,9 @@ def dispatch(a: argparse.Namespace):
         return {"plan": str(a.out), **result}
     if a.command == "automate":
         return automation.start_automation(a.suite, a.app, a.state, read_json(a.plan), approved=a.approve_plan, authorization_note=a.authorization_note)
+    if a.command == "start-native":
+        return native.start_native(a.suite, a.app, a.state, read_json(a.plan), approved=a.approve_plan,
+                                   authorization_note=a.authorization_note)
     if a.command == "start":
         return initialize(a.suite, a.app, a.state, approvals={key:getattr(a, f"approve_{key}") for key in ("cases", "grader", "execution")}, note=a.note)
     state = a.state.resolve()
@@ -127,10 +149,18 @@ def dispatch(a: argparse.Namespace):
         raise LabError("Not an initialized experiment directory")
     if a.command == "resume-automation":
         return automation.resume_automation(state)
+    if a.command == "prepare-turn":
+        instruction = a.instruction_file.read_text(encoding="utf-8") if a.instruction_file else ""
+        return native.prepare_turn(state, a.out, approved=a.approve_optimizer,
+                    authorization_note=a.authorization_note, instruction=instruction)
+    if a.command == "submit-turn":
+        return native.submit_turn(state, a.call_id, a.response, elapsed_s=a.elapsed_s, outcome=a.outcome)
+    if a.command == "evaluate-turn":
+        return native.evaluate_turn(state, a.call_id)
     if a.command == "status":
         with Store(state / "state.sqlite3") as store:
             manifest = manifest_for(state, store)
-            return {"name": manifest["config"]["name"], "best": store.get("best"), "variants": store.variants(),
+            return {"name": manifest["config"]["name"], "best": store.get("best"), "variants": store.variants(), "search_outcome": search_policy.outcome_summary(store),
                     "budget": store.budget(), "pending_trials": store.pending(), "unresolved_optimizer_calls": store.unresolved_optimizers(), "final_selection": store.get("final_selection"),
                     "final_completed": store.get("final_result") is not None, "expires_at": manifest["expires_at"],
                     "oracle_gate": manifest.get("oracle_gate"), "automation_blocker": store.get("automation_blocker"),

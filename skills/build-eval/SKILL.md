@@ -28,6 +28,14 @@ mutation controls, and test metamorphic transformations on the application's
 actual outputs where meaningful. Never certify an oracle by comparing it only
 with labels produced by the same oracle. Two-model agreement is not ground truth.
 
+For a new single-criterion full-output exact-JSON task, read
+`references/EVAL_DESIGN.md` and enable its bounded generated controls.
+Check plausible wrong outputs and valid alternatives, including boolean/number
+confusion, missing/extra fields, ordered arrays, object-key order and numeric
+spellings. Inspect capped or inapplicable family coverage. These derived probes
+test the grader, not independent truth or application metamorphic correctness;
+do not infer exact-JSON semantics for a semantic or mixed grader.
+
 For JSON-only objective cases, the runner also checks every frozen case via the
 reference and actual grader before search; keep private receipts out of proposer
 context. Artifact-dependent outcomes need the separately validated task-specific
@@ -95,3 +103,12 @@ Build and smoke-test candidate code in disposable copies before immutable
 registration. Keep Python bytecode, Rust targets and other caches outside frozen
 snapshots; bind cache keys to source, trusted driver/reference, compiler and flags.
 Do not weaken hashing or ignore arbitrary changed files to hide a cache write.
+
+
+When the author is the native host rather than a configured CLI backend, use a
+new exact `automation-plan` with `start-native`, then `prepare-turn`, host dispatch,
+`submit-turn` and `evaluate-turn --call-id`. Initialization runs configured oracle
+preflight and protects final capacity through existing reservation semantics.
+The active-only evaluation command cannot dispatch a new author. Keep the same
+scope, receipt, uncertainty and final-authorization requirements; this additive
+workflow was not used by the earlier frozen comparative benchmark.

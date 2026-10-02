@@ -135,3 +135,15 @@ record and charges are retained, pending work can be marked indeterminate with
 `recover`, and the cohort cannot drive selection or final confirmation. Resuming
 at a complete pair boundary is supported without repeating completed calls. An
 invalid final cohort keeps its winner sealed; recovery never reopens selection.
+
+
+## Exploratory archive search
+
+The optional [archive policy](SEARCH_POLICY.md) uses complete observed means and
+prespecified empirical guardrails to choose parents and its search incumbent.
+It does not claim confidence-bound acceptance at that stage. The original
+comparison intervals are retained, and the final sealed comparison still uses
+the configured primary superiority and guardrail noninferiority gates. Allocation
+rewards and behavioral buckets are heuristics; they are not statistical evidence
+or a regret guarantee. Multiple adaptive outer-policy trials require a separately
+protected task holdout and full-run accounting.

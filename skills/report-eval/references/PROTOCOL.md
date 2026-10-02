@@ -124,7 +124,8 @@ fields:
 | `objective` | Declared metric, `maximize`/`minimize`, minimum meaningful improvement, confidence, minimum validation **groups**, bootstrap count |
 | `guardrails` | Array of metric, direction, and maximum permitted regression (absolute metric units) |
 | `budget` | Evaluation dollar ceiling, conservative **whole-trial** reservation (app + judge), max trials, wall-time window, separate optimizer call limit |
-| `search` | Explicit editable path patterns, max rounds, patience, maximum replacement bytes |
+| `search` | Explicit editable path patterns, max rounds, patience, maximum replacement bytes, optional `max_feedback_bytes` (4,096–2,000,000; default 65,536) |
+| `search_policy` | Optional versioned archive configuration; omission keeps conservative selection; see [SEARCH_POLICY.md](SEARCH_POLICY.md) |
 | `optimizer` | `codex` or `command`, optional model, timeout, explicit environment allowlist |
 
 The core rejects unknown configuration keys rather than ignoring typos. Directions
@@ -233,6 +234,11 @@ consistency errors; it does not prove reference/specification validity. Raw priv
 case receipts stay in the controller, never proposal or default report context.
 This route supports JSON-only cases without file assets or artifact-dependent grading.
 
+Optional `oracle.json` `generated_controls` add narrow exact-JSON adversarial
+probes and positive invariances. This changes the evaluator and call budget; it
+requires a new state. See [EVAL_DESIGN.md](EVAL_DESIGN.md) for the equality contract,
+coverage limits and distinction from independently established labels.
+
 `automation-plan` records scope and bytes without executing code. `automate` verifies
 that plan and consumes authority already granted through the user's host policy.
 Every oracle check is reserved before execution in the same SQLite trial ledger
@@ -240,3 +246,16 @@ Every oracle check is reserved before execution in the same SQLite trial ledger
 charges. A separate raw receipt preserves commands' responses and streams. Final
 capacity is protected for automated plans. `automation-result.json` exposes
 provenance, selection/final status and accounting without private control rows.
+
+
+## Native workflow control commands
+
+`start-native` takes the same exact `automation-plan` and existing scope authority
+as `automate`, installs its existing final-capacity reservation, executes configured
+oracle preflight and returns a `native_initialization` JSON receipt without search.
+`evaluate-turn STATE --call-id N` consumes only an already-applied native candidate;
+it cannot create an author call. It returns a bound `native_evaluation_receipt`
+with completion-time accounting, and verified duplicates return the same object.
+Neither command changes proposal JSON, adapter contracts, search/scoring policies,
+paired schedules or final qualification gates. Full command and receipt details
+are in [SEARCH_POLICY.md](SEARCH_POLICY.md#native-authors-with-immutable-evidence).

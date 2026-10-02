@@ -15,7 +15,7 @@ import time
 import uuid
 from typing import Any
 
-from . import __version__, paired, oracle
+from . import __version__, paired, oracle, search_policy
 from .artifacts import allowed_edit, collect, copy_files, hashes, snapshot
 from .config import audit, load_cases, load_config, make_splits
 from .evidence import evidence_files, validate_evidence, validate_criterion_results
@@ -92,6 +92,7 @@ def initialize(suite: Path, app: Path, state: Path, *, approvals: dict[str, bool
             if automation_plan is not None:
                 store.put("protected_final_trials", automation_plan["plan"]["budget_projection"]["protected_final_trials"])
             store.put("best", "baseline")
+            store.put("validation_champion", "baseline")
             store.add_variant("baseline", digest(base_hashes), "Approved unchanged starting point")
             store.event("approved", {"approvals": approvals, "note": note, "audit": audit_result})
         write_json(state / "audit.json", audit_result)
@@ -137,6 +138,25 @@ def manifest_for(state: Path, store: Store, *, check_time: bool = False) -> dict
         gate = oracle.validate_receipt(state / "evaluator", manifest["config"], receipt)
         if gate != manifest.get("oracle_gate"):
             raise LabError("Frozen executable-oracle receipt changed; start a new experiment")
+    # Dispatch evidence remains bound throughout evaluation, reporting and final
+    # sealing, not merely at the instant the proposal is submitted.
+    from . import proposal_receipts
+    for saved in store.db.execute("SELECT key,value FROM meta WHERE key LIKE 'proposal_receipt:%' OR key LIKE 'native_turn:%'"):
+        value = json.loads(saved["value"])
+        if saved["key"].startswith("native_turn:"):
+            receipt = value.get("receipt")
+            if not receipt:  # interrupted preparation stays pending, never redispatched
+                continue
+            directory = state / value["evidence_relative"]
+        else:
+            receipt = value
+            call_id = int(saved["key"].split(":")[1])
+            directory = state / "optimizer-runs" / f"call-{call_id:04d}" / "evidence"
+        source = state / "candidates" / receipt["source_label"]
+        proposal_receipts.verify_dispatch(directory, expected_digest=receipt["dispatch_digest"], source=source)
+        if receipt.get("response_digest"):
+            proposal_receipts.verify_response(directory, expected_digest=receipt["dispatch_digest"],
+                    expected_response_digest=receipt["response_digest"], source=source)
     return manifest
 
 
@@ -341,6 +361,33 @@ def perform_trial(state: Path, manifest: dict[str, Any], source: Path, case: dic
     return record
 
 
+def _completed_matrix(store: Store, label: str, split: str, jobs: list[tuple[str, int]], metrics: dict) -> str | None:
+    """Identify an exact successful ledger; other states retain the ordinary loop."""
+    ledger = store.db.execute("SELECT * FROM trials WHERE label=? AND split=? ORDER BY case_id,rep",
+                              (label, split)).fetchall()
+    expected = set(jobs)
+    if not expected or {(row["case_id"], row["rep"]) for row in ledger} != expected:
+        return None
+    for row in ledger:
+        if row["status"] != "ok" or row["result"] is None:
+            return None
+        try:
+            result = json.loads(row["result"])
+            if (not isinstance(result, dict) or result.get("status") != "ok"
+                    or result.get("case_id") != row["case_id"]
+                    or type(result.get("rep")) is not int or result["rep"] != row["rep"]
+                    or not isinstance(result.get("metrics"), dict) or set(result["metrics"]) != set(metrics)):
+                return None
+            for metric, value in result["metrics"].items():
+                finite(value, metric)
+        except (ValueError, TypeError, OverflowError, RecursionError, LabError):
+            return None
+    try:
+        return digest([dict(row) for row in ledger])
+    except (ValueError, TypeError, OverflowError, RecursionError, LabError):
+        return None
+
+
 def run_internal(state: Path, store: Store, manifest: dict[str, Any], label: str, split: str, *, allow_test: bool = False) -> dict[str, Any]:
     if split not in ("train", "validation", "test"):
         raise LabError("Unknown split")
@@ -358,7 +405,21 @@ def run_internal(state: Path, store: Store, manifest: dict[str, Any], label: str
     # Same randomized order across variants; still run interleaved controls for noisy systems.
     import random
     random.Random(cfg["seed"]).shuffle(jobs)
+    expected_jobs = jobs
+    completed_identity = None
     try:
+        if split != "test" and _completed_matrix(store, label, split, jobs, cfg["metrics"]):
+            # No adapter can run for this exact successful ledger/result matrix.
+            # Recheck fresh bytes at both invocation boundaries, without repeating
+            # full manifest/oracle/toolchain checks for each already-completed row.
+            manifest_for(state, store, check_time=True)
+            check_source(state, store, label)
+            # Recheck eligibility after verification: a nonqualifying ledger must
+            # return to ordinary reservation/error handling, even if stale result
+            # JSON still describes a successful row.
+            completed_identity = _completed_matrix(store, label, split, jobs, cfg["metrics"])
+            if completed_identity:
+                jobs = []
         for id_, rep in jobs:
             manifest_for(state, store, check_time=True)
             check_source(state, store, label)
@@ -377,6 +438,9 @@ def run_internal(state: Path, store: Store, manifest: dict[str, Any], label: str
         atomic_text(state / "runs" / label / f"{split}.jsonl", "".join(canonical(row) + "\n" for row in store.results(label, split)))
     manifest_for(state, store)
     check_source(state, store, label)
+    # The no-execution revisit must still describe its exact post-entry ledger.
+    if completed_identity and _completed_matrix(store, label, split, expected_jobs, cfg["metrics"]) != completed_identity:
+        raise LabError("Completed trial ledger changed during verification; inspect the stored evidence")
     rows = store.results(label, split)
     valid_rows(rows, ids, cfg["repetitions"])
     summary = {"label": label, "split": split, "trials": len(rows),
@@ -424,21 +488,31 @@ def select(state: Path, candidate: str) -> dict[str, Any]:
         if store.get("final_selection"):
             raise LabError("Final selection is sealed")
         incumbent = store.get("best")
+        if search_policy.enabled(manifest):
+            # Check archive eligibility inputs before spending or mutating best.
+            search_policy.candidate_record(store, manifest, candidate)
         if paired.enabled(manifest):
             decision, against_start = paired.evaluate_selection(state, store, manifest, candidate, incumbent)
         else:
             decision = compare_internal(state, store, manifest, incumbent, candidate)
             against_start = compare_internal(state, store, manifest, "baseline", candidate)
-        store.record_manual_selection(candidate, {"candidate": candidate, "incumbent": incumbent,
-                                      "vs_incumbent": decision, "vs_start": against_start},
-                                      promoted=decision["accepted"] and against_start["accepted"])
-        if not decision["accepted"]:
-            raise LabError("Candidate does not clear the approved validation and guardrail gates; use compare to inspect the recorded result")
-        # Guardrails are also checked against the original baseline to prevent cumulative drift.
-        if not against_start["accepted"]:
-            raise LabError("Candidate regresses against the original baseline")
-        store.event("selected", {"vs_incumbent": decision, "vs_start": against_start})
-        return decision
+        conservative = decision["accepted"] and against_start["accepted"]
+        exploration = search_policy.exploratory_decision(decision, against_start, manifest["config"]) if search_policy.enabled(manifest) else None
+        promoted = exploration["selected_for_search"] if exploration else conservative
+        record = {"candidate": candidate, "incumbent": incumbent,
+                  "vs_incumbent": decision, "vs_start": against_start,
+                  "confidence_gate_passed": conservative, "release_qualified": False,
+                  "exploration": exploration}
+        updates = {"validation_champion": candidate} if conservative else {}
+        if exploration:
+            updates["search_archive"] = search_policy.archive_records(store, manifest, candidate,
+                        eligible=exploration["eligible_parent"], selected=candidate if promoted else incumbent)
+            record["archive_labels"] = [r["label"] for r in updates["search_archive"]]
+        store.record_manual_selection(candidate, record, promoted=promoted, additional_state=updates)
+        if not promoted:
+            raise LabError("Candidate does not clear the configured search-selection policy; inspect the recorded decision")
+        store.event("selected", record)
+        return {**decision, "selected_for_search": promoted, "release_qualified": False, "exploration": exploration} if exploration else decision
 
 
 def finalize(state: Path, *, approved: bool) -> dict[str, Any]:
@@ -446,10 +520,15 @@ def finalize(state: Path, *, approved: bool) -> dict[str, Any]:
         raise LabError("Final-test execution requires explicit approval")
     with experiment_lock(state), Store(state / "state.sqlite3") as store:
         manifest = manifest_for(state, store)
+        if store.unresolved_optimizers():
+            raise LabError("Unresolved optimizer execution blocks finalization")
+        if store.get("active_round") is not None:
+            raise LabError("An active evaluation round blocks finalization; complete that round before sealing")
+        for table in ("trials", "paired_trials"):
+            if store.db.execute(f"SELECT 1 FROM {table} WHERE status IN ('pending','indeterminate') LIMIT 1").fetchone():
+                raise LabError("Pending or indeterminate evaluation trials block finalization; preserve any existing seal and do not replay calls")
         if store.get("final_result"):
             return store.get("final_result")
-        if manifest.get("automation_plan") and store.unresolved_optimizers():
-            raise LabError("Unresolved optimizer execution blocks automated finalization")
         manifest_for(state, store, check_time=True)
         selection = store.get("final_selection")
         if selection is None:
@@ -475,6 +554,8 @@ def finalize(state: Path, *, approved: bool) -> dict[str, Any]:
                 run_internal(state, store, manifest, winner, "test", allow_test=True)
             result = compare_internal(state, store, manifest, "baseline", winner, "test")
         result["final_selection"] = selection
+        result["release_qualified"] = result["accepted"]
+        result["release_champion"] = winner if result["accepted"] else "baseline"
         result["interpretation"] = "Independent held-out comparison for the preselected winner; not a guarantee about unsampled tasks. Do not tune further on this test set."
         store.put("final_result", result)
         store.event("final_test_completed", result)
@@ -491,7 +572,7 @@ def feedback(state: Path, label: str) -> dict[str, Any]:
         valid_rows(rows, manifest["splits"]["train"], manifest["config"]["repetitions"])
         objective = manifest["config"]["objective"]
         direction = 1 if objective["direction"] == "maximize" else -1
-        rows.sort(key=lambda row: direction * row["metrics"][objective["metric"]])
+        rows.sort(key=lambda row: (direction * row["metrics"][objective["metric"]], row["case_id"], row["rep"]))
         exposed = [{key: row.get(key) for key in ("case_id", "rep", "input", "expected", "output", "metrics", "explanation", "trace", "criterion_results")} for row in rows]
         return {"schema_version": 1, "variant": label, "objective": objective,
                 "guardrails": manifest["config"]["guardrails"], "editable": manifest["config"]["search"]["editable"],
@@ -508,4 +589,5 @@ def export_best(state: Path, destination: Path) -> dict[str, Any]:
             raise LabError("Export destination exists; never overwrite a user's working tree")
         shutil.copytree(source, destination)
         return {"winner": winner, "destination": str(destination), "source_hash": store.variant(winner)["source_hash"],
-                "final_test_completed": store.get("final_result") is not None}
+                "final_test_completed": store.get("final_result") is not None,
+                "search_outcome": search_policy.outcome_summary(store)}

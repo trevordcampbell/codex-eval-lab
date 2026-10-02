@@ -23,12 +23,15 @@ class ProcessResult:
     stderr: str
     elapsed_s: float
     returncode: int
+    stdout_bytes: bytes | None = None
+    stderr_bytes: bytes | None = None
 
 
 class ProcessFailure(LabError):
-    def __init__(self, message: str, *, stdout: str = "", stderr: str = "", elapsed_s: float = 0):
+    def __init__(self, message: str, *, stdout: str = "", stderr: str = "", elapsed_s: float = 0, stdout_bytes: bytes | None = None, stderr_bytes: bytes | None = None):
         super().__init__(message)
         self.stdout, self.stderr, self.elapsed_s = stdout, stderr, elapsed_s
+        self.stdout_bytes, self.stderr_bytes = stdout_bytes, stderr_bytes
 
 
 def minimal_env(names: list[str], *, home: Path | None = None) -> dict[str, str]:
@@ -125,14 +128,19 @@ def invoke(command: list[str], request: Any, *, cwd: Path, env: dict[str, str], 
         size = os.fstat(stdout.fileno()).st_size + os.fstat(stderr.fileno()).st_size
         stdout.seek(0)
         stderr.seek(0)
-        out = stdout.read(max_output_bytes).decode("utf-8", errors="replace")
-        err = stderr.read(max_output_bytes).decode("utf-8", errors="replace")
+        raw_out, raw_err = stdout.read(max_output_bytes), stderr.read(max_output_bytes)
+        try:
+            out = raw_out.decode("utf-8")
+        except UnicodeError:
+            reason = "Process stdout is not valid UTF-8"
+            out = raw_out.decode("utf-8", errors="replace")
+        err = raw_err.decode("utf-8", errors="replace")
         if size > max_output_bytes:
             reason = f"Process output exceeded {max_output_bytes} bytes"
         if reason or proc.returncode:
-            raise ProcessFailure(reason or f"Process exited {proc.returncode}", stdout=out, stderr=err, elapsed_s=elapsed)
+            raise ProcessFailure(reason or f"Process exited {proc.returncode}", stdout=out, stderr=err, elapsed_s=elapsed, stdout_bytes=raw_out, stderr_bytes=raw_err)
         try:
             value = strict_json(out) if parse_json else None
         except LabError as exc:
-            raise ProcessFailure(str(exc), stdout=out, stderr=err, elapsed_s=elapsed) from exc
-        return ProcessResult(value, out, err, elapsed, proc.returncode)
+            raise ProcessFailure(str(exc), stdout=out, stderr=err, elapsed_s=elapsed, stdout_bytes=raw_out, stderr_bytes=raw_err) from exc
+        return ProcessResult(value, out, err, elapsed, proc.returncode, raw_out, raw_err)

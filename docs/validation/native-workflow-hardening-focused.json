@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "kind": "native_workflow_hardening_focused_validation",
+  "completed_at_utc": "2026-10-02T13:16:52Z",
+  "source_base": "247c1f0366eaa65fd64f20164c3048a89803b912",
+  "command": "PYTHONPATH=src python -m unittest -v tests.test_native_workflow tests.test_native",
+  "tests": 56,
+  "duration_s": 19.292,
+  "exit_code": 0,
+  "result": "OK",
+  "execution_scope": "Explicit measurement-free window confirmed by scientific study owner. No scored operation active. Isolated product-hardening checkout only.",
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41"
+  },
+  "runtime_sha256": {
+    "__init__.py": "a77d98446cfa7be8c06e446ee102ad8671326d2d1f2ba53075c55510e5474bb5",
+    "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "artifacts.py": "d871725ad740e2d35eb3aee0fcc43aade5cd3b3dcc83728617a8fa29689ce923",
+    "automation.py": "d6d3b7e378f546042537a0fb19cff4bad7cfb3aa0d2b26c6127ffe1983b7b7fb",
+    "calibration.py": "58fbc39c4760d7e19dad312776aa41ff5c614c7547748979eda409cb9323d6d1",
+    "cli.py": "36cb9a185b0612ba99363e96b87439e73347764cb0ec09617bb60b4d9cbd5b18",
+    "config.py": "50c0ecff8610535e0936162472af42a7054a095cec7f564f8a48eaedce62d877",
+    "engine.py": "ac866ad2e35a913d99e77d163704455b658f1796e995018bde2fe5389fed8d21",
+    "evidence.py": "060686d28af3885f56bd63898a4f369c8c6130f1b039cb0c96c244651137b337",
+    "native.py": "6e6961e93d12c2f17ed8b901016ab5b4187a91fb0466f5edf9f5b20fdc0fca8d",
+    "optimizer.py": "946370302df5ea81af70d7427795749e3b7f4554b67873c923c12c0294f3e3ff",
+    "oracle.py": "11ba3c3dfcf03c3243f3502f6b2928fb811a8492ccee678bfcc7cb46ab941bac",
+    "oracle_controls.py": "a6126e2fe53569655b79ea1cf3bdbc006d3cd85769efa8b0d0be2766ea23295e",
+    "paired.py": "2706b7e07afea227c3fffac686ab7fdd878fd8c047497ca308ce4cfa4f16387b",
+    "plugin_server.py": "da30e6868afced4be4446419190ff13abc6ac19cad0fdca6268821878c3de983",
+    "process.py": "0dcb5aaf225646f6f3ecc924d5ebad69d5f261ff3e59962de385f8f986de3afb",
+    "proposal_feedback.py": "dfa0da6d36e7d8d1d8bd1cc048be6df27f395649e01c12d4841a46b5c393bbc5",
+    "proposal_receipts.py": "568fe7ef4245b833c3486b0bad3e43182c3a145799cfcb70c5bf7e817c257d9f",
+    "report.py": "fb048b2c9aaa55b0b782bc3c9712d064a2ee7ef6d219ff6fc6535c30cf28f2d0",
+    "review.py": "03e8cebc0d31e8abaae808422e0c7fe1eca8d726dd8813870f55c8d187e330c3",
+    "review_cli.py": "8e87ac60c4a0a552ebe58d2df9a729a9e64b4ad0800c9be0e49bf31e626b4be1",
+    "review_ui.py": "93b4fd6748cb8ef7226911d02496ea459c6d8118d23d7d2c1c740ed55df81e71",
+    "search_policy.py": "1a56a1cfb657b4ae5dadaa402f459fd7c6ad56366b5ecd010a710ba57fb193d3",
+    "stats.py": "15f648c693d9183d62db665c02680a13f0e2629b075ca651f38ca872954234b2",
+    "store.py": "deb469458c51065532ab31836b5e0b594f33fa06f06b41ade3dbfe466de397fc",
+    "util.py": "0ea7d626958925c4e05e555812311ecba2f2e9d6f6daaa34254be69d7a456611"
+  },
+  "test_sha256": {
+    "tests/test_native_workflow.py": "c3883f3d53f132920ebf9722a0ae35e758d57ee3b169657793fea1aca5448eb6",
+    "tests/test_native.py": "205aed1173c71f1f9619247b5e0f7fe7186e09c9b579795de9d4e09ebc6bb462"
+  },
+  "log": "native-workflow-hardening-focused.txt",
+  "not_run": [
+    "broader automation/search/paired/receipt regression command",
+    "full core discovery",
+    "offline demos",
+    "package build",
+    "live native authors",
+    "external services"
+  ],
+  "scientific_claim": "These offline synthetic regressions test mechanics only. The unchanged frozen comparative benchmark did not exercise these additive APIs."
+}

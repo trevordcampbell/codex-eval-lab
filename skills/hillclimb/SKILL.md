@@ -5,7 +5,7 @@ description: Autonomously improve scoped application code, prompts, skills, para
 
 # Own the bounded improvement loop
 
-Read `references/AUTOMATION.md`, `references/OPERATING_GUIDE.md` and
+Read `references/SEARCH_POLICY.md`, `references/AUTOMATION.md`, `references/OPERATING_GUIDE.md` and
 `references/SECURITY.md`. If the eval is missing or untrusted, use `$build-eval` and
 `$audit-eval` to build it. Codex should design, inspect, diagnose and iterate; do not
 send the user a list of manual setup chores or ask permission for every iteration
@@ -27,8 +27,10 @@ only missing decisions or required action-policy authority. A flag cannot grant
 that authority; record the actual user scope and source in the authorization note.
 Unknown optimizer dollars are unknown, never zero.
 
-Prefer `automation-plan` then `automate` for a requested complete improvement. The
-native CLI freezes the source-bound plan and evaluator, runs preflight and baseline,
+Prefer `automation-plan` then `automate` for a requested complete improvement
+when a working configured command or Codex CLI proposal backend is available.
+Otherwise use the explicit native host bridge below; it is a different dispatch
+path and does not verify one-command live CLI integration. The local CLI freezes the source-bound plan and evaluator, runs preflight and baseline,
 launches fresh Codex proposals, applies only scoped edits, compares to incumbent and
 original baseline, retains raw decisions, reserves final capacity, seals the winner,
 opens the preauthorized final comparison and writes the result/report. No hosted
@@ -38,6 +40,34 @@ same frozen plan after investigating interruptions; do not create duplicate work
 If final opening was not approved, use the individual start/loop/report commands
 and ask once when that new action is needed. If the user asked only for a baseline
 or short experiment, honor that stopping point rather than broadening the task.
+
+## Separate exploratory search from release evidence
+
+For a new experiment, consider opt-in archive search when conservative selection
+would discard useful inconclusive stepping stones. Freeze its primary metric,
+empirical guardrails, diversity/reward scales, archive capacity and operator policy.
+Keep hard validity and final release checks unchanged. Use conservative default
+selection when archive assumptions are unsuitable or have not been assessed.
+
+Archive admission, a better observed mean and an author hypothesis are not release
+qualification. Preserve best-found, validation champion and final release outcome
+separately. Do not change thresholds or secondary objectives after outcomes. Use
+fresh paired measurements for timing; noisy development ranks are only heuristics.
+Do not claim UCB or portfolio efficacy from a run that never revisits an operator.
+
+For native Codex orchestration, initialize a new `automation-plan` with
+`start-native` to protect final capacity. Configured oracle preflight executes now
+under existing authority; record its actual calls. Then prefer `prepare-turn` /
+`submit-turn` followed by `evaluate-turn STATE --call-id CALL_ID`. Never substitute
+generic `loop` for native completion retries; it can dispatch another backend call.
+The active-only command validates the exact call and safely returns an unchanged
+verified completion receipt on repetition. This reserves each opportunity, snapshots the exact public
+source/prompt/feedback before dispatch, and captures the response before scoped
+application. Send the captured prompt bytes and verify the workspace source before
+calling an author. Keep every failed/malformed turn counted. A pending admission
+is not evidence of execution; preserve its status and do not silently redispatch.
+Record actual model/usage when available, otherwise unknown. This file protocol
+does not claim that the standalone Codex CLI executed successfully.
 
 ## Keep measurement and proposal separate
 

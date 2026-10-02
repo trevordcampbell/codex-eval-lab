@@ -38,11 +38,11 @@ def package(root:Path,out:Path):
     root=root.resolve();out=out.resolve()
     if out==root or root in out.parents: raise ValueError("Release destination must be outside source tree")
     paths=release_files(root)
-    manifest={"schema_version":1,"name":"codex-eval-lab","version":"0.4.0",
+    manifest={"schema_version":1,"name":"codex-eval-lab","version":"0.5.0",
               "files":{str(p.relative_to(root)).replace("\\","/"):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
     payload=(json.dumps(manifest,indent=2,sort_keys=True)+"\n").encode()
     out.mkdir(parents=True,exist_ok=True)
-    archive=out/"codex-eval-lab-v0.4.0.zip"
+    archive=out/"codex-eval-lab-v0.5.0.zip"
     if archive.exists():raise ValueError("Release archive already exists; choose a new destination")
     with zipfile.ZipFile(archive,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
         for p in paths: z.writestr("codex-eval-lab/"+p.relative_to(root).as_posix(),p.read_bytes())

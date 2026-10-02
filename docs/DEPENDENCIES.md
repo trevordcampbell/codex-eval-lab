@@ -69,3 +69,27 @@ The stable Codex CLI checks use isolated configuration and `--help`; they do not
 start a model turn. Optional judge serialization uses the real released SDK with
 an offline mock transport. Neither substitutes for authenticated live-provider
 validation. See [validation](VALIDATION.md) for exact results and remaining limits.
+
+
+## October 2, 2026: separate release validation update
+
+The table and source-build notes above describe the October 1 historical audit.
+After the scientific cohorts finished, release validation used a **separate
+uv-managed prebuilt Python 3.14.8**, acquired with [uv 0.12.22](https://pypi.org/project/uv/0.12.22/)
+from PyPI. The tooling, managed interpreter, cache and virtual environment are
+isolated; global tools and the frozen benchmark environment were not changed.
+This does not relabel the earlier source-built Python or hosted-CI records.
+
+The current release judge lock now selects [OpenAI 3.23.0](https://pypi.org/project/openai/3.23.0/).
+A universal Python>=3.11 resolution was staged with only OpenAI upgraded; all other
+pins remained unchanged, including Pydantic 2.13.5 and its exact core 2.46.5
+requirement. MCP stays at 2.2.0. The existing optional dependency ranges did not
+change. The previous judge lock and its resolver/date comments are retained
+byte-for-byte in [`requirements/history/judge-2026-10-01-openai3.22.1.txt`](../requirements/history/judge-2026-10-01-openai3.22.1.txt).
+Plugin and packaging locks retain their original content and provenance.
+
+The release environment passed 560 full tests (one disabled CLI opt-in skip) plus
+80 dedicated offline tests, including both real OpenAI SDK mock-transport checks.
+Hash-required installation of the final locks and the dependency consistency check
+passed. This is offline compatibility evidence, not live provider or hosted-client
+verification. See [the exact acquisition and validation record](validation/native-workflow-release-3148.json).

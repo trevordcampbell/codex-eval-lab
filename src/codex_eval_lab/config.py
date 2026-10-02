@@ -10,7 +10,7 @@ from typing import Any
 
 from .util import LabError, canonical, contained, digest, finite, integer, relative_name, safe_name, strict_json, unknown_keys
 
-TOP = {"schema_version", "name", "cases", "repetitions", "seed", "source_paths", "harness_paths", "execution", "metrics", "objective", "guardrails", "budget", "search", "optimizer", "evidence", "measurement", "oracle"}
+TOP = {"schema_version", "name", "cases", "repetitions", "seed", "source_paths", "harness_paths", "execution", "metrics", "objective", "guardrails", "budget", "search", "optimizer", "evidence", "measurement", "oracle", "search_policy"}
 
 
 def strings(value: Any, name: str, *, nonempty: bool = True) -> list[str]:
@@ -124,7 +124,7 @@ def validate_config(cfg: dict[str, Any]) -> dict[str, Any]:
     budget.setdefault("max_optimizer_calls", 0)
     integer(budget["max_optimizer_calls"], "max_optimizer_calls", minimum=0, maximum=1000)
     search = cfg["search"]
-    unknown_keys(search, {"editable", "max_rounds", "patience", "max_edit_bytes"}, "search")
+    unknown_keys(search, {"editable", "max_rounds", "patience", "max_edit_bytes", "max_feedback_bytes"}, "search")
     for pattern in strings(search.get("editable"), "search.editable"):
         relative_name(pattern)
         if pattern in ("*", "**", "**/*"):
@@ -135,6 +135,8 @@ def validate_config(cfg: dict[str, Any]) -> dict[str, Any]:
     integer(search["max_rounds"], "max_rounds", maximum=1000)
     integer(search["patience"], "patience", maximum=1000)
     integer(search["max_edit_bytes"], "max_edit_bytes", maximum=100_000_000)
+    if "max_feedback_bytes" in search:
+        integer(search["max_feedback_bytes"], "max_feedback_bytes", minimum=4096, maximum=2_000_000)
     opt = cfg.setdefault("optimizer", {"backend": "codex"})
     if not isinstance(opt, dict):
         raise LabError("optimizer must be a table")
@@ -174,6 +176,8 @@ def validate_config(cfg: dict[str, Any]) -> dict[str, Any]:
         unknown_keys(measurement, {"design"}, "measurement")
         if measurement.get("design") != "paired_ab_ba":
             raise LabError('measurement.design must be "paired_ab_ba" when configured')
+    from .search_policy import validate_policy
+    validate_policy(cfg)
     return cfg
 
 
@@ -293,8 +297,9 @@ def audit(suite: Path) -> dict[str, Any]:
     if cfg.get("oracle"):
         from .oracle import load_contract, binding, all_requests, LIMITS
         contract = load_contract(suite, cfg)
+        from .oracle_controls import coverage_summary
         oracle_gate = {"configured": True, "ready": False, "status": "execution_required",
-                       "binding": binding(suite, cfg, contract), "preflight_calls": len(all_requests(suite, cfg, contract)),
+                       "control_coverage": coverage_summary(contract), "binding": binding(suite, cfg, contract), "preflight_calls": len(all_requests(suite, cfg, contract)),
                        "author_kind": contract["author"]["kind"], "source_kind": contract["source"]["kind"],
                        "human_reviewed": False, "limitations": LIMITS}
         warnings.append("Oracle schema checked only; authorized start must execute the bound reference and mutation controls.")
